@@ -1,7 +1,7 @@
 import sys
+from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5 import uic
 
 dir = 'UI/Main GUI.ui'
 form_class = uic.loadUiType(dir)[0]
@@ -22,12 +22,29 @@ class MyWindow(QMainWindow, form_class):
         self.qPixmap_Canvas = QPixmap(self.test_pic_dir)
         self.label_Canvas.setPixmap(self.qPixmap_Canvas)
 
+        # ==== File Menu Area ====
+        self.action_Open.triggered.connect(self.openImage)
+
     """
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
                시그널과 연결된 작동 함수 부분을 멤버함수 형태로 작성한다.
     ----------------------------------------------------------------------------
     """
+
+    # ==== file Menu Area ====
+    def openImage(self):
+        extension_Filter = '*.jpg, *.jpeg, *.png'
+        img_Dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_Filter)
+        self.qPixmap_Canvas = QPixmap(img_Dir[0])
+
+        width = self.qPixmap_Canvas.width()
+        height = self.qPixmap_Canvas.height()
+        if(height>width):
+            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToHeight(810)
+        else:
+            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToWidth(1280)
+        self.label_Canvas.setPixmap(self.qPixmap_Canvas_Scaled)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
