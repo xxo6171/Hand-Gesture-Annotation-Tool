@@ -23,7 +23,7 @@ class MyWindow(QMainWindow, form_class):
         self.label_Canvas.setPixmap(self.qPixmap_Canvas)
 
         # ==== File Menu Area ====
-        self.action_Open.triggered.connect(self.open_image)
+        self.action_Open.triggered.connect(self.openImage)
 
     """
     ----------------------------------------------------------------------------
@@ -33,11 +33,18 @@ class MyWindow(QMainWindow, form_class):
     """
 
     # ==== file Menu Area ====
-    def open_image(self):
-        extension_filter = '*.jpg, *.jpeg, *.png'
-        img_dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_filter)
-        self.qPixmap_Canvas = QPixmap(img_dir[0])
-        self.label_Canvas.setPixmap(self.qPixmap_Canvas)
+    def openImage(self):
+        extension_Filter = '*.jpg, *.jpeg, *.png'
+        img_Dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_Filter)
+        self.qPixmap_Canvas = QPixmap(img_Dir[0])
+
+        width = self.qPixmap_Canvas.width()
+        height = self.qPixmap_Canvas.height()
+        if(height>width):
+            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToHeight(810)
+        else:
+            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToWidth(1280)
+        self.label_Canvas.setPixmap(self.qPixmap_Canvas_Scaled)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
