@@ -146,121 +146,155 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menu_File">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
     <addaction name="separator"/>
-    <addaction name="actionExit"/>
+    <addaction name="action_Exit"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
+   <widget class="QMenu" name="menu_Edit">
     <property name="title">
      <string>Edit</string>
     </property>
-    <widget class="QMenu" name="menuCreate">
+    <widget class="QMenu" name="menu_Create">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="tearOffEnabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Create</string>
      </property>
-     <addaction name="actionPolygon"/>
-     <addaction name="actionGesture_Polygon"/>
-     <addaction name="actionRectangle"/>
-     <addaction name="actionCircle"/>
-     <addaction name="actionLine"/>
-     <addaction name="actionDot"/>
+     <property name="separatorsCollapsible">
+      <bool>false</bool>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>false</bool>
+     </property>
+     <addaction name="action_Polygon"/>
+     <addaction name="action_Gesture_Polygon"/>
+     <addaction name="action_Rectangle"/>
+     <addaction name="action_Circle"/>
+     <addaction name="action_Line"/>
+     <addaction name="action_Dot"/>
     </widget>
-    <addaction name="menuCreate"/>
-    <addaction name="actionPoint_Move"/>
-    <addaction name="actionDelete"/>
+    <addaction name="menu_Create"/>
+    <addaction name="action_Retouch"/>
+    <addaction name="action_Delete"/>
     <addaction name="separator"/>
-    <addaction name="actionAouto_Annotation"/>
+    <addaction name="action_Auto_Annotation"/>
    </widget>
-   <widget class="QMenu" name="menuZoom">
+   <widget class="QMenu" name="menu_Zoom">
     <property name="title">
      <string>Zoom</string>
     </property>
-    <addaction name="actionZoom_In"/>
-    <addaction name="actionZoom_Out"/>
+    <addaction name="action_Zoom_In"/>
+    <addaction name="action_Zoom_Out"/>
     <addaction name="separator"/>
-    <addaction name="actionFit"/>
+    <addaction name="action_Fit"/>
    </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
-   <addaction name="menuZoom"/>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Zoom"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionOpen">
+  <widget class="QStatusBar" name="statusBar">
+   <property name="cursor">
+    <cursorShape>ForbiddenCursor</cursorShape>
+   </property>
+  </widget>
+  <action name="action_Open">
    <property name="text">
     <string>Open</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
-  <action name="actionSave">
+  <action name="action_Save">
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
-  <action name="actionPoint_Move">
+  <action name="action_Retouch">
    <property name="text">
     <string>Retouch</string>
    </property>
   </action>
-  <action name="actionDelete">
+  <action name="action_Delete">
    <property name="text">
     <string>Delete</string>
    </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
   </action>
-  <action name="actionAouto_Annotation">
+  <action name="action_Auto_Annotation">
    <property name="text">
     <string>Auto Annotation</string>
    </property>
   </action>
-  <action name="actionPolygon">
+  <action name="action_Polygon">
    <property name="text">
     <string>Polygon</string>
    </property>
   </action>
-  <action name="actionGesture_Polygon">
+  <action name="action_Gesture_Polygon">
    <property name="text">
     <string>Gesture Polygon</string>
    </property>
   </action>
-  <action name="actionRectangle">
+  <action name="action_Rectangle">
    <property name="text">
     <string>Rectangle</string>
    </property>
   </action>
-  <action name="actionCircle">
+  <action name="action_Circle">
    <property name="text">
     <string>Circle</string>
    </property>
   </action>
-  <action name="actionLine">
+  <action name="action_Line">
    <property name="text">
     <string>Line</string>
    </property>
   </action>
-  <action name="actionDot">
+  <action name="action_Dot">
    <property name="text">
     <string>Dot</string>
    </property>
   </action>
-  <action name="actionZoom_In">
+  <action name="action_Zoom_In">
    <property name="text">
     <string>Zoom In</string>
    </property>
+   <property name="shortcut">
+    <string>+</string>
+   </property>
   </action>
-  <action name="actionZoom_Out">
+  <action name="action_Zoom_Out">
    <property name="text">
     <string>Zoom Out</string>
    </property>
+   <property name="shortcut">
+    <string>-</string>
+   </property>
   </action>
-  <action name="actionFit">
+  <action name="action_Fit">
    <property name="text">
     <string>Fit</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="action_Exit">
    <property name="text">
     <string>Exit</string>
    </property>
