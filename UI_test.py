@@ -1,7 +1,7 @@
 import sys
+from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5 import uic
 
 dir = 'UI/Main GUI.ui'
 form_class = uic.loadUiType(dir)[0]
@@ -34,7 +34,10 @@ class MyWindow(QMainWindow, form_class):
 
     # ==== file Menu Area ====
     def open_image(self):
-        print("test")
+        extension_filter = '*.jpg, *.jpeg, *.png'
+        img_dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_filter)
+        self.qPixmap_Canvas = QPixmap(img_dir[0])
+        self.label_Canvas.setPixmap(self.qPixmap_Canvas)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
