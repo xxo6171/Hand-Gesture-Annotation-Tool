@@ -42,9 +42,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>9</y>
       <width>1300</width>
-      <height>750</height>
+      <height>841</height>
      </rect>
     </property>
     <property name="title">
@@ -56,7 +56,7 @@
        <x>10</x>
        <y>20</y>
        <width>1280</width>
-       <height>720</height>
+       <height>810</height>
       </rect>
      </property>
      <property name="cursor">
@@ -74,9 +74,9 @@
     <property name="geometry">
      <rect>
       <x>1320</x>
-      <y>100</y>
+      <y>10</y>
       <width>271</width>
-      <height>370</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="title">
@@ -88,7 +88,7 @@
        <x>10</x>
        <y>20</y>
        <width>256</width>
-       <height>341</height>
+       <height>381</height>
       </rect>
      </property>
      <column>
@@ -107,9 +107,9 @@
     <property name="geometry">
      <rect>
       <x>1320</x>
-      <y>480</y>
+      <y>439</y>
       <width>271</width>
-      <height>370</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="title">
@@ -121,7 +121,7 @@
        <x>10</x>
        <y>20</y>
        <width>256</width>
-       <height>341</height>
+       <height>381</height>
       </rect>
      </property>
      <column>
