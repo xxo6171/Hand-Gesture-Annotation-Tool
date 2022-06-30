@@ -22,12 +22,19 @@ class MyWindow(QMainWindow, form_class):
         self.qPixmap_Canvas = QPixmap(self.test_pic_dir)
         self.label_Canvas.setPixmap(self.qPixmap_Canvas)
 
+        # ==== File Menu Area ====
+        self.action_Open.triggered.connect(self.open_image)
+
     """
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
                시그널과 연결된 작동 함수 부분을 멤버함수 형태로 작성한다.
     ----------------------------------------------------------------------------
     """
+
+    # ==== file Menu Area ====
+    def open_image(self):
+        print("test")
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
