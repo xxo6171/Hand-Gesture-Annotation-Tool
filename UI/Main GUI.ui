@@ -120,22 +120,114 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuCreate">
+     <property name="title">
+      <string>Create</string>
+     </property>
+     <addaction name="actionPolygon"/>
+     <addaction name="actionGesture_Polygon"/>
+     <addaction name="actionRectangle"/>
+     <addaction name="actionCircle"/>
+     <addaction name="actionLine"/>
+     <addaction name="actionDot"/>
+    </widget>
+    <addaction name="menuCreate"/>
+    <addaction name="actionPoint_Move"/>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="actionAouto_Annotation"/>
    </widget>
    <widget class="QMenu" name="menuZoom">
     <property name="title">
      <string>Zoom</string>
     </property>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
+    <addaction name="separator"/>
+    <addaction name="actionFit"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuZoom"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionPoint_Move">
+   <property name="text">
+    <string>Retouch</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionAouto_Annotation">
+   <property name="text">
+    <string>Auto Annotation</string>
+   </property>
+  </action>
+  <action name="actionPolygon">
+   <property name="text">
+    <string>Polygon</string>
+   </property>
+  </action>
+  <action name="actionGesture_Polygon">
+   <property name="text">
+    <string>Gesture Polygon</string>
+   </property>
+  </action>
+  <action name="actionRectangle">
+   <property name="text">
+    <string>Rectangle</string>
+   </property>
+  </action>
+  <action name="actionCircle">
+   <property name="text">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="actionLine">
+   <property name="text">
+    <string>Line</string>
+   </property>
+  </action>
+  <action name="actionDot">
+   <property name="text">
+    <string>Dot</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+  </action>
+  <action name="actionFit">
+   <property name="text">
+    <string>Fit</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
