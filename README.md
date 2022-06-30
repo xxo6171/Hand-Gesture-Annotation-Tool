@@ -11,5 +11,3 @@ Hand Gesture Annotation Tool with P&amp;C Solution Internship
 * 프레임워크 종류
 
 ## Usage
-* 사용법
-* develop test
