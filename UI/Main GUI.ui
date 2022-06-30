@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1600</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1600</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1600</width>
+    <height>900</height>
+   </size>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Hand Annot</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="groupBox_Canvas">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>100</y>
+      <width>1300</width>
+      <height>750</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Canvas</string>
+    </property>
+    <widget class="QLabel" name="label_Canvas">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>1280</width>
+       <height>720</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>Display Canvas</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_LabelList">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>100</y>
+      <width>271</width>
+      <height>370</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Label List</string>
+    </property>
+    <widget class="QTableWidget" name="tableWidget_LabelList">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>256</width>
+       <height>341</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>Label Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>#</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_PolygonList">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>480</y>
+      <width>271</width>
+      <height>370</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Polygon List</string>
+    </property>
+    <widget class="QTableWidget" name="tableWidget__PolygonLIst">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>256</width>
+       <height>341</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>Label Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>#</string>
+      </property>
+     </column>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1600</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="action_Open"/>
+    <addaction name="action_Save"/>
+    <addaction name="separator"/>
+    <addaction name="action_Exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <widget class="QMenu" name="menu_Create">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="tearOffEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Create</string>
+     </property>
+     <property name="separatorsCollapsible">
+      <bool>false</bool>
+     </property>
+     <property name="toolTipsVisible">
+      <bool>false</bool>
+     </property>
+     <addaction name="action_Polygon"/>
+     <addaction name="action_Gesture_Polygon"/>
+     <addaction name="action_Rectangle"/>
+     <addaction name="action_Circle"/>
+     <addaction name="action_Line"/>
+     <addaction name="action_Dot"/>
+    </widget>
+    <addaction name="menu_Create"/>
+    <addaction name="action_Retouch"/>
+    <addaction name="action_Delete"/>
+    <addaction name="separator"/>
+    <addaction name="action_Auto_Annotation"/>
+   </widget>
+   <widget class="QMenu" name="menu_Zoom">
+    <property name="title">
+     <string>Zoom</string>
+    </property>
+    <addaction name="action_Zoom_In"/>
+    <addaction name="action_Zoom_Out"/>
+    <addaction name="separator"/>
+    <addaction name="action_Fit"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Zoom"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="cursor">
+    <cursorShape>ForbiddenCursor</cursorShape>
+   </property>
+  </widget>
+  <action name="action_Open">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="action_Retouch">
+   <property name="text">
+    <string>Retouch</string>
+   </property>
+  </action>
+  <action name="action_Delete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="action_Auto_Annotation">
+   <property name="text">
+    <string>Auto Annotation</string>
+   </property>
+  </action>
+  <action name="action_Polygon">
+   <property name="text">
+    <string>Polygon</string>
+   </property>
+  </action>
+  <action name="action_Gesture_Polygon">
+   <property name="text">
+    <string>Gesture Polygon</string>
+   </property>
+  </action>
+  <action name="action_Rectangle">
+   <property name="text">
+    <string>Rectangle</string>
+   </property>
+  </action>
+  <action name="action_Circle">
+   <property name="text">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="action_Line">
+   <property name="text">
+    <string>Line</string>
+   </property>
+  </action>
+  <action name="action_Dot">
+   <property name="text">
+    <string>Dot</string>
+   </property>
+  </action>
+  <action name="action_Zoom_In">
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+   <property name="shortcut">
+    <string>+</string>
+   </property>
+  </action>
+  <action name="action_Zoom_Out">
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+   <property name="shortcut">
+    <string>-</string>
+   </property>
+  </action>
+  <action name="action_Fit">
+   <property name="text">
+    <string>Fit</string>
+   </property>
+  </action>
+  <action name="action_Exit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
