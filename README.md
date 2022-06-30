@@ -12,3 +12,4 @@ Hand Gesture Annotation Tool with P&amp;C Solution Internship
 
 ## Usage
 * 사용법
+* 테스트
