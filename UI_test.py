@@ -24,6 +24,10 @@ class MyWindow(QMainWindow, form_class):
 
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
+        
+        # ==== TEST Menu Area ====
+        self.action_Add_Label.triggered.connect(self.addLabel)
+        self.action_Delete_Label.triggered.connect(self.deleteLabel)
 
     """
     ----------------------------------------------------------------------------
@@ -32,7 +36,7 @@ class MyWindow(QMainWindow, form_class):
     ----------------------------------------------------------------------------
     """
 
-    # ==== file Menu Area ====
+    # ==== File Menu Area ====
     def openImage(self):
         extension_Filter = '*.jpg, *.jpeg, *.png'
         img_Dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_Filter)
@@ -46,6 +50,13 @@ class MyWindow(QMainWindow, form_class):
             self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToWidth(1280)
         self.label_Canvas.setPixmap(self.qPixmap_Canvas_Scaled)
 
+    # ==== TEST Menu Area ====
+    def addLabel(self):
+        print("Add Label")
+
+    def deleteLabel(self):
+        print("Delete Label")
+        
 if __name__=='__main__':
     app = QApplication(sys.argv)
     mywindow = MyWindow()
