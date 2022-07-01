@@ -43,6 +43,7 @@ class AddLabelDialog(QDialog, add_label__form_class):
             label_List_New_Item = QListWidgetItem(label_Name)
             self.listWidget_LabelList.addItem(label_Name)
             GLOBAL_label_List.append(label_Name)
+        self.lineEdit_NewLabel.clear()
 
     def close_Dialog(self):
         self.close()
