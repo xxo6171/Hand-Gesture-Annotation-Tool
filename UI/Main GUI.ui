@@ -200,9 +200,17 @@
     <addaction name="separator"/>
     <addaction name="action_Fit"/>
    </widget>
+   <widget class="QMenu" name="menu_TEST">
+    <property name="title">
+     <string>TEST</string>
+    </property>
+    <addaction name="action_Add_Label"/>
+    <addaction name="action_Delete_Label"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Zoom"/>
+   <addaction name="menu_TEST"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="cursor">
@@ -297,6 +305,16 @@
   <action name="action_Exit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="action_Add_Label">
+   <property name="text">
+    <string>Add Label</string>
+   </property>
+  </action>
+  <action name="action_Delete_Label">
+   <property name="text">
+    <string>Delete Label</string>
    </property>
   </action>
  </widget>
