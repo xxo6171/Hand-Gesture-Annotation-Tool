@@ -189,6 +189,8 @@
     </property>
     <addaction name="action_Add_Label"/>
     <addaction name="action_Delete_Label"/>
+    <addaction name="separator"/>
+    <addaction name="action_Image_from_IP_Camera"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
@@ -298,6 +300,11 @@
   <action name="action_Delete_Label">
    <property name="text">
     <string>Delete Label</string>
+   </property>
+  </action>
+  <action name="action_Image_from_IP_Camera">
+   <property name="text">
+    <string>Image from IP Camera</string>
    </property>
   </action>
  </widget>
