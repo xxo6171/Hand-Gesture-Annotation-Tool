@@ -3,6 +3,9 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
+# ====== Global Variable =====
+GLOBAL_label_List = []
+
 # ======= Dialog =======
 add_label_UI_dir = 'UI/Add Lable Dialog.ui'
 add_label__form_class = uic.loadUiType(add_label_UI_dir)[0]
@@ -11,13 +14,19 @@ class AddLabelDialog(QDialog, add_label__form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
+        
+        for label in GLOBAL_label_List:
+            new_Item = QListWidgetItem(label)
+            self.listWidget_LabelList.addItem(new_Item)
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
         시그널이 작동할 때 실행될 기능은 보통 이 클래스의 멤버함수( 슬롯 )로 작성한다.
         ----------------------------------------------------------------------------
         '''
+        # ==== Button Area ====
+        self.pushButton_OK.clicked.connect(self.set_Label)
+        self.pushButton_Cancel.clicked.connect(self.close_Dialog)
 
     '''
     ----------------------------------------------------------------------------
@@ -26,16 +35,33 @@ class AddLabelDialog(QDialog, add_label__form_class):
     ----------------------------------------------------------------------------
     '''
 
+    # ==== Button Area ====
+    def set_Label(self):
+        label_Name = self.lineEdit_NewLabel.text()
+        
+        if label_Name not in GLOBAL_label_List:
+            label_List_New_Item = QListWidgetItem(label_Name)
+            self.listWidget_LabelList.addItem(label_Name)
+            GLOBAL_label_List.append(label_Name)
+
+    def close_Dialog(self):
+        self.close()
+
+
+
+
+
+
+
 # ======= Main Window =======
 mainUI_dir = 'UI/Main GUI.ui'
 main_form_class = uic.loadUiType(mainUI_dir)[0]
 
-class MyWindow(QMainWindow, main_form_class):
+class HandAnnot(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.label_List = []
-
+        
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
@@ -78,19 +104,18 @@ class MyWindow(QMainWindow, main_form_class):
     def openDialog_addLabel(self):
         dlg = AddLabelDialog()
         dlg.exec_()
-        # label_Name = '나는 테스트야!'
-        
-        # if label_Name not in self.label_List:
-        #     label_List_New_Item = QListWidgetItem(label_Name)
-        #     self.listWidget_LabelList.addItem(label_Name)
-        #     self.label_List.append(label_Name)
+
+        self.listWidget_LabelList.clear()
+        for label in GLOBAL_label_List:
+            new_Item = QListWidgetItem(label)
+            self.listWidget_LabelList.addItem(new_Item)
 
     def deleteLabel(self):
         print("Delete Label")
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
-    mywindow = MyWindow()
-    mywindow.show()
+    handannot = HandAnnot()
+    handannot.show()
     app.exec_()
 
