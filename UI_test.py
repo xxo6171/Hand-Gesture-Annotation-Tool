@@ -10,6 +10,7 @@ class MyWindow(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.label_List = []
 
         '''
         ----------------------------------------------------------------------------
@@ -29,13 +30,12 @@ class MyWindow(QMainWindow, form_class):
         self.action_Add_Label.triggered.connect(self.addLabel)
         self.action_Delete_Label.triggered.connect(self.deleteLabel)
 
-    """
+    '''
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
                시그널과 연결된 작동 함수 부분을 멤버함수 형태로 작성한다.
     ----------------------------------------------------------------------------
-    """
-
+    '''
     # ==== File Menu Area ====
     def openImage(self):
         extension_Filter = '*.jpg, *.jpeg, *.png'
@@ -52,11 +52,15 @@ class MyWindow(QMainWindow, form_class):
 
     # ==== TEST Menu Area ====
     def addLabel(self):
-        print("Add Label")
+        label_Name = '나는 테스트야!'
+        if label_Name not in self.label_List:
+            label_List_New_Item = QListWidgetItem(label_Name)
+            self.listWidget_LabelList.addItem(label_Name)
+            self.label_List.append(label_Name)
 
     def deleteLabel(self):
         print("Delete Label")
-        
+
 if __name__=='__main__':
     app = QApplication(sys.argv)
     mywindow = MyWindow()
