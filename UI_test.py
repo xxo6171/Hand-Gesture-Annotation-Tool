@@ -3,10 +3,34 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
-dir = 'UI/Main GUI.ui'
-form_class = uic.loadUiType(dir)[0]
+# ======= Dialog =======
+add_label_UI_dir = 'UI/Add Lable Dialog.ui'
+add_label__form_class = uic.loadUiType(add_label_UI_dir)[0]
 
-class MyWindow(QMainWindow, form_class):
+class AddLabelDialog(QDialog, add_label__form_class):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+        '''
+        ----------------------------------------------------------------------------
+                            이 부분에 시그널을 입력한다.
+        시그널이 작동할 때 실행될 기능은 보통 이 클래스의 멤버함수( 슬롯 )로 작성한다.
+        ----------------------------------------------------------------------------
+        '''
+
+    '''
+    ----------------------------------------------------------------------------
+                            이 부분에 슬롯을 입력한다.
+               시그널과 연결된 작동 함수 부분을 멤버함수 형태로 작성한다.
+    ----------------------------------------------------------------------------
+    '''
+
+# ======= Main Window =======
+mainUI_dir = 'UI/Main GUI.ui'
+main_form_class = uic.loadUiType(mainUI_dir)[0]
+
+class MyWindow(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -27,7 +51,7 @@ class MyWindow(QMainWindow, form_class):
         self.action_Open.triggered.connect(self.openImage)
         
         # ==== TEST Menu Area ====
-        self.action_Add_Label.triggered.connect(self.addLabel)
+        self.action_Add_Label.triggered.connect(self.openDialog_addLabel)
         self.action_Delete_Label.triggered.connect(self.deleteLabel)
 
     '''
@@ -51,12 +75,15 @@ class MyWindow(QMainWindow, form_class):
         self.label_Canvas.setPixmap(self.qPixmap_Canvas_Scaled)
 
     # ==== TEST Menu Area ====
-    def addLabel(self):
-        label_Name = '나는 테스트야!'
-        if label_Name not in self.label_List:
-            label_List_New_Item = QListWidgetItem(label_Name)
-            self.listWidget_LabelList.addItem(label_Name)
-            self.label_List.append(label_Name)
+    def openDialog_addLabel(self):
+        dlg = AddLabelDialog()
+        dlg.exec_()
+        # label_Name = '나는 테스트야!'
+        
+        # if label_Name not in self.label_List:
+        #     label_List_New_Item = QListWidgetItem(label_Name)
+        #     self.listWidget_LabelList.addItem(label_Name)
+        #     self.label_List.append(label_Name)
 
     def deleteLabel(self):
         print("Delete Label")
@@ -66,3 +93,4 @@ if __name__=='__main__':
     mywindow = MyWindow()
     mywindow.show()
     app.exec_()
+
