@@ -1,4 +1,7 @@
 import sys
+import cv2
+import numpy as np
+import imutils
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -69,9 +72,6 @@ class HandAnnot(QMainWindow, main_form_class):
         ----------------------------------------------------------------------------
         '''
         # ==== Canvas Area ====
-        self.test_pic_dir = 'Resource\Image\kitty.jpg'
-        self.qPixmap_Canvas = QPixmap(self.test_pic_dir)
-        self.label_Canvas.setPixmap(self.qPixmap_Canvas)
 
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
@@ -87,18 +87,32 @@ class HandAnnot(QMainWindow, main_form_class):
     ----------------------------------------------------------------------------
     '''
     # ==== File Menu Area ====
-    def openImage(self):
-        extension_Filter = '*.jpg, *.jpeg, *.png'
-        img_Dir = QFileDialog.getOpenFileName(self, 'Open File', filter=extension_Filter)
-        self.qPixmap_Canvas = QPixmap(img_Dir[0])
 
-        width = self.qPixmap_Canvas.width()
-        height = self.qPixmap_Canvas.height()
-        if(height>width):
-            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToHeight(810)
-        else:
-            self.qPixmap_Canvas_Scaled = self.qPixmap_Canvas.scaledToWidth(1280)
-        self.label_Canvas.setPixmap(self.qPixmap_Canvas_Scaled)
+    # Open / Load Image
+    def openImage(self):
+        self.file_name, self.extension_filter = QFileDialog.getOpenFileName(self, 'Open File',
+                                                                           filter='Images(*.jpg *.jpeg *.png)')
+        if self.file_name != '' :
+            try :
+                self.loadImage(self.file_name)
+            except Exception as exc:
+                self.app.outputException(exc, 'An error occurred while loading the file : ')
+                #Display error message box
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Error")  # 메세지창의 상단 제목
+                msgBox.setIcon(QMessageBox.Critical)  # 메세지창 내부에 표시될 아이콘
+                msgBox.setText("Error")  # 메세지 제목
+                msgBox.setInformativeText("An error occurred while loading the file :")  # 메세지 내용
+                msgBox.setStandardButtons(QMessageBox.Close)  # 메세지창의 버튼
+                msgBox.setDefaultButton(QMessageBox.Close)  # 포커스가 지정된 기본 버튼
+
+    def loadImage(self, filename):
+        self.img = cv2.imread(filename)
+        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+        h, w, c = self.img.shape #height, width, channel
+        qImg = QImage(self.img.data, w, h, w*c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
