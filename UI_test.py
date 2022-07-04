@@ -165,13 +165,17 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
 # ======= Main Window =======
 mainUI_dir = 'UI/Main GUI.ui'
 main_form_class = uic.loadUiType(mainUI_dir)[0]
-
+GLOBAL_menubar_Flag = False
 class HandAnnot(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
         global GLOBAL_label_List
+
+        # Initial menu settings, Disable before loading image
+        global GLOBAL_menubar_Flag
+        self.menuRefresh(GLOBAL_menubar_Flag)
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
@@ -180,11 +184,14 @@ class HandAnnot(QMainWindow, main_form_class):
         '''
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
-        
+
+        # ==== Edit Menu Area ====
+
+        #==== Zoom Menu Area ====
+
         # ==== TEST Menu Area ====
         self.action_Add_Label.triggered.connect(self.openDialog_addLabel)
         self.action_Delete_Label.triggered.connect(self.deleteLabel)
-
         self.action_Image_from_IP_Camera.triggered.connect(self.openDialog_imgFromCamera)
 
     '''
@@ -193,12 +200,19 @@ class HandAnnot(QMainWindow, main_form_class):
                시그널과 연결된 작동 함수 부분을 멤버함수 형태로 작성한다.
     ----------------------------------------------------------------------------
     '''
+
+    # ==== Component Area ====
+    # refresh menu
+    def menuRefresh(self, flag):
+        if flag : self.menu_Edit.setEnabled(True) ; self.menu_Zoom.setEnabled(True); self.action_Save.setEnabled(True);
+        else : self.menu_Edit.setEnabled(False); self.menu_Zoom.setEnabled(False); self.action_Save.setEnabled(False);
+
+    # ==== File Menu Area ====
     # Open / Load Image
     def openImage(self):
         self.file_name, self.extension_filter = QFileDialog.getOpenFileName(self, 'Open File',
                                                                            filter='Images(*.jpg *.jpeg *.png)')
-        if self.file_name != '' :
-            self.loadImage(self.file_name)
+        if self.file_name != '' : self.loadImage(self.file_name)
 
     def loadImage(self, filename):
         global img
@@ -208,7 +222,11 @@ class HandAnnot(QMainWindow, main_form_class):
         h, w, c = img.shape #height, width, channel
         qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
-        self.label_Canvas.setPixmap(self.qPixmap) 
+        self.label_Canvas.setPixmap(self.qPixmap)
+        GLOBAL_menubar_Flag = True
+        
+        #refresh menu
+        self.menuRefresh(GLOBAL_menubar_Flag)
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
