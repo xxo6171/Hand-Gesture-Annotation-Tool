@@ -64,12 +64,12 @@ class IPCameThread(QThread):
     power = False
     change_pixmap = pyqtSignal(QImage)
 
-
-
     def run(self):
         self.power = True
         cap = cv2.VideoCapture(GLOBAL_nb_cam)
 
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         mp_drawing = mp.solutions.drawing_utils
         mp_hands = mp.solutions.hands
 
@@ -106,10 +106,10 @@ class IPCameThread(QThread):
                     scaled_image = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
                     self.change_pixmap.emit(scaled_image)
 
+
+
 image_from_camera_UI_dir = 'UI/Image From Camera.ui'
 image_from_camera_form_class = uic.loadUiType(image_from_camera_UI_dir)[0]
-
-
 
 class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
     def __init__(self):
@@ -144,14 +144,14 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.th.power = False
         self.th.quit()
         
-        capture = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        global img
 
-        ret, frame = capture.read()
+        ret, frame = cap.read()
         if ret:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, c = frame.shape
-            qImg = QImage(frame.data, w, h, w*c, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qImg)
+            img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
         self.close()
 
@@ -172,7 +172,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.setupUi(self)
 
         global GLOBAL_label_List
-
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
@@ -202,12 +201,14 @@ class HandAnnot(QMainWindow, main_form_class):
             self.loadImage(self.file_name)
 
     def loadImage(self, filename):
-        self.img = cv2.imread(filename)
-        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
-        h, w, c = self.img.shape #height, width, channel
-        qImg = QImage(self.img.data, w, h, w*c, QImage.Format_RGB888)
+        global img
+
+        img = cv2.imread(filename)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
-        self.label_Canvas.setPixmap(self.qPixmap)
+        self.label_Canvas.setPixmap(self.qPixmap) 
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
@@ -225,6 +226,13 @@ class HandAnnot(QMainWindow, main_form_class):
     def openDialog_imgFromCamera(self):
         dlg = ImageFromCameraDialog()
         dlg.exec_()
+
+        global img
+
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
 
 
 
