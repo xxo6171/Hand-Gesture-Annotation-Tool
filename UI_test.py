@@ -83,7 +83,7 @@ class IPCameThread(QThread):
                 if ret:
                     rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-                    # hand recognition
+                    # hand recognization
                     results = hands.process(rgbImage)
 
                     if results.multi_hand_landmarks:
