@@ -170,18 +170,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.file_name, self.extension_filter = QFileDialog.getOpenFileName(self, 'Open File',
                                                                            filter='Images(*.jpg *.jpeg *.png)')
         if self.file_name != '' :
-            try :
-                self.loadImage(self.file_name)
-            except Exception as exc:
-                self.app.outputException(exc, 'An error occurred while loading the file : ')
-                #Display error message box
-                msgBox = QMessageBox()
-                msgBox.setWindowTitle("Error")  # 메세지창의 상단 제목
-                msgBox.setIcon(QMessageBox.Critical)  # 메세지창 내부에 표시될 아이콘
-                msgBox.setText("Error")  # 메세지 제목
-                msgBox.setInformativeText("An error occurred while loading the file :")  # 메세지 내용
-                msgBox.setStandardButtons(QMessageBox.Close)  # 메세지창의 버튼
-                msgBox.setDefaultButton(QMessageBox.Close)  # 포커스가 지정된 기본 버튼
+            self.loadImage(self.file_name)
 
     def loadImage(self, filename):
         self.img = cv2.imread(filename)
