@@ -1,3 +1,4 @@
+from pickle import GLOBAL
 import sys
 import cv2
 from PyQt5 import uic
@@ -15,7 +16,8 @@ class AddLabelDialog(QDialog, add_label__form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        
+        global GLOBAL_label_List
+
         for label in GLOBAL_label_List:
             new_Item = QListWidgetItem(label)
             self.listWidget_LabelList.addItem(new_Item)
@@ -100,6 +102,8 @@ class HandAnnot(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        global GLOBAL_label_List
         
         '''
         ----------------------------------------------------------------------------
