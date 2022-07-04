@@ -1,6 +1,7 @@
 from pickle import GLOBAL
 import sys
 import cv2
+import mediapipe as mp
 import numpy as np
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
@@ -9,7 +10,7 @@ from PyQt5.QtGui import *
 
 # ====== Global Variable =====
 GLOBAL_label_List = []
-GLOBAL_nb_cam = 1
+GLOBAL_nb_cam = 0
 
 
 
@@ -63,19 +64,47 @@ class IPCameThread(QThread):
     power = False
     change_pixmap = pyqtSignal(QImage)
 
+
+
     def run(self):
         self.power = True
         cap = cv2.VideoCapture(GLOBAL_nb_cam)
 
-        while self.power:
-            ret, frame = cap.read()
-            if ret:
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                scaled_image = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.change_pixmap.emit(scaled_image)
+        mp_drawing = mp.solutions.drawing_utils
+        mp_hands = mp.solutions.hands
+
+        with mp_hands.Hands(
+            max_num_hands=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5) as hands:
+
+            while self.power:
+                ret, frame = cap.read()
+                if ret:
+                    rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                    # hand recognition
+                    results = hands.process(rgbImage)
+
+                    if results.multi_hand_landmarks:
+                        for hand_landmarks in results.multi_hand_landmarks:
+                            finger1 = int(hand_landmarks.landmark[4].x * 100 )
+                            finger2 = int(hand_landmarks.landmark[8].x * 100 )
+                            dist = abs(finger1 - finger2)
+                            cv2.putText(
+                                rgbImage, text='f1=%d f2=%d dist=%d ' % (finger1,finger2,dist), org=(10, 30),
+                                fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+                                color=255, thickness=3)
+            
+                            mp_drawing.draw_landmarks(
+                                rgbImage, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                    # -hand recognition
+
+                    h, w, ch = rgbImage.shape
+                    bytesPerLine = ch * w
+                    convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                    scaled_image = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                    self.change_pixmap.emit(scaled_image)
 
 image_from_camera_UI_dir = 'UI/Image From Camera.ui'
 image_from_camera_form_class = uic.loadUiType(image_from_camera_UI_dir)[0]
