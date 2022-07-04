@@ -1,6 +1,7 @@
 from pickle import GLOBAL
 import sys
 import cv2
+import mediapipe as mp
 import numpy as np
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
@@ -9,7 +10,7 @@ from PyQt5.QtGui import *
 
 # ====== Global Variable =====
 GLOBAL_label_List = []
-GLOBAL_nb_cam = 1
+GLOBAL_nb_cam = 0
 
 
 
@@ -67,20 +68,48 @@ class IPCameThread(QThread):
         self.power = True
         cap = cv2.VideoCapture(GLOBAL_nb_cam)
 
-        while self.power:
-            ret, frame = cap.read()
-            if ret:
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                scaled_image = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
-                self.change_pixmap.emit(scaled_image)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        mp_drawing = mp.solutions.drawing_utils
+        mp_hands = mp.solutions.hands
+
+        with mp_hands.Hands(
+            max_num_hands=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5) as hands:
+
+            while self.power:
+                ret, frame = cap.read()
+                if ret:
+                    rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+                    # hand recognization
+                    results = hands.process(rgbImage)
+
+                    if results.multi_hand_landmarks:
+                        for hand_landmarks in results.multi_hand_landmarks:
+                            finger1 = int(hand_landmarks.landmark[4].x * 100 )
+                            finger2 = int(hand_landmarks.landmark[8].x * 100 )
+                            dist = abs(finger1 - finger2)
+                            cv2.putText(
+                                rgbImage, text='f1=%d f2=%d dist=%d ' % (finger1,finger2,dist), org=(10, 30),
+                                fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1,
+                                color=255, thickness=3)
+            
+                            mp_drawing.draw_landmarks(
+                                rgbImage, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+                    # -hand recognition
+
+                    h, w, ch = rgbImage.shape
+                    bytesPerLine = ch * w
+                    convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+                    scaled_image = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
+                    self.change_pixmap.emit(scaled_image)
+
+
 
 image_from_camera_UI_dir = 'UI/Image From Camera.ui'
 image_from_camera_form_class = uic.loadUiType(image_from_camera_UI_dir)[0]
-
-
 
 class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
     def __init__(self):
@@ -115,14 +144,14 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.th.power = False
         self.th.quit()
         
-        capture = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        global img
 
-        ret, frame = capture.read()
+        ret, frame = cap.read()
         if ret:
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, c = frame.shape
-            qImg = QImage(frame.data, w, h, w*c, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qImg)
+            img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
         self.close()
 
@@ -186,16 +215,18 @@ class HandAnnot(QMainWindow, main_form_class):
         if self.file_name != '' : self.loadImage(self.file_name)
 
     def loadImage(self, filename):
-        self.img = cv2.imread(filename)
-        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
-        h, w, c = self.img.shape #height, width, channel
-        qImg = QImage(self.img.data, w, h, w*c, QImage.Format_RGB888)
+        global img
+
+        img = cv2.imread(filename)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
         self.label_Canvas.setPixmap(self.qPixmap)
         GLOBAL_menubar_Flag = True
+        
         #refresh menu
         self.menuRefresh(GLOBAL_menubar_Flag)
-
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
@@ -213,6 +244,13 @@ class HandAnnot(QMainWindow, main_form_class):
     def openDialog_imgFromCamera(self):
         dlg = ImageFromCameraDialog()
         dlg.exec_()
+
+        global img
+
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
 
 
 
