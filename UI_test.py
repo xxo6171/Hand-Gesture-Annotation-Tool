@@ -169,7 +169,14 @@ class HandAnnot(QMainWindow, main_form_class):
         super().__init__()
         self.setupUi(self)
 
+
         global GLOBAL_label_List
+        self.draw_flag = 0
+        self.draw_type = 'No Draw'
+
+        global img
+        img = cv2.imread('')
+        # Initial menu settings, Disable before loading image
 
         '''
         ----------------------------------------------------------------------------
@@ -187,6 +194,14 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Open.triggered.connect(self.openImage)
 
         # ==== Edit Menu Area ====
+        self.action_Polygon.triggered.connect(self.drawPolygon)
+        self.action_Gesture_Polygon.triggered.connect(self.drawGesturePolygon)
+        self.action_Rectangle.triggered.connect(self.drawRectangle)
+        self.action_Circle.triggered.connect(self.drawCircle)
+        self.action_Line.triggered.connect(self.drawLine)
+        self.action_Dot.triggered.connect(self.drawDot)
+
+
 
         #==== Zoom Menu Area ====
         self.f = 1 #ratio
@@ -278,6 +293,59 @@ class HandAnnot(QMainWindow, main_form_class):
             elif (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
         self.update()
 
+    # ==== Edit Menu Area ====
+    def mouseMoveEvent(self, event):
+        #self.draw(event.x(), event.y())
+        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=event.x(), y_pos=event.y(), d_type=self.draw_type, mt=self.scrollArea_Canvas.hasMouseTracking())
+        self.statusBar.showMessage(text)
+
+    def mouseReleaseEvent(self, event):
+        if self.scrollArea_Canvas.hasMouseTracking():
+            self.scrollArea_Canvas.setMouseTracking(False)
+        else:
+            self.scrollArea_Canvas.setMouseTracking(True)
+        
+    def draw(self, x_pos, y_pos):
+        if self.draw_flag == 0:
+            self.draw_type = 'No Draw'
+        elif self.draw_flag == 1:
+            pass
+        elif self.draw_flag == 2:
+            pass
+        elif self.draw_flag == 3:
+            pass
+        elif self.draw_flag == 4:
+            pass
+        elif self.draw_flag == 5:
+            pass
+        elif self.draw_flag == 6:
+            pass
+
+    def drawPolygon(self):
+        self.draw_flag = 1
+        self.draw_type = 'Polygon'
+
+    def drawGesturePolygon(self):
+        self.draw_flag = 2
+        self.draw_type = 'Gesture Polygon'
+
+    def drawRectangle(self):
+        self.draw_flag = 3
+        self.draw_type = 'Rectangle'
+
+    def drawCircle(self):
+        self.draw_flag = 4
+        self.draw_type = 'Circle'
+
+    def drawLine(self):
+        self.draw_flag = 5
+        self.draw_type = 'Line'
+
+    def drawDot(self):
+        self.draw_flag = 6
+        self.draw_type = 'Dot'
+
+
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
         dlg = AddLabelDialog()
@@ -297,10 +365,14 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global img
 
-        h, w, c = img.shape #height, width, channel
-        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
-        self.qPixmap = QPixmap.fromImage(qImg)
-        self.label_Canvas.setPixmap(self.qPixmap)
+        if img is not None:
+            h, w, c = img.shape #height, width, channel
+            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+            self.qPixmap = QPixmap.fromImage(qImg)
+            self.label_Canvas.setPixmap(self.qPixmap)
+
+            GLOBAL_menubar_Flag = True
+            self.menuRefresh(GLOBAL_menubar_Flag)
 
 
 
