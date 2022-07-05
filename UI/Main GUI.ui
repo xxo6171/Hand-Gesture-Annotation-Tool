@@ -28,6 +28,9 @@
     <height>900</height>
    </size>
   </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
@@ -60,7 +63,7 @@
       </rect>
      </property>
      <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
@@ -68,6 +71,29 @@
      <property name="text">
       <string>Display Canvas</string>
      </property>
+    </widget>
+    <widget class="QScrollArea" name="scrollArea_Canvas">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>1280</width>
+       <height>810</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1278</width>
+        <height>808</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_LabelList">
@@ -82,7 +108,7 @@
     <property name="title">
      <string>Label List</string>
     </property>
-    <widget class="QTableWidget" name="tableWidget_LabelList">
+    <widget class="QListWidget" name="listWidget_LabelList">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -91,16 +117,6 @@
        <height>381</height>
       </rect>
      </property>
-     <column>
-      <property name="text">
-       <string>Label Name</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>#</string>
-      </property>
-     </column>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_PolygonList">
@@ -115,7 +131,7 @@
     <property name="title">
      <string>Polygon List</string>
     </property>
-    <widget class="QTableWidget" name="tableWidget__PolygonLIst">
+    <widget class="QListWidget" name="listWidget_PolygonList">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -124,16 +140,6 @@
        <height>381</height>
       </rect>
      </property>
-     <column>
-      <property name="text">
-       <string>Label Name</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>#</string>
-      </property>
-     </column>
     </widget>
    </widget>
   </widget>
@@ -200,9 +206,19 @@
     <addaction name="separator"/>
     <addaction name="action_Fit"/>
    </widget>
+   <widget class="QMenu" name="menu_TEST">
+    <property name="title">
+     <string>TEST</string>
+    </property>
+    <addaction name="action_Add_Label"/>
+    <addaction name="action_Delete_Label"/>
+    <addaction name="separator"/>
+    <addaction name="action_Image_from_IP_Camera"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Zoom"/>
+   <addaction name="menu_TEST"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="cursor">
@@ -297,6 +313,21 @@
   <action name="action_Exit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="action_Add_Label">
+   <property name="text">
+    <string>Add Label</string>
+   </property>
+  </action>
+  <action name="action_Delete_Label">
+   <property name="text">
+    <string>Delete Label</string>
+   </property>
+  </action>
+  <action name="action_Image_from_IP_Camera">
+   <property name="text">
+    <string>Image from IP Camera</string>
    </property>
   </action>
  </widget>
