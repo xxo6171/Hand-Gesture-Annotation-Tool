@@ -175,6 +175,9 @@ class HandAnnot(QMainWindow, main_form_class):
         global GLOBAL_label_List
         self.draw_flag = 0
         self.draw_type = 'No Draw'
+
+        global img
+        img = cv2.imread('')
         # Initial menu settings, Disable before loading image
         global GLOBAL_menubar_Flag
         self.menuRefresh(GLOBAL_menubar_Flag)
@@ -314,12 +317,14 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global img
 
-        h, w, c = img.shape #height, width, channel
-        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
-        self.qPixmap = QPixmap.fromImage(qImg)
-        self.label_Canvas.setPixmap(self.qPixmap)
-        GLOBAL_menubar_Flag = True
-        self.menuRefresh(GLOBAL_menubar_Flag)
+        if img is not None:
+            h, w, c = img.shape #height, width, channel
+            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+            self.qPixmap = QPixmap.fromImage(qImg)
+            self.label_Canvas.setPixmap(self.qPixmap)
+
+            GLOBAL_menubar_Flag = True
+            self.menuRefresh(GLOBAL_menubar_Flag)
 
 
 
