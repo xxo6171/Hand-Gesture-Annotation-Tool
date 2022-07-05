@@ -45,9 +45,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>9</y>
+      <y>29</y>
       <width>1300</width>
-      <height>841</height>
+      <height>821</height>
      </rect>
     </property>
     <property name="title">
@@ -59,7 +59,7 @@
        <x>10</x>
        <y>20</y>
        <width>1280</width>
-       <height>810</height>
+       <height>791</height>
       </rect>
      </property>
      <property name="cursor">
@@ -78,7 +78,7 @@
        <x>10</x>
        <y>20</y>
        <width>1280</width>
-       <height>810</height>
+       <height>791</height>
       </rect>
      </property>
      <property name="widgetResizable">
@@ -90,7 +90,7 @@
         <x>0</x>
         <y>0</y>
         <width>1278</width>
-        <height>808</height>
+        <height>789</height>
        </rect>
       </property>
      </widget>
@@ -142,6 +142,19 @@
      </property>
     </widget>
    </widget>
+   <widget class="QLabel" name="label_mouse_position">
+    <property name="geometry">
+     <rect>
+      <x>1240</x>
+      <y>10</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>( 000, 000 )</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -149,7 +162,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

@@ -242,10 +242,17 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ==== Edit Menu Area ====
     def mouseMoveEvent(self, event):
-        pass
-    def mouseReleaseEvent(self, event):
-        self.draw(event.x(), event.y())
+        #self.draw(event.x(), event.y())
+        text = "( " + str(event.x()) + ", " + str(event.y()) + " )"
+        self.label_mouse_position.setText(text)
 
+    def mouseReleaseEvent(self, event):
+        if self.hasMouseTracking():
+            self.setMouseTracking(False)
+        else:
+            self.setMouseTracking(True)
+        print(self.hasMouseTracking())
+        
     def draw(self, x_pos, y_pos):
         if self.draw_flag == 0:
             print("No Draw")
@@ -261,7 +268,6 @@ class HandAnnot(QMainWindow, main_form_class):
             print("Line")
         elif self.draw_flag == 6:
             print("Dot")
-        
 
     def drawPolygon(self):
         self.draw_flag = 1
