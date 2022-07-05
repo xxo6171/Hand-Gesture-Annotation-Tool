@@ -6,7 +6,6 @@ import numpy as np
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 
 # ====== Global Variable =====
@@ -161,9 +160,12 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.th.quit()
         self.close()
 
+
+
 # ======= Main Window =======
 mainUI_dir = 'UI/Main GUI.ui'
 main_form_class = uic.loadUiType(mainUI_dir)[0]
+GLOBAL_menubar_Flag = False
 class HandAnnot(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
@@ -171,27 +173,21 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global GLOBAL_label_List
 
+        # Initial menu settings, Disable before loading image
+        global GLOBAL_menubar_Flag
+        self.menuRefresh(GLOBAL_menubar_Flag)
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
         시그널이 작동할 때 실행될 기능은 보통 이 클래스의 멤버함수( 슬롯 )로 작성한다.
         ----------------------------------------------------------------------------
         '''
-        # ==== Component Area ====
-        # Initial menu settings, Disable before loading image
-
-        self.flag = False
-        self.menuRefresh(self.flag)
-
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
 
         # ==== Edit Menu Area ====
 
         #==== Zoom Menu Area ====
-        self.f = 1 #ratio
-        self.action_Zoom_In.triggered.connect(self.zoomInImage)
-        self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
 
         # ==== TEST Menu Area ====
         self.action_Add_Label.triggered.connect(self.openDialog_addLabel)
@@ -211,7 +207,7 @@ class HandAnnot(QMainWindow, main_form_class):
     '''
 
     # ==== Component Area ====
-    # Refresh menu
+    # refresh menu
     def menuRefresh(self, flag):
         if flag : self.menu_Edit.setEnabled(True) ; self.menu_Zoom.setEnabled(True); self.action_Save.setEnabled(True);
         else : self.menu_Edit.setEnabled(False); self.menu_Zoom.setEnabled(False); self.action_Save.setEnabled(False);
@@ -225,58 +221,17 @@ class HandAnnot(QMainWindow, main_form_class):
 
     def loadImage(self, filename):
         global img
-        # 경로 한글 깨짐으로 인한 오류 방지 -> numpy 배열로 변환 후 decode
-        img = np.fromfile(filename, np.uint8)
-        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
+
+        img = cv2.imread(filename)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        h, w, c = img.shape    #height, width, channel
+        h, w, c = img.shape #height, width, channel
         qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
         self.label_Canvas.setPixmap(self.qPixmap)
-        self.flag = True
-        self.menuRefresh(self.flag)     #Refresh menu
-
-
-    # ==== Zoom Menu Area ====
-    # Zoom In
-    def zoomInImage(self):
-        global img
-        resize_img = img
-        self.f = self.f * 1.25
-        interpolation = cv2.INTER_LINEAR
-        self.resizeImage(resize_img, self.f, interpolation)
-
-    # Zoom Out
-    def zoomOutImage(self):
-        global img
-        resize_img = img
-        self.f = self.f * 0.8
-        interpolation = cv2.INTER_AREA
-        self.resizeImage(resize_img, self.f, interpolation)
-
-    # Image resize
-    def resizeImage(self, img, f, interpolation):
-        resize_img = cv2.resize(img, None, fx=f, fy=f, interpolation=interpolation)
-        h, w, c = resize_img.shape  # height, width, channel
-        qImg = QImage(resize_img.data, w, h, w * c, QImage.Format_RGB888)
-        self.qPixmap = QPixmap.fromImage(qImg)
-        self.label_Canvas.setPixmap(self.qPixmap)
-        self.update()
-
-    # Image scaling using keyboard, mouse wheel event
-    def keyPressEvent(self, e):         # Press Control Key
-        if e.key() == Qt.Key_Control: self.bCtrl = True
-        self.update()
-
-    def keyReleaseEvent(self, e):     # Release Control Key
-        if e.key() == Qt.Key_Control: self.bCtrl = False
-        self.update()
-
-    def wheelEvent(self, e):                # Move Mouse Wheel
-        if self.bCtrl :
-            if (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
-            elif (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
-        self.update()
+        GLOBAL_menubar_Flag = True
+        
+        #refresh menu
+        self.menuRefresh(GLOBAL_menubar_Flag)
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
