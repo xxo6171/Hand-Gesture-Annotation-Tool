@@ -205,6 +205,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         #==== Zoom Menu Area ====
         self.f = 1 #ratio
+        self.bCtrl = False
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
 
