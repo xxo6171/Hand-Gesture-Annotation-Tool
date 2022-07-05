@@ -171,8 +171,9 @@ class HandAnnot(QMainWindow, main_form_class):
         super().__init__()
         self.setupUi(self)
 
-        global GLOBAL_label_List
 
+        global GLOBAL_label_List
+        self.draw_flag = 0
         # Initial menu settings, Disable before loading image
         global GLOBAL_menubar_Flag
         self.menuRefresh(GLOBAL_menubar_Flag)
@@ -186,8 +187,14 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Open.triggered.connect(self.openImage)
 
         # ==== Edit Menu Area ====
+        self.action_Polygon.triggered.connect(self.drawPolygon)
+        self.action_Gesture_Polygon.triggered.connect(self.drawGesturePolygon)
+        self.action_Rectangle.triggered.connect(self.drawRectangle)
+        self.action_Circle.triggered.connect(self.drawCircle)
+        self.action_Line.triggered.connect(self.drawLine)
+        self.action_Dot.triggered.connect(self.drawDot)
 
-        #==== Zoom Menu Area ====
+        # ==== Zoom Menu Area ====
 
         # ==== TEST Menu Area ====
         self.action_Add_Label.triggered.connect(self.openDialog_addLabel)
@@ -232,6 +239,49 @@ class HandAnnot(QMainWindow, main_form_class):
         
         #refresh menu
         self.menuRefresh(GLOBAL_menubar_Flag)
+
+    # ==== Edit Menu Area ====
+    def mouseMoveEvent(self, event):
+        pass
+    def mouseReleaseEvent(self, event):
+        self.draw(event.x(), event.y())
+
+    def draw(self, x_pos, y_pos):
+        if self.draw_flag == 0:
+            print("No Draw")
+        elif self.draw_flag == 1:
+            print("Polygon")
+        elif self.draw_flag == 2:
+            print("Gesture Polygon")
+        elif self.draw_flag == 3:
+            print("Rectangle")
+        elif self.draw_flag == 4:
+            print("Circle")
+        elif self.draw_flag == 5:
+            print("Line")
+        elif self.draw_flag == 6:
+            print("Dot")
+        
+
+    def drawPolygon(self):
+        self.draw_flag = 1
+
+    def drawGesturePolygon(self):
+        self.draw_flag = 2
+
+    def drawRectangle(self):
+        self.draw_flag = 3
+
+    def drawCircle(self):
+        self.draw_flag = 4
+
+    def drawLine(self):
+        self.draw_flag = 5
+
+    def drawDot(self):
+        self.draw_flag = 6
+
+    # ==== Zoom Menu Area ====
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
