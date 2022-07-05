@@ -141,9 +141,6 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.label_CaptureImage.show()
 
     def image_Capture(self):
-        self.th.power = False
-        self.th.quit()
-        
         cap = cv2.VideoCapture(GLOBAL_nb_cam)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -152,7 +149,10 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         ret, frame = cap.read()
         if ret:
             img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            
+
+        self.th.power = False
+        self.th.quit()
+        
         self.close()
 
     def close_Dialog(self):
