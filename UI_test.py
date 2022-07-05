@@ -185,8 +185,9 @@ class HandAnnot(QMainWindow, main_form_class):
         ----------------------------------------------------------------------------
         '''
         # ==== Component Area ====
+        # Control key flag
+        self.bCtrl = False
         # Initial menu settings, Disable before loading image
-
         self.flag = False
         self.menuRefresh(self.flag)
 
