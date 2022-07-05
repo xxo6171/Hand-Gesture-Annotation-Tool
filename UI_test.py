@@ -174,6 +174,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global GLOBAL_label_List
         self.draw_flag = 0
+        self.draw_type = 'No Draw'
         # Initial menu settings, Disable before loading image
         global GLOBAL_menubar_Flag
         self.menuRefresh(GLOBAL_menubar_Flag)
@@ -243,49 +244,54 @@ class HandAnnot(QMainWindow, main_form_class):
     # ==== Edit Menu Area ====
     def mouseMoveEvent(self, event):
         #self.draw(event.x(), event.y())
-        text = "( " + str(event.x()) + ", " + str(event.y()) + " )"
-        self.label_mouse_position.setText(text)
+        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=event.x(), y_pos=event.y(), d_type=self.draw_type, mt=self.scrollArea_Canvas.hasMouseTracking())
+        self.statusBar.showMessage(text)
 
     def mouseReleaseEvent(self, event):
-        if self.hasMouseTracking():
-            self.setMouseTracking(False)
+        if self.scrollArea_Canvas.hasMouseTracking():
+            self.scrollArea_Canvas.setMouseTracking(False)
         else:
-            self.setMouseTracking(True)
-        print(self.hasMouseTracking())
+            self.scrollArea_Canvas.setMouseTracking(True)
         
     def draw(self, x_pos, y_pos):
         if self.draw_flag == 0:
-            print("No Draw")
+            self.draw_type = 'No Draw'
         elif self.draw_flag == 1:
-            print("Polygon")
+            pass
         elif self.draw_flag == 2:
-            print("Gesture Polygon")
+            pass
         elif self.draw_flag == 3:
-            print("Rectangle")
+            pass
         elif self.draw_flag == 4:
-            print("Circle")
+            pass
         elif self.draw_flag == 5:
-            print("Line")
+            pass
         elif self.draw_flag == 6:
-            print("Dot")
+            pass
 
     def drawPolygon(self):
         self.draw_flag = 1
+        self.draw_type = 'Polygon'
 
     def drawGesturePolygon(self):
         self.draw_flag = 2
+        self.draw_type = 'Gesture Polygon'
 
     def drawRectangle(self):
         self.draw_flag = 3
+        self.draw_type = 'Rectangle'
 
     def drawCircle(self):
         self.draw_flag = 4
+        self.draw_type = 'Circle'
 
     def drawLine(self):
         self.draw_flag = 5
+        self.draw_type = 'Line'
 
     def drawDot(self):
         self.draw_flag = 6
+        self.draw_type = 'Dot'
 
     # ==== Zoom Menu Area ====
 
