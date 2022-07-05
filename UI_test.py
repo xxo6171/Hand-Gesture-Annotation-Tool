@@ -193,7 +193,12 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Add_Label.triggered.connect(self.openDialog_addLabel)
         self.action_Delete_Label.triggered.connect(self.deleteLabel)
         self.action_Image_from_IP_Camera.triggered.connect(self.openDialog_imgFromCamera)
-
+        
+        # ==== Canvas Area ====
+        # label_Canvas
+        self.scrollArea_Canvas.setWidget(self.label_Canvas)
+        self.scrollArea_Canvas.setWidgetResizable(True)
+        
     '''
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.

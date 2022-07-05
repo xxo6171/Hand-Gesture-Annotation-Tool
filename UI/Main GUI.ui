@@ -63,7 +63,7 @@
       </rect>
      </property>
      <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
@@ -71,6 +71,29 @@
      <property name="text">
       <string>Display Canvas</string>
      </property>
+    </widget>
+    <widget class="QScrollArea" name="scrollArea_Canvas">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>1280</width>
+       <height>810</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1278</width>
+        <height>808</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_LabelList">
