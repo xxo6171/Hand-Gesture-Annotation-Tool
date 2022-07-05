@@ -177,6 +177,7 @@ class HandAnnot(QMainWindow, main_form_class):
         global img
         img = cv2.imread('')
         # Initial menu settings, Disable before loading image
+
         '''
         ----------------------------------------------------------------------------
                             이 부분에 시그널을 입력한다.
@@ -344,7 +345,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.draw_flag = 6
         self.draw_type = 'Dot'
 
-    # ==== Zoom Menu Area ====
 
     # ==== TEST Menu Area ====
     def openDialog_addLabel(self):
