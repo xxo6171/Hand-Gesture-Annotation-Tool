@@ -34,6 +34,9 @@
   <property name="mouseTracking">
    <bool>false</bool>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::NoFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Hand Annot</string>
   </property>
@@ -41,6 +44,12 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="mouseTracking">
+    <bool>true</bool>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <widget class="QGroupBox" name="groupBox_Canvas">
     <property name="geometry">
      <rect>
@@ -50,6 +59,12 @@
       <height>841</height>
      </rect>
     </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="title">
      <string>Canvas</string>
     </property>
@@ -57,16 +72,19 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>10</y>
        <width>1280</width>
-       <height>811</height>
+       <height>821</height>
       </rect>
      </property>
      <property name="cursor">
       <cursorShape>ArrowCursor</cursorShape>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Display Canvas</string>
@@ -81,6 +99,12 @@
        <height>811</height>
       </rect>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -93,8 +117,16 @@
         <height>809</height>
        </rect>
       </property>
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
      </widget>
     </widget>
+    <zorder>scrollArea_Canvas</zorder>
+    <zorder>label_Canvas</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_LabelList">
     <property name="geometry">
@@ -141,6 +173,16 @@
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>0</y>
+      <width>120</width>
+      <height>80</height>
+     </rect>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

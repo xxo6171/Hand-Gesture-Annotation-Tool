@@ -169,12 +169,13 @@ class HandAnnot(QMainWindow, main_form_class):
         super().__init__()
         self.setupUi(self)
 
-
         global GLOBAL_label_List
         self.draw_flag = 0
         self.draw_type = 'No Draw'
 
+
         global img
+
         img = None
         # Initial menu settings, Disable before loading image
 
@@ -202,8 +203,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
 
-
-
         #==== Zoom Menu Area ====
         self.f = 1 #ratio
         self.bCtrl = False
@@ -219,8 +218,8 @@ class HandAnnot(QMainWindow, main_form_class):
         # label_Canvas
         self.label_Canvas.setAlignment(Qt.AlignCenter)
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
-        self.scrollArea_Canvas.setWidgetResizable(True)
-        
+        self.past_x_pos = 0
+        self.past_y_pos = 0
     '''
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
@@ -302,29 +301,58 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ==== Edit Menu Area ====
     def mouseMoveEvent(self, event):
-        #self.draw(event.x(), event.y())
-        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=event.x(), y_pos=event.y(), d_type=self.draw_type, mt=self.scrollArea_Canvas.hasMouseTracking())
+        global img
+        if img is None:
+            return
+        self.cur_x_pos = event.x()
+        self.cur_y_pos = event.y()
+
+        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=self.cur_x_pos, y_pos=self.cur_y_pos, d_type=self.draw_type, mt=self.hasMouseTracking())
         self.statusBar.showMessage(text)
+        # self.draw_Line(x_pos, y_pos)
+        self.draw()
 
     def mouseReleaseEvent(self, event):
-        if self.scrollArea_Canvas.hasMouseTracking():
-            self.scrollArea_Canvas.setMouseTracking(False)
+        if self.draw_flag == 0:
+            return
+            
+        if self.hasMouseTracking():
+            self.setMouseTracking(False)
         else:
-            self.scrollArea_Canvas.setMouseTracking(True)
-        
-    def draw(self, x_pos, y_pos):
+            self.past_x_pos = event.x()
+            self.past_y_pos = event.y()
+            self.setMouseTracking(True)
+
+    def draw(self):
+        # No Draw
         if self.draw_flag == 0:
             self.draw_type = 'No Draw'
+        # Polygon
         elif self.draw_flag == 1:
             pass
+        # Gesture Polygon
         elif self.draw_flag == 2:
             pass
+        # Rectangle
         elif self.draw_flag == 3:
             pass
+        # Circle
         elif self.draw_flag == 4:
             pass
+        # Line
         elif self.draw_flag == 5:
-            pass
+            global img
+
+            h, w, c = img.shape #height, width, channel
+            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+            draw_img = QPixmap.fromImage(qImg)
+
+            painter = QPainter(draw_img)
+            painter.setPen(QPen(Qt.green, 5, Qt.SolidLine))
+            painter.drawLine(self.past_x_pos, self.past_y_pos, self.cur_x_pos, self.cur_y_pos)
+            painter.end()
+            self.label_Canvas.setPixmap(QPixmap(draw_img))    
+        # Dot
         elif self.draw_flag == 6:
             pass
 
@@ -372,14 +400,12 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global img
 
-        if img is not None:
-            h, w, c = img.shape #height, width, channel
-            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
-            self.qPixmap = QPixmap.fromImage(qImg)
-            self.label_Canvas.setPixmap(self.qPixmap)
-
-            self.flag = True
-            self.menuRefresh(self.flag)
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
+        self.flag = True
+        self.menuRefresh(self.flag)
 
 
 
