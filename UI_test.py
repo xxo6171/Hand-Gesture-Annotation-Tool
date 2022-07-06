@@ -169,13 +169,11 @@ class HandAnnot(QMainWindow, main_form_class):
         super().__init__()
         self.setupUi(self)
 
-
         global GLOBAL_label_List
         self.draw_flag = 0
         self.draw_type = 'No Draw'
 
-        global img
-        img = cv2.imread('')
+        self.loadImage('Resource\Image\kitty.jpg')
         # Initial menu settings, Disable before loading image
 
         '''
@@ -201,8 +199,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
 
-
-
         #==== Zoom Menu Area ====
         self.f = 1 #ratio
         self.bCtrl = False
@@ -218,7 +214,6 @@ class HandAnnot(QMainWindow, main_form_class):
         # label_Canvas
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
         self.scrollArea_Canvas.setWidgetResizable(True)
-        
     '''
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
@@ -296,16 +291,33 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ==== Edit Menu Area ====
     def mouseMoveEvent(self, event):
-        #self.draw(event.x(), event.y())
-        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=event.x(), y_pos=event.y(), d_type=self.draw_type, mt=self.scrollArea_Canvas.hasMouseTracking())
-        self.statusBar.showMessage(text)
+        x_pos = event.x()
+        y_pos = event.y()
+        print(event.localPos())
 
-    def mouseReleaseEvent(self, event):
-        if self.scrollArea_Canvas.hasMouseTracking():
-            self.scrollArea_Canvas.setMouseTracking(False)
-        else:
-            self.scrollArea_Canvas.setMouseTracking(True)
-        
+        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=x_pos, y_pos=y_pos, d_type=self.draw_type, mt=self.hasMouseTracking())
+        self.statusBar.showMessage(text)
+        self.draw_Line(x_pos, y_pos)
+
+    # def mouseReleaseEvent(self, event):
+    #     if self.hasMouseTracking():
+    #         self.setMouseTracking(False)
+    #     else:
+    #         self.setMouseTracking(True)
+
+    def draw_Line(self, x, y):
+        global img
+
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        draw_img = QPixmap.fromImage(qImg)
+
+        painter = QPainter(draw_img)
+        painter.setPen(QPen(Qt.black, 10, Qt.SolidLine))
+        painter.drawLine(400, 300, x, y)
+        painter.end()
+        self.label_Canvas.setPixmap(QPixmap(draw_img))    
+
     def draw(self, x_pos, y_pos):
         if self.draw_flag == 0:
             self.draw_type = 'No Draw'
@@ -366,14 +378,13 @@ class HandAnnot(QMainWindow, main_form_class):
 
         global img
 
-        if img is not None:
-            h, w, c = img.shape #height, width, channel
-            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
-            self.qPixmap = QPixmap.fromImage(qImg)
-            self.label_Canvas.setPixmap(self.qPixmap)
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
 
-            GLOBAL_menubar_Flag = True
-            self.menuRefresh(GLOBAL_menubar_Flag)
+        GLOBAL_menubar_Flag = True
+        self.menuRefresh(GLOBAL_menubar_Flag)
 
 
 
