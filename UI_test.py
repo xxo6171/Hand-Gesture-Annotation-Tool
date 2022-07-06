@@ -216,6 +216,7 @@ class HandAnnot(QMainWindow, main_form_class):
         
         # ==== Canvas Area ====
         # label_Canvas
+        self.label_Canvas.setAlignment(Qt.AlignCenter)
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
         self.scrollArea_Canvas.setWidgetResizable(True)
         
