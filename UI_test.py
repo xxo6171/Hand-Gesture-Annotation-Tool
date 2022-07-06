@@ -67,7 +67,7 @@ class IPCameThread(QThread):
 
     def run(self):
         self.power = True
-        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
 
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -142,7 +142,7 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.label_CaptureImage.show()
 
     def image_Capture(self):
-        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         global img
@@ -175,7 +175,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.draw_type = 'No Draw'
 
         global img
-        img = cv2.imread('')
+        img = None
         # Initial menu settings, Disable before loading image
 
         '''
@@ -185,8 +185,9 @@ class HandAnnot(QMainWindow, main_form_class):
         ----------------------------------------------------------------------------
         '''
         # ==== Component Area ====
+        # Control key flag
+        self.bCtrl = False
         # Initial menu settings, Disable before loading image
-
         self.flag = False
         self.menuRefresh(self.flag)
 
@@ -216,6 +217,7 @@ class HandAnnot(QMainWindow, main_form_class):
         
         # ==== Canvas Area ====
         # label_Canvas
+        self.label_Canvas.setAlignment(Qt.AlignCenter)
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
         self.scrollArea_Canvas.setWidgetResizable(True)
         
@@ -260,7 +262,9 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 1.25
         interpolation = cv2.INTER_LINEAR
-        self.resizeImage(resize_img, self.f, interpolation)
+        if self.f > 3.05 : self.f = 3.05
+        if self.f <= 3.05 : self.resizeImage(resize_img, self.f, interpolation)
+        print('배율 = ', self.f)
 
     # Zoom Out
     def zoomOutImage(self):
@@ -268,7 +272,9 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 0.8
         interpolation = cv2.INTER_AREA
-        self.resizeImage(resize_img, self.f, interpolation)
+        if self.f < 0.21 : self.f = 0.21
+        if self.f >= 0.21 : self.resizeImage(resize_img, self.f, interpolation)
+        print('배율 = ', self.f)
 
     # Image resize
     def resizeImage(self, img, f, interpolation):
@@ -289,9 +295,9 @@ class HandAnnot(QMainWindow, main_form_class):
         self.update()
 
     def wheelEvent(self, e):                # Move Mouse Wheel
-        if self.bCtrl :
-            if (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
-            elif (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
+        global img
+        if (img is not None) and (self.bCtrl) and  (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
+        elif (img is not None) and (self.bCtrl) and  (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
         self.update()
 
     # ==== Edit Menu Area ====
@@ -372,8 +378,8 @@ class HandAnnot(QMainWindow, main_form_class):
             self.qPixmap = QPixmap.fromImage(qImg)
             self.label_Canvas.setPixmap(self.qPixmap)
 
-            GLOBAL_menubar_Flag = True
-            self.menuRefresh(GLOBAL_menubar_Flag)
+            self.flag = True
+            self.menuRefresh(self.flag)
 
 
 
