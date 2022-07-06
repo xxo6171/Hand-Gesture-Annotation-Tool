@@ -194,6 +194,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
+        self.action_Save.triggered.connect(self.saveImg2Json)
 
         # ==== Edit Menu Area ====
         self.action_Polygon.triggered.connect(self.drawPolygon)
@@ -253,6 +254,9 @@ class HandAnnot(QMainWindow, main_form_class):
         self.flag = True
         self.menuRefresh(self.flag)     #Refresh menu
 
+    def saveImg2Json(self):
+        self.save_file_name, self.extension_filter = QFileDialog.getSaveFileName(self,'Open File',
+                                                                                filter='*.json')
 
     # ==== Zoom Menu Area ====
     # Zoom In
