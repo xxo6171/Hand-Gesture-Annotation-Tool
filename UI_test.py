@@ -376,8 +376,8 @@ class HandAnnot(QMainWindow, main_form_class):
             self.qPixmap = QPixmap.fromImage(qImg)
             self.label_Canvas.setPixmap(self.qPixmap)
 
-            GLOBAL_menubar_Flag = True
-            self.menuRefresh(GLOBAL_menubar_Flag)
+            self.flag = True
+            self.menuRefresh(self.flag)
 
 
 
