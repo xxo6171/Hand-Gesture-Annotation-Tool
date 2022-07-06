@@ -67,7 +67,7 @@ class IPCameThread(QThread):
 
     def run(self):
         self.power = True
-        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
 
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -142,7 +142,7 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.label_CaptureImage.show()
 
     def image_Capture(self):
-        cap = cv2.VideoCapture(GLOBAL_nb_cam)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         global img
