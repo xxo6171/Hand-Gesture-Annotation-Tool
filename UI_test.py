@@ -289,9 +289,9 @@ class HandAnnot(QMainWindow, main_form_class):
         self.update()
 
     def wheelEvent(self, e):                # Move Mouse Wheel
-        if self.bCtrl :
-            if (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
-            elif (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
+        global img
+        if (img is not None) and (self.bCtrl) and  (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
+        elif (img is not None) and (self.bCtrl) and  (e.angleDelta().y() < 0) : self.zoomOutImage() # Wheel Down
         self.update()
 
     # ==== Edit Menu Area ====
