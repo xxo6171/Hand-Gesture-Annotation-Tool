@@ -34,10 +34,6 @@ for data_point in hand_landmarks.landmark:
     keypoints.append({
                          'X': int(data_point.x*w),  # x축에서의 좌표_정규화됨_픽셀 폭으로 나눈 값으로 초기화됨
                          'Y': int(data_point.y*h),  # y축에서의 좌표_정규화됨_픽셀 높이로 나눈 값으로 초기화됨
-                         'Z': data_point.z,         # z축에서의 좌표_정규화됨_손목을 기준으로 카메라에 가까울수록 값이 작다.
-                          'Visibility': data_point.visibility,
+                        #  'Z': data_point.z,         # z축에서의 좌표_정규화됨_손목을 기준으로 카메라에 가까울수록 값이 작다.
+                        #   'Visibility': data_point.visibility,
                          })
-
-for point in keypoints:
-    print(point)
-print(results)
