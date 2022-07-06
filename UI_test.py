@@ -260,7 +260,9 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 1.25
         interpolation = cv2.INTER_LINEAR
-        self.resizeImage(resize_img, self.f, interpolation)
+        if self.f > 3.05 : self.f = 3.05
+        if self.f <= 3.05 : self.resizeImage(resize_img, self.f, interpolation)
+        print('배율 = ', self.f)
 
     # Zoom Out
     def zoomOutImage(self):
@@ -268,7 +270,9 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 0.8
         interpolation = cv2.INTER_AREA
-        self.resizeImage(resize_img, self.f, interpolation)
+        if self.f < 0.21 : self.f = 0.21
+        if self.f >= 0.21 : self.resizeImage(resize_img, self.f, interpolation)
+        print('배율 = ', self.f)
 
     # Image resize
     def resizeImage(self, img, f, interpolation):
@@ -291,7 +295,7 @@ class HandAnnot(QMainWindow, main_form_class):
     def wheelEvent(self, e):                # Move Mouse Wheel
         global img
         if (img is not None) and (self.bCtrl) and  (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
-        elif (img is not None) and (self.bCtrl) and  (e.angleDelta().y() < 0) : self.zoomOutImage() # Wheel Down
+        elif (img is not None) and (self.bCtrl) and  (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
         self.update()
 
     # ==== Edit Menu Area ====
