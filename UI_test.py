@@ -175,7 +175,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.draw_type = 'No Draw'
 
         global img
-        img = cv2.imread('')
+        img = None
         # Initial menu settings, Disable before loading image
 
         '''
