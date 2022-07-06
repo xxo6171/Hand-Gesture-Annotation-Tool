@@ -67,7 +67,7 @@ class IPCameThread(QThread):
 
     def run(self):
         self.power = True
-        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam)
 
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
@@ -142,7 +142,7 @@ class ImageFromCameraDialog(QDialog, image_from_camera_form_class):
         self.label_CaptureImage.show()
 
     def image_Capture(self):
-        cap = cv2.VideoCapture(GLOBAL_nb_cam, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(GLOBAL_nb_cam)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         global img
@@ -173,10 +173,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.draw_flag = 0
         self.draw_type = 'No Draw'
 
-
-        global img
-
-        img = None
+        self.loadImage('Resource\Image\kitty.jpg')
         # Initial menu settings, Disable before loading image
 
         '''
@@ -186,9 +183,8 @@ class HandAnnot(QMainWindow, main_form_class):
         ----------------------------------------------------------------------------
         '''
         # ==== Component Area ====
-        # Control key flag
-        self.bCtrl = False
         # Initial menu settings, Disable before loading image
+
         self.flag = False
         self.menuRefresh(self.flag)
 
@@ -216,10 +212,8 @@ class HandAnnot(QMainWindow, main_form_class):
         
         # ==== Canvas Area ====
         # label_Canvas
-        self.label_Canvas.setAlignment(Qt.AlignCenter)
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
-        self.past_x_pos = 0
-        self.past_y_pos = 0
+        self.scrollArea_Canvas.setWidgetResizable(True)
     '''
     ----------------------------------------------------------------------------
                             이 부분에 슬롯을 입력한다.
@@ -261,9 +255,7 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 1.25
         interpolation = cv2.INTER_LINEAR
-        if self.f > 3.05 : self.f = 3.05
-        if self.f <= 3.05 : self.resizeImage(resize_img, self.f, interpolation)
-        print('배율 = ', self.f)
+        self.resizeImage(resize_img, self.f, interpolation)
 
     # Zoom Out
     def zoomOutImage(self):
@@ -271,9 +263,7 @@ class HandAnnot(QMainWindow, main_form_class):
         resize_img = img
         self.f = self.f * 0.8
         interpolation = cv2.INTER_AREA
-        if self.f < 0.21 : self.f = 0.21
-        if self.f >= 0.21 : self.resizeImage(resize_img, self.f, interpolation)
-        print('배율 = ', self.f)
+        self.resizeImage(resize_img, self.f, interpolation)
 
     # Image resize
     def resizeImage(self, img, f, interpolation):
@@ -294,65 +284,53 @@ class HandAnnot(QMainWindow, main_form_class):
         self.update()
 
     def wheelEvent(self, e):                # Move Mouse Wheel
-        global img
-        if (img is not None) and (self.bCtrl) and  (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
-        elif (img is not None) and (self.bCtrl) and  (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
+        if self.bCtrl :
+            if (e.angleDelta().y() > 0) : self.zoomInImage()        # Wheel Up
+            elif (e.angleDelta().y() < 0) : self.zoomOutImage()  # Wheel Down
         self.update()
 
     # ==== Edit Menu Area ====
     def mouseMoveEvent(self, event):
-        global img
-        if img is None:
-            return
-        self.cur_x_pos = event.x()
-        self.cur_y_pos = event.y()
+        x_pos = event.x()
+        y_pos = event.y()
+        print(event.localPos())
 
-        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=self.cur_x_pos, y_pos=self.cur_y_pos, d_type=self.draw_type, mt=self.hasMouseTracking())
+        text = "Mouse Point: [ {x_pos}, {y_pos} ]   Draw Type: [ {d_type} ]  Mouse Tracking: [ {mt} ]".format(x_pos=x_pos, y_pos=y_pos, d_type=self.draw_type, mt=self.hasMouseTracking())
         self.statusBar.showMessage(text)
-        # self.draw_Line(x_pos, y_pos)
-        self.draw()
+        self.draw_Line(x_pos, y_pos)
 
-    def mouseReleaseEvent(self, event):
-        if self.draw_flag == 0:
-            return
-            
-        if self.hasMouseTracking():
-            self.setMouseTracking(False)
-        else:
-            self.past_x_pos = event.x()
-            self.past_y_pos = event.y()
-            self.setMouseTracking(True)
+    # def mouseReleaseEvent(self, event):
+    #     if self.hasMouseTracking():
+    #         self.setMouseTracking(False)
+    #     else:
+    #         self.setMouseTracking(True)
 
-    def draw(self):
-        # No Draw
+    def draw_Line(self, x, y):
+        global img
+
+        h, w, c = img.shape #height, width, channel
+        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        draw_img = QPixmap.fromImage(qImg)
+
+        painter = QPainter(draw_img)
+        painter.setPen(QPen(Qt.black, 10, Qt.SolidLine))
+        painter.drawLine(400, 300, x, y)
+        painter.end()
+        self.label_Canvas.setPixmap(QPixmap(draw_img))    
+
+    def draw(self, x_pos, y_pos):
         if self.draw_flag == 0:
             self.draw_type = 'No Draw'
-        # Polygon
         elif self.draw_flag == 1:
             pass
-        # Gesture Polygon
         elif self.draw_flag == 2:
             pass
-        # Rectangle
         elif self.draw_flag == 3:
             pass
-        # Circle
         elif self.draw_flag == 4:
             pass
-        # Line
         elif self.draw_flag == 5:
-            global img
-
-            h, w, c = img.shape #height, width, channel
-            qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
-            draw_img = QPixmap.fromImage(qImg)
-
-            painter = QPainter(draw_img)
-            painter.setPen(QPen(Qt.green, 5, Qt.SolidLine))
-            painter.drawLine(self.past_x_pos, self.past_y_pos, self.cur_x_pos, self.cur_y_pos)
-            painter.end()
-            self.label_Canvas.setPixmap(QPixmap(draw_img))    
-        # Dot
+            pass
         elif self.draw_flag == 6:
             pass
 
@@ -404,8 +382,9 @@ class HandAnnot(QMainWindow, main_form_class):
         qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
         self.label_Canvas.setPixmap(self.qPixmap)
-        self.flag = True
-        self.menuRefresh(self.flag)
+
+        GLOBAL_menubar_Flag = True
+        self.menuRefresh(GLOBAL_menubar_Flag)
 
 
 
