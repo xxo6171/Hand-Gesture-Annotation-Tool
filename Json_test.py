@@ -1,3 +1,5 @@
+import json
+
 test = {
     'shapes': [
         {
@@ -23,3 +25,11 @@ test = {
     'image_height': 300,
     'image_width': 300
 }
+
+print(test.keys())
+
+# Jason Open
+# with open('Resource\json\sample_without_image_data.json', 'r') as f:
+#     json_data = json.load(f)
+
+# print(json.dumps(json_data, indent='\t'))
