@@ -1,4 +1,5 @@
 from pickle import GLOBAL
+import json
 import sys
 import cv2
 import mediapipe as mp
@@ -194,6 +195,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         # ==== File Menu Area ====
         self.action_Open.triggered.connect(self.openImage)
+        self.action_Save.triggered.connect(self.saveImg2Json)
 
         # ==== Edit Menu Area ====
         self.action_Polygon.triggered.connect(self.drawPolygon)
@@ -246,13 +248,43 @@ class HandAnnot(QMainWindow, main_form_class):
         img = np.fromfile(filename, np.uint8)
         img = cv2.imdecode(img, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        h, w, c = img.shape    #height, width, channel
-        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.h, self.w, self.c = img.shape    #height, width, channel
+        qImg = QImage(img.data, self.w, self.h, self.w*self.c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
         self.label_Canvas.setPixmap(self.qPixmap)
         self.flag = True
         self.menuRefresh(self.flag)     #Refresh menu
 
+    def saveImg2Json(self):
+        self.save_file_name, self.extension_filter = QFileDialog.getSaveFileName(self,'Open File',
+                                                                                filter='*.json')
+        print(self.save_file_name)
+        self.writeJson(self.save_file_name)
+
+    def writeJson(self, filename):
+        file = {
+            'shapes' : [
+                {
+                    'label' : 'test1',
+                    'points' : [
+                        [
+                            23,
+                            20
+                        ],
+                        [
+                            40,
+                            40
+                        ]
+                    ],
+                    'shape_type' : 'line',
+                }
+            ],
+            'imagePath' : filename,
+            'imageHeight' : self.h,
+            'imageWidth' : self.w
+        }
+        with open(filename, 'w') as f :
+            json.dump(file, f, indent='\t')
 
     # ==== Zoom Menu Area ====
     # Zoom In
