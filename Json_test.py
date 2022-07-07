@@ -33,6 +33,7 @@ pos_mapping_list = [
                         'Pinky_MCP', 'Pinky_PIP', 'Pinky_DIP', 'Pinky_TIP'
                     ]
 
+# 기본 구조 생성
 test_dict = {}
 test_dict['shapes'] = []
 test_dict['image_path'] = 'Resource\Image\hand.jpeg'
@@ -42,11 +43,13 @@ test_dict['image_width'] = 300
 sub_dict = {}
 sub_dict['label'] = 'Hand Gesture'
 sub_dict['points'] = []
+sub_dict['shape_type'] = 'Gesture Poligon'
+test_dict['shapes'].append(sub_dict)
+
+# 좌표 정보 입력
 sub_point = {}
 for index_pos in range(len(pos_mapping_list)):
     sub_point[pos_mapping_list[index_pos]] = [10, 10]
 sub_dict['points'].append(sub_point)
-sub_dict['shape_type'] = 'Gesture Poligon'
-test_dict['shapes'].append(sub_dict)
 
 print(test_dict)
