@@ -176,8 +176,9 @@ class HandAnnot(QMainWindow, main_form_class):
 
 
         global img
-
         img = None
+
+        self.file_name = None
         # Initial menu settings, Disable before loading image
 
         '''
@@ -262,29 +263,65 @@ class HandAnnot(QMainWindow, main_form_class):
         self.writeJson(self.save_file_name)
 
     def writeJson(self, filename):
-        file = {
-            'shapes' : [
-                {
-                    'label' : 'test1',
-                    'points' : [
-                        [
-                            23,
-                            20
-                        ],
-                        [
-                            40,
-                            40
-                        ]
-                    ],
-                    'shape_type' : 'line',
-                }
-            ],
-            'imagePath' : filename,
-            'imageHeight' : self.h,
-            'imageWidth' : self.w
-        }
+        global img
+
+        if self.file_name is None:
+            open_file_name = 'IP Camera Generated'
+        else:
+            open_file_name = self.file_name
+        
+        # 제스쳐 포인트 인식 및 출력
+        mp_drawing = mp.solutions.drawing_utils
+        mp_hands = mp.solutions.hands
+
+        index_pos = 0
+        with mp_hands.Hands(
+            max_num_hands=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5) as hands:
+
+            results = hands.process(img)
+
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    mp_drawing.draw_landmarks(img, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+
+        # 포인트 별 레이블 이름 리스트
+        pos_mapping_list = [
+                                'Wrist', 
+                                'Thumb_CMC', 'Thumb_MCP','Thumb_IP', 'Thumb_TIP', 
+                                'Index_Finger_MCP', 'Index_Finger_PIP', 'Index_Finger_DIP', 'Index_Finger_TIP', 
+                                'Middle_Finger_MCP', 'Middle_Finger_PIP', 'Middle_Finger_DIP', 'Middle_Finger_TIP', 
+                                'Ring_Finger_MCP', 'Ring_Finger_PIP', 'Ring_Finger_DIP', 'Ring_Finger_TIP',
+                                'Pinky_MCP', 'Pinky_PIP', 'Pinky_DIP', 'Pinky_TIP'
+                            ]
+
+        # 기본 구조 생성
+        h, w, c = img.shape
+
+        annotation_dict = {}
+        annotation_dict['shapes'] = []
+        annotation_dict['image_path'] = open_file_name
+        annotation_dict['image_height'] = h
+        annotation_dict['image_width'] = w
+
+        sub_dict_shapes = {}
+        sub_dict_shapes['label'] = 'Hand Gesture'
+        sub_dict_shapes['points'] = []
+        sub_dict_shapes['shape_type'] = 'Gesture Poligon'
+
+        annotation_dict['shapes'].append(sub_dict_shapes)
+
+        # 좌표 정보 입력
+        index_pos = 0
+        for data_point in hand_landmarks.landmark:
+            sub_point = {}
+            sub_point[pos_mapping_list[index_pos]] = [int(data_point.x*w), int(data_point.y*h)]
+            sub_dict_shapes['points'].append(sub_point)
+            index_pos = index_pos + 1
+
         with open(filename, 'w') as f :
-            json.dump(file, f, indent='\t')
+            json.dump(annotation_dict, f, indent='\t')
 
     # ==== Zoom Menu Area ====
     # Zoom In
