@@ -29,7 +29,7 @@ pos_mapping_list = [
                         'Thumb_CMC', 'Thumb_MCP','Thumb_IP', 'Thumb_TIP', 
                         'Index_Finger_MCP', 'Index_Finger_PIP', 'Index_Finger_DIP', 'Index_Finger_TIP', 
                         'Middle_Finger_MCP', 'Middle_Finger_PIP', 'Middle_Finger_DIP', 'Middle_Finger_TIP', 
-                        'Ring_Finger_MCP', 'Ring_Finger_PIP', 'Ring_Finger_DIP', 'Ring_Finger_TIP'
+                        'Ring_Finger_MCP', 'Ring_Finger_PIP', 'Ring_Finger_DIP', 'Ring_Finger_TIP',
                         'Pinky_MCP', 'Pinky_PIP', 'Pinky_DIP', 'Pinky_TIP'
                     ]
 
@@ -52,4 +52,5 @@ for index_pos in range(len(pos_mapping_list)):
     sub_point[pos_mapping_list[index_pos]] = [10, 10]
 sub_dict['points'].append(sub_point)
 
-print(test_dict)
+print(len(pos_mapping_list))
+# print(test_dict)
