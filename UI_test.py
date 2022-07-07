@@ -1,4 +1,5 @@
 from pickle import GLOBAL
+import json
 import sys
 import cv2
 import mediapipe as mp
@@ -257,6 +258,33 @@ class HandAnnot(QMainWindow, main_form_class):
     def saveImg2Json(self):
         self.save_file_name, self.extension_filter = QFileDialog.getSaveFileName(self,'Open File',
                                                                                 filter='*.json')
+        print(self.save_file_name)
+        self.writeJson(self.save_file_name)
+
+    def writeJson(self, filename):
+        file = {
+            'shapes' : [
+                {
+                    'label' : 'test1',
+                    'points' : [
+                        [
+                            23,
+                            20
+                        ],
+                        [
+                            40,
+                            40
+                        ]
+                    ],
+                    'shape_type' : 'line',
+                }
+            ],
+            'imagePath' : filename,
+            'imageHeight' : 720,
+            'imageWidth' : 1280
+        }
+        with open(filename, 'w') as f :
+            json.dump(file, f, indent='\t')
 
     # ==== Zoom Menu Area ====
     # Zoom In
