@@ -248,8 +248,8 @@ class HandAnnot(QMainWindow, main_form_class):
         img = np.fromfile(filename, np.uint8)
         img = cv2.imdecode(img, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        h, w, c = img.shape    #height, width, channel
-        qImg = QImage(img.data, w, h, w*c, QImage.Format_RGB888)
+        self.h, self.w, self.c = img.shape    #height, width, channel
+        qImg = QImage(img.data, self.w, self.h, self.w*self.c, QImage.Format_RGB888)
         self.qPixmap = QPixmap.fromImage(qImg)
         self.label_Canvas.setPixmap(self.qPixmap)
         self.flag = True
@@ -280,8 +280,8 @@ class HandAnnot(QMainWindow, main_form_class):
                 }
             ],
             'imagePath' : filename,
-            'imageHeight' : 720,
-            'imageWidth' : 1280
+            'imageHeight' : self.h,
+            'imageWidth' : self.w
         }
         with open(filename, 'w') as f :
             json.dump(file, f, indent='\t')
