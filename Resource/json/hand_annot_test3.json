@@ -1,0 +1,139 @@
+{
+	"shapes": [
+		{
+			"label": "Hand Gesture",
+			"points": [
+				{
+					"Wrist": [
+						166,
+						546
+					]
+				},
+				{
+					"Thumb_CMC": [
+						295,
+						543
+					]
+				},
+				{
+					"Thumb_MCP": [
+						373,
+						495
+					]
+				},
+				{
+					"Thumb_IP": [
+						449,
+						443
+					]
+				},
+				{
+					"Thumb_TIP": [
+						522,
+						400
+					]
+				},
+				{
+					"Index_Finger_MCP": [
+						348,
+						395
+					]
+				},
+				{
+					"Index_Finger_PIP": [
+						454,
+						305
+					]
+				},
+				{
+					"Index_Finger_DIP": [
+						514,
+						230
+					]
+				},
+				{
+					"Index_Finger_TIP": [
+						557,
+						176
+					]
+				},
+				{
+					"Middle_Finger_MCP": [
+						285,
+						355
+					]
+				},
+				{
+					"Middle_Finger_PIP": [
+						373,
+						237
+					]
+				},
+				{
+					"Middle_Finger_DIP": [
+						432,
+						151
+					]
+				},
+				{
+					"Middle_Finger_TIP": [
+						476,
+						85
+					]
+				},
+				{
+					"Ring_Finger_MCP": [
+						229,
+						336
+					]
+				},
+				{
+					"Ring_Finger_PIP": [
+						298,
+						230
+					]
+				},
+				{
+					"Ring_Finger_DIP": [
+						352,
+						157
+					]
+				},
+				{
+					"Ring_Finger_TIP": [
+						393,
+						107
+					]
+				},
+				{
+					"Pinky_MCP": [
+						188,
+						329
+					]
+				},
+				{
+					"Pinky_PIP": [
+						205,
+						248
+					]
+				},
+				{
+					"Pinky_DIP": [
+						219,
+						191
+					]
+				},
+				{
+					"Pinky_TIP": [
+						235,
+						138
+					]
+				}
+			],
+			"shape_type": "Gesture Poligon"
+		}
+	],
+	"image_path": "D:/Private/GitHub/Hand-Gesture-Annotation-Tool/Resource/Image/hand.jpeg",
+	"image_height": 632,
+	"image_width": 648
+}
