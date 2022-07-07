@@ -1,4 +1,5 @@
 import json
+from turtle import position
 '''
 test = {
     'shapes': [
@@ -23,6 +24,15 @@ with open('Resource\json\sample_without_image_data.json', 'r') as f:
 print(json.dumps(json_data, indent='\t'))
 '''
 
+pos_mapping_list = [
+                        'Wrist', 
+                        'Thumb_CMC', 'Thumb_MCP','Thumb_IP', 'Thumb_TIP', 
+                        'Index_Finger_MCP', 'Index_Finger_PIP', 'Index_Finger_DIP', 'Index_Finger_TIP', 
+                        'Middle_Finger_MCP', 'Middle_Finger_PIP', 'Middle_Finger_DIP', 'Middle_Finger_TIP', 
+                        'Ring_Finger_MCP', 'Ring_Finger_PIP', 'Ring_Finger_DIP', 'Ring_Finger_TIP'
+                        'Pinky_MCP', 'Pinky_PIP', 'Pinky_DIP', 'Pinky_TIP'
+                    ]
+
 test_dict = {}
 test_dict['shapes'] = []
 test_dict['image_path'] = 'Resource\Image\hand.jpeg'
@@ -30,9 +40,13 @@ test_dict['image_height'] = 300
 test_dict['image_width'] = 300
 
 sub_dict = {}
-sub_dict['label'] = 'test_label'
+sub_dict['label'] = 'Hand Gesture'
 sub_dict['points'] = []
-sub_dict['points'].append([10, 30])
-sub_dict['shape_type'] = 'Line'
+sub_point = {}
+for index_pos in range(len(pos_mapping_list)):
+    sub_point[pos_mapping_list[index_pos]] = [10, 10]
+sub_dict['points'].append(sub_point)
+sub_dict['shape_type'] = 'Gesture Poligon'
 test_dict['shapes'].append(sub_dict)
 
+print(test_dict)
