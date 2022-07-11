@@ -8,12 +8,9 @@ class Canvas(QMainWindow):
         # Initialize
         super().__init__()
         self.flag = False
-        self.action_Open = view[0]
-        self.label_Canvas = view[1]
-        self.scrollArea_Canvas = view[2]
-        self.menu_Edit = view[3]
-        self.menu_Zoom = view[4]
-        self.action_Save = view[5]
+
+        self.action_Open, self.label_Canvas, self.scrollArea_Canvas = view[0],view[1],view[2]
+        self.menu_Edit, self.menu_Zoom, self.action_Save = view[3],view[4],view[5]
 
         self.model = model
         self.imgProc = ImageProc()
