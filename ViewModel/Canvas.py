@@ -7,24 +7,29 @@ class Canvas(QMainWindow):
     def __init__(self, view, model):
         # Initialize
         super().__init__()
+        self.flag = False
         self.action_Open = view[0]
         self.label_Canvas = view[1]
         self.scrollArea_Canvas = view[2]
-        '''
-        self.list_listWidget = view[0]
-        self.add_btn = view[1]
-        self.delete_btn = view[2]
-        self.string_lineEdit = view[3]
-        '''
+        self.menu_Edit = view[3]
+        self.menu_Zoom = view[4]
+        self.action_Save = view[5]
+
         self.model = model
         self.imgProc = ImageProc()
-
+        self.menuRefresh(self.flag)
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
 
         #Widget setting
         self.label_Canvas.setAlignment(Qt.AlignCenter)
         self.scrollArea_Canvas.setWidget(self.label_Canvas)
+
+    # Refresh menu
+    def menuRefresh(self, flag):
+        if flag: self.menu_Edit.setEnabled(True);self.menu_Zoom.setEnabled(True);self.action_Save.setEnabled(True);
+        else:self.menu_Edit.setEnabled(False);self.menu_Zoom.setEnabled(False);self.action_Save.setEnabled(False);
+
 
     def openImage(self):
         self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
@@ -35,3 +40,5 @@ class Canvas(QMainWindow):
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             self.qPixmap = QPixmap.fromImage(qImg)
             self.label_Canvas.setPixmap(self.qPixmap)
+            self.flag = True
+            self.menuRefresh(self.flag)
