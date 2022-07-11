@@ -20,6 +20,8 @@ def autoAnnotation(img):
                 mp_drawing.draw_landmarks(
                     image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    
     return image, hand_landmarks
 
 def landmarksToList(landmarks):

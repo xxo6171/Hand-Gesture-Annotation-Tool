@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from Utils.ImageProc import *
+from Utils.AutoAnnotation import *
 
 class Canvas(QMainWindow):
     def __init__(self, view, model):
@@ -31,6 +32,10 @@ class Canvas(QMainWindow):
         self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
         if self.filepath[0] != '' :
             img = loadImgData(self.filepath[0])
+            
+            # !!! Auto Annotation 부분 지워도 무방 !!!
+            img, landmark = autoAnnotation(img)
+
             self.model.setImgData(img)
             self.displayImage(img)
 
