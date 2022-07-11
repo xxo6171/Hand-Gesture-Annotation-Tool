@@ -22,7 +22,10 @@ class HandAnnot(QMainWindow, main_form_class):
 
         canvas_widget = [self.action_Open,
                         self.label_Canvas,
-                        self.scrollArea_Canvas]
+                        self.scrollArea_Canvas,
+                        self.menu_Edit,
+                        self.menu_Zoom,
+                        self.action_Save]
         '''
         list_widget = [
                         self.listWidget,
