@@ -1,5 +1,7 @@
 class Model:
     def __init__(self):
+        self.imgData = None
+
         self.img_origin = None
         self.img_scaled = None
         self.scale_ratio = None
@@ -12,10 +14,8 @@ class Model:
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
     
-    def getImgOrigin(self):
-        return self.img_origin
-    def setImgOrigin(self, img):
-        self.img_origin = img
+    def getImgData(self): return self.imgData
+    def setImgData(self, img): self.imgData = img
 
     def getImgScaled(self):
         return self.img_origin

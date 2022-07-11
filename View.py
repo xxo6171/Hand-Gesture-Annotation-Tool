@@ -5,7 +5,7 @@ import sys
 from Utils import AutoAnnotation
 from Utils import ConvertAnnotation
 from Utils import ImageProc
-from ViewModel import Canvas
+from ViewModel.Canvas import Canvas
 from ViewModel import LabelList
 from ViewModel import ObjectList
 import Model
@@ -18,6 +18,14 @@ class HandAnnot(QMainWindow, main_form_class):
         super().__init__()
         self.setupUi(self)
 
+        self.model = Model.Model()
+
+        canvas_widget = [self.action_Open,
+                        self.label_Canvas,
+                        self.scrollArea_Canvas,
+                        self.menu_Edit,
+                        self.menu_Zoom,
+                        self.action_Save]
         '''
         list_widget = [
                         self.listWidget,
@@ -28,6 +36,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.model = Model.Model()
         self.list_viewmodel = ViewModel.List(list_widget, self.model)
         '''
+        self.canvas_viewmodel = Canvas(canvas_widget, self.model)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
