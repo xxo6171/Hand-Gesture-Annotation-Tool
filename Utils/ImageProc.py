@@ -6,7 +6,7 @@ class ImageProc:
         pass
 
     def loadImgData(self, filepath):
-        img = np.fromfile(filepath, np.uint8)
-        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        return img
+        img_data = np.fromfile(filepath, np.uint8)
+        img_data = cv2.imdecode(img_data, cv2.IMREAD_COLOR)
+        img_data = cv2.cvtColor(img_data, cv2.COLOR_BGR2RGB)
+        return img_data
