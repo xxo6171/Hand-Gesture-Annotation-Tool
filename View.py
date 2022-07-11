@@ -1,8 +1,14 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
 import sys
+
+from Utils import AutoAnnotation
+from Utils import ConvertAnnotation
+from Utils import ImageProc
+from ViewModel import Canvas
+from ViewModel import LabelList
+from ViewModel import ObjectList
+import Model
 
 mainUI_dir = 'Resource/UI/Main GUI.ui'
 main_form_class = uic.loadUiType(mainUI_dir)[0]
