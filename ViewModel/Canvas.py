@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from Utils.ImageProc import ImageProc
+from Utils.ImageProc import *
 
 class Canvas(QMainWindow):
     def __init__(self, view, model):
@@ -13,7 +13,6 @@ class Canvas(QMainWindow):
         self.menu_Edit, self.menu_Zoom, self.action_Save = view[3],view[4],view[5]
 
         self.model = model
-        self.imgProc = ImageProc()
         self.menuRefresh(self.flag)
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
@@ -31,7 +30,7 @@ class Canvas(QMainWindow):
     def openImage(self):
         self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
         if self.filepath[0] != '' :
-            img = self.imgProc.loadImgData(self.filepath[0])
+            img = loadImgData(self.filepath[0])
             self.model.setImgData(img)
             self.displayImage(img)
 

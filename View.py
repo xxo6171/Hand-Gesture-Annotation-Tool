@@ -2,12 +2,9 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 import sys
 
-from Utils import AutoAnnotation
-from Utils import ConvertAnnotation
-from Utils import ImageProc
 from ViewModel.Canvas import Canvas
-from ViewModel import LabelList
-from ViewModel import ObjectList
+from ViewModel.LabelList import LabelList
+from ViewModel.ObjectList import ObjectList
 import Model
 
 mainUI_dir = 'Resource/UI/Main GUI.ui'
