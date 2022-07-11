@@ -1,8 +1,5 @@
-from enum import auto
 import cv2
-from cv2 import KeyPoint
 import mediapipe as mp
-from operator import index
 
 def autoAnnotation(img):
     image = img
