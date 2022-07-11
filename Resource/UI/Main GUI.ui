@@ -161,9 +161,9 @@
      </rect>
     </property>
     <property name="title">
-     <string>Polygon List</string>
+     <string>Object List</string>
     </property>
-    <widget class="QListWidget" name="listWidget_PolygonList">
+    <widget class="QListWidget" name="listWidget_ObjectList">
      <property name="geometry">
       <rect>
        <x>10</x>

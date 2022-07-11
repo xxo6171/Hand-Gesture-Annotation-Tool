@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
+import Constant
 
 class Canvas(QMainWindow):
     def __init__(self, view, model):
@@ -13,10 +14,14 @@ class Canvas(QMainWindow):
         self.action_Open, self.label_Canvas, self.scrollArea_Canvas = view[0],view[1],view[2]
         self.menu_Edit, self.menu_Zoom, self.action_Save = view[3],view[4],view[5]
 
+        self.action_Line = view[6]
+        self.statusBar = view[7]
+
         self.model = model
         self.menuRefresh(self.flag)
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
+        self.action_Line.triggered.connect(self.drawLine)
 
         #Widget setting
         self.label_Canvas.setAlignment(Qt.AlignCenter)
@@ -46,3 +51,6 @@ class Canvas(QMainWindow):
         self.label_Canvas.setPixmap(self.qPixmap)
         self.flag = True
         self.menuRefresh(self.flag)
+    
+    def drawLine(self):
+        pass

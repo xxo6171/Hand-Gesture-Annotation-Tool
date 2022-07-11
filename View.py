@@ -17,23 +17,34 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.model = Model.Model()
 
-        canvas_widget = [self.action_Open,
-                        self.label_Canvas,
-                        self.scrollArea_Canvas,
-                        self.menu_Edit,
-                        self.menu_Zoom,
-                        self.action_Save]
-        '''
-        list_widget = [
-                        self.listWidget,
-                        self.add,
-                        self.delete_2,
-                        self.lineEdit
-                      ]
-        self.model = Model.Model()
-        self.list_viewmodel = ViewModel.List(list_widget, self.model)
-        '''
+        canvas_widget = [
+                            self.action_Open,
+                            self.label_Canvas,
+                            self.scrollArea_Canvas,
+                            self.menu_Edit,
+                            self.menu_Zoom,
+                            self.action_Save,
+                            
+                            self.action_Line,
+                            self.statusBar
+                        ]
+
         self.canvas_viewmodel = Canvas(canvas_widget, self.model)
+
+    def mouseMoveEvent(self, event):
+        text = '{x_pos}, {y_pos}'.format(x_pos=event.x(), y_pos=event.y())
+        self.statusBar.showMessage(text)
+    
+    def mouseReleaseEvent(self, event):
+        if self.model.getDrawFlag is None:
+            return
+            
+        if self.hasMouseTracking():
+            self.setMouseTracking(False)
+        else:
+            self.past_x_pos = event.x()
+            self.past_y_pos = event.y()
+            self.setMouseTracking(True)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
