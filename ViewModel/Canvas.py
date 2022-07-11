@@ -53,4 +53,4 @@ class Canvas(QMainWindow):
         self.menuRefresh(self.flag)
     
     def drawLine(self):
-        pass
+        self.model.setDrawFlag(Constant.LINE)
