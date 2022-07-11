@@ -1,6 +1,4 @@
-from operator import index
 import cv2
-from cv2 import KeyPoint
 import mediapipe as mp
 
 # 제스쳐 포인트 인식 및 출력
