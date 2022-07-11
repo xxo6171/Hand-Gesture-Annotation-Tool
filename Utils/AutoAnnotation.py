@@ -3,6 +3,9 @@ import mediapipe as mp
 
 def autoAnnotation(img):
     image = img
+
+    hand_landmarks = None
+
     mp_drawing = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
 
@@ -21,10 +24,13 @@ def autoAnnotation(img):
                     image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    
+
     return image, hand_landmarks
 
 def landmarksToList(landmarks):
+    if landmarks is None:
+        return False
+        
     pos_list = []
 
     for data_point in landmarks.landmark:
