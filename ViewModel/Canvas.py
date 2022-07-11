@@ -5,6 +5,7 @@ from Utils.ImageProc import ImageProc
 
 class Canvas(QMainWindow):
     def __init__(self, view, model):
+        super().__init__()
         #Initialize
         self.action_Open = view[0]
         self.label_Canvas = view[1]
