@@ -33,9 +33,12 @@ class Canvas(QMainWindow):
         if self.filepath[0] != '' :
             img = self.imgProc.loadImgData(self.filepath[0])
             self.model.setImgData(img)
-            h, w, c = img.shape  # height, width, channel
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            self.qPixmap = QPixmap.fromImage(qImg)
-            self.label_Canvas.setPixmap(self.qPixmap)
-            self.flag = True
-            self.menuRefresh(self.flag)
+            self.displayImage(img)
+
+    def displayImage(self, img):
+        h, w, c = img.shape  # height, width, channel
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        self.qPixmap = QPixmap.fromImage(qImg)
+        self.label_Canvas.setPixmap(self.qPixmap)
+        self.flag = True
+        self.menuRefresh(self.flag)
