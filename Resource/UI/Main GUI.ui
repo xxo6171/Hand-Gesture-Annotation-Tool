@@ -68,35 +68,13 @@
     <property name="title">
      <string>Canvas</string>
     </property>
-    <widget class="QLabel" name="label_Canvas">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>1280</width>
-       <height>821</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>ArrowCursor</cursorShape>
-     </property>
-     <property name="mouseTracking">
-      <bool>true</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="text">
-      <string>Display Canvas</string>
-     </property>
-    </widget>
     <widget class="QScrollArea" name="scrollArea_Canvas">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
        <width>1280</width>
-       <height>811</height>
+       <height>810</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -114,7 +92,7 @@
         <x>0</x>
         <y>0</y>
         <width>1278</width>
-        <height>809</height>
+        <height>808</height>
        </rect>
       </property>
       <property name="mouseTracking">
@@ -123,10 +101,30 @@
       <property name="focusPolicy">
        <enum>Qt::StrongFocus</enum>
       </property>
+      <widget class="QLabel" name="label_Canvas">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>10</y>
+         <width>1280</width>
+         <height>821</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+       <property name="text">
+        <string>Display Canvas</string>
+       </property>
+      </widget>
      </widget>
     </widget>
-    <zorder>scrollArea_Canvas</zorder>
-    <zorder>label_Canvas</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_LabelList">
     <property name="geometry">

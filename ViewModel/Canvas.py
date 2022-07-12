@@ -1,3 +1,4 @@
+from tkinter import W
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -54,3 +55,17 @@ class Canvas(QMainWindow):
     
     def drawLine(self):
         self.model.setDrawFlag(Constant.LINE)
+    
+    def scaleImage(self, img):
+        h, w, c = img.shape
+        scaled_img = img
+
+        if h>w:
+            scale = 810 / h
+        else:
+            scale = 1280 / w
+        self.model.setScaleRatio(scale)
+
+        scaled_img = cv2.resize(scaled_img, dsize=(0, 0), fx=scale, fy=scale, interpolation=cv2.INTER_LINEAR)
+        self.model.setImgScaled(scaled_img)
+        

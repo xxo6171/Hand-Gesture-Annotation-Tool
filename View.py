@@ -32,18 +32,19 @@ class HandAnnot(QMainWindow, main_form_class):
         self.canvas_viewmodel = Canvas(canvas_widget, self.model)
 
     def mouseMoveEvent(self, event):
-        text = '{x_pos}, {y_pos}'.format(x_pos=event.x(), y_pos=event.y())
+        x_pos = event.x() - 20
+        y_pos = event.y() - 50
+        self.model.setCurPos([x_pos, y_pos])
+        text = '{x_pos}, {y_pos}'.format(x_pos=x_pos, y_pos=y_pos)
         self.statusBar.showMessage(text)
     
     def mouseReleaseEvent(self, event):
-        if self.model.getDrawFlag is None:
-            return
-            
         if self.hasMouseTracking():
             self.setMouseTracking(False)
         else:
-            self.past_x_pos = event.x()
-            self.past_y_pos = event.y()
+            past_x_pos = event.x() - 20
+            past_y_pos = event.y() - 50
+            self.model.setPrePos([past_x_pos, past_y_pos])
             self.setMouseTracking(True)
 
 if __name__=='__main__':
