@@ -10,6 +10,7 @@ class Model:
         self.object_list = []
         self.annot_info = {}
 
+        self.ctrl_flag = None
         self.draw_flag = None
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
@@ -46,6 +47,11 @@ class Model:
         return self.img_origin
     def setDrawFlag(self, flag):
         self.draw_flag = flag
+
+    def getCtrlFlag(self):
+        return self.ctrl_flag
+    def setDrawFlag(self, flag):
+        self.ctrl_flag = flag
 
     def getPrePos(self):
         return self.img_origin
