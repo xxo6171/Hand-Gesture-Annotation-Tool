@@ -50,7 +50,7 @@ class Model:
 
     def getCtrlFlag(self):
         return self.ctrl_flag
-    def getCtrlFlag(self, flag):
+    def setCtrlFlag(self, flag):
         self.ctrl_flag = flag
 
     def getPrePos(self):
