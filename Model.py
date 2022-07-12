@@ -15,7 +15,8 @@ class Model:
         self.label_list = []
         self.object_list = []
         self.annot_info = {}
-        
+
+        self.menu_flag = None
         self.ctrl_flag = None
         self.draw_flag = 'No Draw'
         
@@ -56,6 +57,11 @@ class Model:
         return self.annot_info
     def setAnnotInfo(self, dict):
         self.annot_info = dict
+
+    def getMenuFlag(self):
+        return self.menu_flag
+    def setMenuFlag(self, flag):
+        self.menu_flag = flag
 
     def getDrawFlag(self):
         return self.draw_flag
