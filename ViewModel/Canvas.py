@@ -41,8 +41,6 @@ class Canvas(QWidget):
         if self.filepath[0] != '' :
             img = loadImgData(self.filepath[0])
 
-            # !!! Auto Annotation 부분 !!!
-            # img, landmark = autoAnnotation(img)
             h, w, c = img.shape  # height, width, channel
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             qPixmap = QPixmap.fromImage(qImg)
