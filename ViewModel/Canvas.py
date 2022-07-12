@@ -10,7 +10,6 @@ class Canvas(QWidget):
     def __init__(self, view, model):
         # Initialize
         super().__init__()
-        self.flag = False
 
         self.label_Canvas = QLabel(self)
 
@@ -24,7 +23,8 @@ class Canvas(QWidget):
         self.statusBar = view[5]
 
         self.model = model
-        self.menuRefresh(self.flag)
+        self.model.setMenuFlag(False)
+        self.menuRefresh(self.model.getMenuFlag())
 
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
@@ -57,8 +57,8 @@ class Canvas(QWidget):
         self.label_Canvas.setGeometry(0, 0, w, h)
         self.label_Canvas.setPixmap(img)
 
-        self.flag = True 
-        self.menuRefresh(self.flag)
+        self.model.setMenuFlag(True)
+        self.menuRefresh(self.model.getMenuFlag())
     
     def drawLine(self):
         self.model.setDrawFlag('Line')
