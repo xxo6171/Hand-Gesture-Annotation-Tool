@@ -3,7 +3,13 @@ class Model:
         self.imgData = None
 
         self.img_origin = None
+        self.img_origin_width = None
+        self.img_origin_height = None
+
         self.img_scaled = None
+        self.img_scaled_width = None
+        self.img_scaled_height = None
+
         self.scale_ratio = None
 
         self.label_list = []
@@ -14,13 +20,20 @@ class Model:
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
     
-    def getImgData(self): return self.imgData
-    def setImgData(self, img): self.imgData = img
+    def getImgData(self): 
+        return self.imgData.copy(), self.img_origin_width, self.img_origin_height
+    def setImgData(self, img, width, height): 
+        self.imgData = img.copy()
+        self.img_origin_width = width
+        self.img_origin_height = height
 
     def getImgScaled(self):
-        return self.img_scaled
-    def setImgScaled(self, img):
-        self.img_scaled = img
+        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height
+    def setImgScaled(self, img, width, height):
+        self.img_scaled = img.copy()
+        self.img_scaled_width = width
+        self.img_scaled_height = height
+
 
     def getScaleRatio(self):
         return self.scale_ratio
