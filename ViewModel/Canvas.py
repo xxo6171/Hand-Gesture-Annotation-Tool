@@ -2,6 +2,7 @@ from tkinter import W
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtCore import Qt
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 import Constant
@@ -29,6 +30,8 @@ class Canvas(QWidget):
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
         self.action_Line.triggered.connect(self.drawLine)
+
+        self.setFocusPolicy(Qt.ClickFocus)
 
     # Refresh menu
     def menuRefresh(self, flag):
@@ -61,7 +64,28 @@ class Canvas(QWidget):
     
     def drawLine(self):
         self.model.setDrawFlag(Constant.LINE)
-    
+
+
+    # Image scaling using keyboard, mouse wheel event
+    def keyPressEvent(self, event):  # Press Control Key
+        if event.key() == Qt.Key_Control:
+            self.model.setCtrlFlag(True)
+            print(self.model.getCtrlFlag())
+
+
+    def keyReleaseEvent(self, event):  # Release Control Key
+        if event.key() == Qt.Key_Control:
+            self.model.setCtrlFlag(False)
+            print(self.model.getCtrlFlag())
+
+
+    def wheelEvent(self, event):       # Move Mouse Wheel
+        # Wheel Up
+        if (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() > 0) :
+            print('up')
+        elif (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() < 0) :
+            print('down')
+
     def mouseMoveEvent(self, event):
         x_pos = event.x()
         y_pos = event.y()
