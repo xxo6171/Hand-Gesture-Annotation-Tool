@@ -30,6 +30,8 @@ class Canvas(QWidget):
         self.action_Open.triggered.connect(self.openImage)
         self.action_Line.triggered.connect(self.drawLine)
 
+        self.setMouseTracking(True)
+
     # Refresh menu
     def menuRefresh(self, flag):
         if flag: self.menu_Edit.setEnabled(True);self.menu_Zoom.setEnabled(True);self.action_Save.setEnabled(True);
@@ -71,9 +73,9 @@ class Canvas(QWidget):
 
     def mouseReleaseEvent(self, event):
         if self.label_Canvas.hasMouseTracking():
-            self.setMouseTracking(False)
+            self.label_Canvas.setMouseTracking(False)
         else:
             past_x_pos = event.x()
             past_y_pos = event.y()
             self.model.setPrePos([past_x_pos, past_y_pos])
-            self.setMouseTracking(True)
+            self.label_Canvas.setMouseTracking(True)
