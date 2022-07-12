@@ -10,7 +10,7 @@ class Model:
         self.object_list = []
         self.annot_info = {}
 
-        self.draw_flag = None
+        self.draw_flag = 'No Draw'
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
     
@@ -18,41 +18,41 @@ class Model:
     def setImgData(self, img): self.imgData = img
 
     def getImgScaled(self):
-        return self.img_origin
+        return self.img_scaled
     def setImgScaled(self, img):
         self.img_scaled = img
 
     def getScaleRatio(self):
-        return self.img_origin
+        return self.scale_ratio
     def setScaleRatio(self, ratio):
         self.scale_ratio = ratio
 
     def getLabelList(self):
-        return self.img_origin
+        return self.label_list
     def setLabelList(self, list):
         self.label_list = list
 
     def getObjectList(self):
-        return self.img_origin
+        return self.object_list
     def setObjectList(self, list):
         self.object_list = list
 
     def getAnnotInfo(self):
-        return self.img_origin
+        return self.annot_info
     def setAnnotInfo(self, dict):
         self.annot_info = dict
 
     def getDrawFlag(self):
-        return self.img_origin
+        return self.draw_flag
     def setDrawFlag(self, flag):
         self.draw_flag = flag
 
     def getPrePos(self):
-        return self.img_origin
+        return self.pre_mouse_pos
     def setPrePos(self, list):
         self.pre_mouse_pos = list
 
     def getCurPos(self):
-        return self.img_origin
+        return self.cur_mouse_pos
     def setCurPos(self, list):
         self.cur_mouse_pos = list

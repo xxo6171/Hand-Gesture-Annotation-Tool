@@ -4,7 +4,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
-import Constant
 
 class Canvas(QWidget):
     def __init__(self, view, model):
@@ -62,13 +61,13 @@ class Canvas(QWidget):
         self.menuRefresh(self.flag)
     
     def drawLine(self):
-        self.model.setDrawFlag(Constant.LINE)
+        self.model.setDrawFlag('Line')
     
     def mouseMoveEvent(self, event):
         x_pos = event.x()
         y_pos = event.y()
         self.model.setCurPos([x_pos, y_pos])
-        text = '{x_pos}, {y_pos}'.format(x_pos=x_pos, y_pos=y_pos)
+        text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
 
     def mouseReleaseEvent(self, event):
