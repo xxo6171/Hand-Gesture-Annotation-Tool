@@ -3,8 +3,6 @@ from re import sub
 
 class Model:
     def __init__(self):
-        self.imgData = None
-
         self.img_origin = None
         self.img_origin_width = None
         self.img_origin_height = None
@@ -33,11 +31,11 @@ class Model:
         self.cur_mouse_pos = []
     
     def getImgData(self):
-        if self.imgData is None :
+        if self.img_origin is None :
             return None
         return self.imgData.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
     def setImgData(self, img, width, height, channel):
-        self.imgData = img.copy()
+        self.img_origin = img.copy()
         self.img_origin_width = width
         self.img_origin_height = height
         self.img_origin_channel = channel
