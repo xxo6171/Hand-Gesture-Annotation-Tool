@@ -33,7 +33,7 @@ class Model:
     def getImgData(self):
         if self.img_origin is None :
             return None
-        return self.imgData.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
+        return self.img_origin.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
     def setImgData(self, img, width, height, channel):
         self.img_origin = img.copy()
         self.img_origin_width = width
