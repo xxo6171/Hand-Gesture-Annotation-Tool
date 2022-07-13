@@ -19,17 +19,24 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.model = Model.Model()
 
-        canvas_widget = [
+        self.draw_actions = [
+                            self.action_Polygon,
+                            self.action_Gesture_Polygon,
+                            self.action_Rectangle,
+                            self.action_Circle,
+                            self.action_Line,
+                            self.action_Dot         ]
+
+        self.canvas_widget = [
                             self.action_Open,
                             self.menu_Edit,
                             self.menu_Zoom,
                             self.action_Save,
                             
-                            self.action_Line,
-                            self.statusBar
-                        ]
+                            self.draw_actions,
+                            self.statusBar          ]
 
-        self.canvas_viewmodel = Canvas(canvas_widget, self.model)
+        self.canvas_viewmodel = Canvas(self.canvas_widget, self.model)
 
         self.scrollArea_Canvas.setWidget(self.canvas_viewmodel)
 
