@@ -37,7 +37,7 @@ class Canvas(QWidget):
         self.model.setCtrlFlag(False)
         self.model.setMenuFlag(False)
         self.model.setFocusFlag(False)
-        self.menuRefresh(self.model.getMenuFlag())
+        self.menuRefresh()
 
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
@@ -55,9 +55,15 @@ class Canvas(QWidget):
         self.setFocusPolicy(Qt.ClickFocus)
 
     # Refresh menu
-    def menuRefresh(self, flag):
-        if flag: self.menu_Edit.setEnabled(True);self.menu_Zoom.setEnabled(True);self.action_Save.setEnabled(True);
-        else:self.menu_Edit.setEnabled(False);self.menu_Zoom.setEnabled(False);self.action_Save.setEnabled(False);
+    def menuRefresh(self):
+        if self.model.getMenuFlag():
+            self.menu_Edit.setEnabled(True)
+            self.menu_Zoom.setEnabled(True)
+            self.action_Save.setEnabled(True)
+        else:
+            self.menu_Edit.setEnabled(False)
+            self.menu_Zoom.setEnabled(False)
+            self.action_Save.setEnabled(False)
 
     def openImage(self):
         self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
@@ -78,7 +84,7 @@ class Canvas(QWidget):
         self.label_Canvas.setPixmap(qPixmap)
 
         self.model.setMenuFlag(True)
-        self.menuRefresh(self.model.getMenuFlag())
+        self.menuRefresh()
 
     def zoomInImage(self):
         img, w, h, c = self.model.getImgData()
