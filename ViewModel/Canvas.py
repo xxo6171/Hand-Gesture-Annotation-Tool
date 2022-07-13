@@ -10,7 +10,6 @@ class Canvas(QWidget):
     def __init__(self, view, model):
         # Initialize
         super().__init__()
-        self.flag = False
 
         self.label_Canvas = QLabel(self)
 
@@ -30,7 +29,10 @@ class Canvas(QWidget):
         self.statusBar = view[5]
 
         self.model = model
-        self.menuRefresh(self.flag)
+        self.model.setCtrlFlag(False)
+        self.model.setMenuFlag(False)
+        self.model.setFocusFlag(False)
+        self.menuRefresh(self.model.getMenuFlag())
 
         #Triggered connect
         self.action_Open.triggered.connect(self.openImage)
@@ -57,23 +59,49 @@ class Canvas(QWidget):
             img = loadImgData(self.filepath[0])
 
             h, w, c = img.shape  # height, width, channel
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
 
-            self.model.setImgData(qPixmap, w, h)
-            self.model.setImgScaled(qPixmap, w, h)
-            self.displayImage(qPixmap, w, h)
+            self.model.setImgData(img, w, h, c)
+            self.model.setImgScaled(img, w, h, c)
+            self.displayImage()
 
-    def displayImage(self, img, w, h):
+    def displayImage(self):
+        img, w, h, c = self.model.getImgScaled()
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)       
         self.label_Canvas.setGeometry(0, 0, w, h)
-        self.label_Canvas.setPixmap(img)
+        self.label_Canvas.setPixmap(qPixmap)
 
-        self.flag = True 
-        self.menuRefresh(self.flag)
+        self.model.setMenuFlag(True)
+        self.menuRefresh(self.model.getMenuFlag())
+
+    # def zoomInImage(self):
+    #     resize_img = self.model.getImgData()
+    #     self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
+    #     if self.model.getScaleRatio() > 3.05 :
+    #         self.model.setScaleRatio(3.05)
+    #     if self.model.getScaleRatio() <= 3.05 :
+    #         img = resizeImage(resize_img, self.model.getScaleRatio())
+    #     print('배율 = ', self.model.getScaleRatio())
+
+    def zoomOutImage(self):
+        pass
     
-        
+    def drawLine(self):
+        self.model.setDrawFlag('Line')
+
+    def focusInEvent(self,event):
+        self.model.setFocusFlag(True)
+        print(self.model.getFocusFlag())
+        QWidget.focusInEvent(self, event)
+
+    def focusOutEvent(self, event):
+        self.model.setFocusFlag(False)
+        print(self.model.getFocusFlag())
+        QWidget.focusOutEvent(self, event)
+
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
@@ -86,11 +114,16 @@ class Canvas(QWidget):
             print(self.model.getCtrlFlag())
 
     def wheelEvent(self, event):       # Move Mouse Wheel
-        # Wheel Up
-        if (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() > 0) :
-            print('up')
-        elif (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() < 0) :
-            print('down')
+        if not self.model.getFocusFlag():
+            return
+        if self.model.getImgData() is None:
+            return
+        if not self.model.getCtrlFlag():
+            return
+        if event.angleDelta().y() > 0 :
+            print('wheel up')
+        elif event.angleDelta().y() < 0 :
+            print('wheel down')
 
     def mouseMoveEvent(self, event):
         if self.model.getDrawFlag() in 'No Draw':
