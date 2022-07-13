@@ -1,3 +1,4 @@
+import math
 from tkinter import W
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -11,6 +12,7 @@ class Canvas(QWidget):
         # Initialize
         super().__init__()
 
+        self.polygon_list = [-1]
         self.label_Canvas = QLabel(self)
 
         self.action_Open = view[0]
@@ -51,7 +53,6 @@ class Canvas(QWidget):
 
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.ClickFocus)
-
 
     # Refresh menu
     def menuRefresh(self, flag):
@@ -118,24 +119,20 @@ class Canvas(QWidget):
 
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
-        print(self.model.getFocusFlag())
         QWidget.focusInEvent(self, event)
 
     def focusOutEvent(self, event):
         self.model.setFocusFlag(False)
-        print(self.model.getFocusFlag())
         QWidget.focusOutEvent(self, event)
 
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
             self.model.setCtrlFlag(True)
-            print(self.model.getCtrlFlag())
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control:
             self.model.setCtrlFlag(False)
-            print(self.model.getCtrlFlag())
 
     def wheelEvent(self, event):       # Move Mouse Wheel
         if not self.model.getFocusFlag():
@@ -160,14 +157,32 @@ class Canvas(QWidget):
         self.draw()
         
     def mouseReleaseEvent(self, event):
-        if self.label_Canvas.hasMouseTracking():
-            self.stopMouseTracking()
-        else:
-            past_x_pos = event.x()
-            past_y_pos = event.y()
-            self.model.setPrePos([past_x_pos, past_y_pos])
+        if self.model.getDrawFlag() is 'No Draw':
+            return
+        pos = [event.x(), event.y()]
+        tracking = self.label_Canvas.hasMouseTracking()
+
+        if len(self.polygon_list) == 0:
+            self.polygon_list.append(pos)
+
+        if tracking:
+            if self.model.isKeepTracking():
+                # self.model.setPrePos(pos)
+                if self.polygon_list[0] == self.model.getPrePos():
+                    print(self.polygon_list)
+                    self.model.setKeepTracking(False)
+                    self.stopMouseTracking()
+                    self.model.setDrawFlag('No Draw')
+                else:
+                    self.polygon_list.append(self.model.getPrePos())
+            else:
+                self.stopMouseTracking()
+                self.model.setDrawFlag('No Draw')
+
+        if not tracking:
+            self.model.setPrePos(pos)
             self.startMouseTracking()
-    
+            
     def draw(self):
         flag = self.model.getDrawFlag()
         img, w, h, c = self.model.getImgScaled()
@@ -177,15 +192,34 @@ class Canvas(QWidget):
         draw_img = QPixmap.fromImage(draw_img)
 
         painter = QPainter(draw_img)
-        painter.setPen(QPen(Qt.green, 5, Qt.SolidLine))
 
         pre_pos = self.model.getPrePos()
         cur_pos = self.model.getCurPos()
 
+        painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
         if flag == 'No Draw':
             return
         elif flag == 'Polygon':
-            pass
+            src_x = self.polygon_list[-1][0]
+            src_y = self.polygon_list[-1][1]
+            click_range = 10
+            start_point = self.polygon_list[0]
+            if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
+                if cur_pos[1] < start_point[1]+click_range and cur_pos[1] > start_point[1]-click_range:
+                    cur_pos[0] = start_point[0]
+                    cur_pos[1] = start_point[1]
+            self.model.setCurPos([cur_pos[0], cur_pos[1]])
+            self.model.setPrePos([cur_pos[0], cur_pos[1]])
+            dst_x = cur_pos[0]
+            dst_y = cur_pos[1]
+
+            painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+            painter.drawLine(src_x, src_y, dst_x, dst_y)
+
+            painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+            painter.drawPoint(src_x, src_y)
+            painter.drawPoint(start_point[0], start_point[1])
+
         elif flag == 'Gesture Polygon':
             pass
         elif flag == 'Rectangle':
@@ -196,7 +230,14 @@ class Canvas(QWidget):
             painter.drawRect(x_pos, y_pos, width, height)
 
         elif flag == 'Circle':
-            pass
+            try:
+                rad = math.sqrt(math.pow(pre_pos[0]-cur_pos[0], 2) + math.pow(pre_pos[1]-cur_pos[1], 2))
+            except:
+                rad = 0
+            x_pos = pre_pos[0] - rad
+            y_pos = pre_pos[1] - rad
+            painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
+
         elif flag == 'Line':
             src_x = pre_pos[0]
             src_y = pre_pos[1]
@@ -207,11 +248,18 @@ class Canvas(QWidget):
         elif flag == 'Dot':
             painter.drawPoint(cur_pos[0], cur_pos[1])
 
+        painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+        painter.drawPoint(pre_pos[0], pre_pos[1])
+        painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+        painter.drawPoint(cur_pos[0], cur_pos[1])
+
         painter.end()
         self.label_Canvas.setPixmap(draw_img)
 
     def drawPoly(self):
         self.model.setDrawFlag('Polygon')
+        self.polygon_list = []
+        self.model.setKeepTracking(True)
         self.stopMouseTracking()
 
     def drawGesturePoly(self):
@@ -220,22 +268,28 @@ class Canvas(QWidget):
 
     def drawRect(self):
         self.model.setDrawFlag('Rectangle')
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawCircle(self):
         self.model.setDrawFlag('Circle')
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawLine(self):
         self.model.setDrawFlag('Line')
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawDot(self):
         self.model.setDrawFlag('Dot')
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def stopMouseTracking(self):
         self.label_Canvas.setMouseTracking(False)
+        self.model.setTracking(False)
 
     def startMouseTracking(self):
         self.label_Canvas.setMouseTracking(True)
+        self.model.setTracking(True)
