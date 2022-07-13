@@ -77,17 +77,29 @@ class Canvas(QWidget):
         self.model.setMenuFlag(True)
         self.menuRefresh(self.model.getMenuFlag())
 
-    # def zoomInImage(self):
-    #     resize_img = self.model.getImgData()
-    #     self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
-    #     if self.model.getScaleRatio() > 3.05 :
-    #         self.model.setScaleRatio(3.05)
-    #     if self.model.getScaleRatio() <= 3.05 :
-    #         img = resizeImage(resize_img, self.model.getScaleRatio())
-    #     print('배율 = ', self.model.getScaleRatio())
+    def zoomInImage(self):
+        img = self.model.getImgData()
+        self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
+        if self.model.getScaleRatio() > 3.05 :
+            self.model.setScaleRatio(3.05)
+        if self.model.getScaleRatio() <= 3.05 :
+            img = resizeImage(img, self.model.getScaleRatio())
+            h, w, c = img.shape
+            self.model.setImgScaled(img, w, h, c)
+            self.displayImage()
+        print('배율 = ', self.model.getScaleRatio())
 
     def zoomOutImage(self):
-        pass
+        img = self.model.getImgData()
+        self.model.setScaleRatio(self.model.getScaleRatio() * 0.8)
+        if self.model.getScaleRatio() < 0.21:
+            self.model.setScaleRatio(0.21)
+        if self.model.getScaleRatio() >= 0.21:
+            img = resizeImage(img, self.model.getScaleRatio())
+            h, w, c = img.shape
+            self.model.setImgScaled(img, w, h, c)
+            self.displayImage()
+        print('배율 = ', self.model.getScaleRatio())
     
     def drawLine(self):
         self.model.setDrawFlag('Line')
