@@ -34,7 +34,10 @@ class HandAnnot(QMainWindow, main_form_class):
                             self.action_Save,
                             
                             self.draw_actions,
-                            self.statusBar          ]
+                            self.statusBar,
+                            self.action_Zoom_In,
+                            self.action_Zoom_Out
+                            ]
 
         self.canvas_viewmodel = Canvas(self.canvas_widget, self.model)
 
