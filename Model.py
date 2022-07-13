@@ -5,36 +5,44 @@ class Model:
         self.img_origin = None
         self.img_origin_width = None
         self.img_origin_height = None
+        self.img_origin_channel = None
 
         self.img_scaled = None
         self.img_scaled_width = None
         self.img_scaled_height = None
+        self.img_scaled_channel = None
 
-        self.scale_ratio = None
+        self.scale_ratio = 1
 
         self.label_list = []
         self.object_list = []
         self.annot_info = {}
-        
+
+        self.focus_flag = None
+        self.menu_flag = None
         self.ctrl_flag = None
         self.draw_flag = 'No Draw'
         
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
     
-    def getImgData(self): 
-        return self.imgData.copy(), self.img_origin_width, self.img_origin_height
-    def setImgData(self, img, width, height): 
+    def getImgData(self):
+        if self.imgData is None :
+            return None
+        return self.imgData.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
+    def setImgData(self, img, width, height, channel):
         self.imgData = img.copy()
         self.img_origin_width = width
         self.img_origin_height = height
+        self.img_origin_channel = channel
 
     def getImgScaled(self):
-        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height
-    def setImgScaled(self, img, width, height):
+        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
+    def setImgScaled(self, img, width, height, channel):
         self.img_scaled = img.copy()
         self.img_scaled_width = width
         self.img_scaled_height = height
+        self.img_scaled_channel = channel
 
 
     def getScaleRatio(self):
@@ -57,15 +65,27 @@ class Model:
     def setAnnotInfo(self, dict):
         self.annot_info = dict
 
-    def getDrawFlag(self):
-        return self.draw_flag
-    def setDrawFlag(self, flag):
-        self.draw_flag = flag
+    def getFocusFlag(self):
+        return self.focus_flag
+    def setFocusFlag(self, flag):
+        self.focus_flag = flag
+        
+    def getMenuFlag(self):
+        return self.menu_flag
+    def setMenuFlag(self, flag):
+        self.menu_flag = flag
 
     def getCtrlFlag(self):
         return self.ctrl_flag
     def setCtrlFlag(self, flag):
         self.ctrl_flag = flag
+
+    def getDrawFlag(self):
+        return self.draw_flag
+    def setDrawFlag(self, flag):
+        self.draw_flag = flag
+
+
 
     def getPrePos(self):
         return self.pre_mouse_pos
