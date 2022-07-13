@@ -10,7 +10,7 @@ class Model:
         self.img_scaled_width = None
         self.img_scaled_height = None
 
-        self.scale_ratio = None
+        self.scale_ratio = 1
 
         self.label_list = []
         self.object_list = []
