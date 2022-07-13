@@ -146,9 +146,12 @@ class Canvas(QWidget):
     
     def draw(self):
         flag = self.model.getDrawFlag()
-        img, w, h = self.model.getImgScaled()
+        img, w, h, c = self.model.getImgScaled()
 
         draw_img = img.copy()
+        draw_img = QImage(draw_img.data, w, h, w * c, QImage.Format_RGB888)
+        draw_img = QPixmap.fromImage(draw_img)
+
         painter = QPainter(draw_img)
         painter.setPen(QPen(Qt.green, 5, Qt.SolidLine))
 
@@ -181,7 +184,7 @@ class Canvas(QWidget):
             painter.drawPoint(cur_pos[0], cur_pos[1])
 
         painter.end()
-        self.displayImage(draw_img, w, h)
+        self.label_Canvas.setPixmap(draw_img)
 
     def drawPoly(self):
         self.model.setDrawFlag('Polygon')
