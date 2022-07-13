@@ -64,15 +64,15 @@ class Canvas(QWidget):
     def drawLine(self):
         self.model.setDrawFlag('Line')
 
-    def focusInEvent(self,e):
+    def focusInEvent(self,event):
         self.model.setFocusFlag(True)
         print(self.model.getFocusFlag())
-        QWidget.focusInEvent(self,e)
+        QWidget.focusInEvent(self, event)
 
-    def focusOutEvent(self, e):
+    def focusOutEvent(self, event):
         self.model.setFocusFlag(False)
         print(self.model.getFocusFlag())
-        QWidget.focusOutEvent(self, e)
+        QWidget.focusOutEvent(self, event)
 
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
@@ -86,17 +86,15 @@ class Canvas(QWidget):
             print(self.model.getCtrlFlag())
 
     def wheelEvent(self, event):       # Move Mouse Wheel
-        # Wheel Up
-        if self.model.getFocusFlag():
+        if not self.model.getFocusFlag():
             return
         if self.model.getImgData() is None:
             return
-        if self.model.getCtrlFlag() is False:
+        if not self.model.getCtrlFlag():
             return
-
         if event.angleDelta().y() > 0 :
             print('wheel up')
-        else:
+        elif event.angleDelta().y() < 0 :
             print('wheel down')
 
     def mouseMoveEvent(self, event):
