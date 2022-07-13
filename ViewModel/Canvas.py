@@ -11,7 +11,10 @@ class Canvas(QWidget):
     def __init__(self, view, model):
         # Initialize
         super().__init__()
+        self.initUI(view)
+        self.initData(model)
 
+    def initUI(self, view):
         self.polygon_list = [-1]
         self.label_Canvas = QLabel(self)
 
@@ -27,21 +30,15 @@ class Canvas(QWidget):
         self.action_Circle = view[4][3]
         self.action_Line = view[4][4]
         self.action_Dot = view[4][5]
-        
+
         self.statusBar = view[5]
 
         self.action_Zoom_In = view[6]
         self.action_Zoom_Out = view[7]
 
-        self.model = model
-        self.model.setCtrlFlag(False)
-        self.model.setMenuFlag(False)
-        self.model.setFocusFlag(False)
-        self.menuRefresh()
-
-        #Triggered connect
+        # Triggered connect
         self.action_Open.triggered.connect(self.openImage)
-        
+
         self.action_Polygon.triggered.connect(self.drawPoly)
         self.action_Gesture_Polygon.triggered.connect(self.drawGesturePoly)
         self.action_Rectangle.triggered.connect(self.drawRect)
@@ -53,6 +50,13 @@ class Canvas(QWidget):
 
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.ClickFocus)
+
+    def initData(self, model):
+        self.model = model
+        self.model.setCtrlFlag(False)
+        self.model.setMenuFlag(False)
+        self.model.setFocusFlag(False)
+        self.menuRefresh()
 
     # Refresh menu
     def menuRefresh(self):
