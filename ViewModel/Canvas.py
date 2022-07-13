@@ -18,12 +18,13 @@ class Canvas(QWidget):
         self.menu_Edit = view[1]
         self.menu_Zoom = view[2]
         self.action_Save = view[3]
-
         self.action_Line = view[4]
         self.statusBar = view[5]
 
         self.model = model
+        self.model.setCtrlFlag(False)
         self.model.setMenuFlag(False)
+        self.model.setFocusFlag(False)
         self.menuRefresh(self.model.getMenuFlag())
 
         #Triggered connect
@@ -63,6 +64,16 @@ class Canvas(QWidget):
     def drawLine(self):
         self.model.setDrawFlag('Line')
 
+    def focusInEvent(self,e):
+        self.model.setFocusFlag(True)
+        print(self.model.getFocusFlag())
+        QWidget.focusInEvent(self,e)
+
+    def focusOutEvent(self, e):
+        self.model.setFocusFlag(False)
+        print(self.model.getFocusFlag())
+        QWidget.focusOutEvent(self, e)
+
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
@@ -76,10 +87,17 @@ class Canvas(QWidget):
 
     def wheelEvent(self, event):       # Move Mouse Wheel
         # Wheel Up
-        if (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() > 0) :
-            print('up')
-        elif (self.model.getImgData() is not None) and (self.model.getCtrlFlag()) and (event.angleDelta().y() < 0) :
-            print('down')
+        if self.model.getFocusFlag():
+            return
+        if self.model.getImgData() is None:
+            return
+        if self.model.getCtrlFlag() is False:
+            return
+
+        if event.angleDelta().y() > 0 :
+            print('wheel up')
+        else:
+            print('wheel down')
 
     def mouseMoveEvent(self, event):
         if self.model.getDrawFlag() in 'No Draw':
