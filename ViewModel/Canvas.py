@@ -28,6 +28,9 @@ class Canvas(QWidget):
         
         self.statusBar = view[5]
 
+        self.action_Zoom_In = view[6]
+        self.action_Zoom_Out = view[7]
+
         self.model = model
         self.model.setCtrlFlag(False)
         self.model.setMenuFlag(False)
@@ -43,6 +46,8 @@ class Canvas(QWidget):
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
+        self.action_Zoom_In.triggered.connect(self.zoomInImage)
+        self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
 
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.ClickFocus)
