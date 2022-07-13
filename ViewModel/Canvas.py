@@ -56,10 +56,7 @@ class Canvas(QWidget):
     def openImage(self):
         self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
         if self.filepath[0] != '' :
-            img = loadImgData(self.filepath[0])
-
-            h, w, c = img.shape  # height, width, channel
-
+            img, w, h, c = loadImgData(self.filepath[0])
             self.model.setImgData(img, w, h, c)
             self.model.setImgScaled(img, w, h, c)
             self.displayImage()
@@ -70,7 +67,7 @@ class Canvas(QWidget):
         qPixmap = QPixmap.fromImage(qImg)
 
         self.setMinimumSize(w, h)
-        self.setMaximumSize(w, h)       
+        self.setMaximumSize(w, h)
         self.label_Canvas.setGeometry(0, 0, w, h)
         self.label_Canvas.setPixmap(qPixmap)
 
@@ -78,27 +75,37 @@ class Canvas(QWidget):
         self.menuRefresh(self.model.getMenuFlag())
 
     def zoomInImage(self):
-        img = self.model.getImgData()
+        img, w, h, c = self.model.getImgData()
+        interpolation = 1
         self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
         if self.model.getScaleRatio() > 3.05 :
             self.model.setScaleRatio(3.05)
+
+        # 배율을 조정하면 1로 나누어 떨어지지 않음
+        if self.model.getScaleRatio() > 0.99 and self.model.getScaleRatio() < 1.001 :
+            self.model.setScaleRatio(1.0)
+
         if self.model.getScaleRatio() <= 3.05 :
-            img = resizeImage(img, self.model.getScaleRatio())
-            h, w, c = img.shape
+            img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
             self.model.setImgScaled(img, w, h, c)
-            self.displayImage()
+        self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
 
     def zoomOutImage(self):
-        img = self.model.getImgData()
+        img, w, h, c = self.model.getImgData()
+        interpolation = 0
         self.model.setScaleRatio(self.model.getScaleRatio() * 0.8)
         if self.model.getScaleRatio() < 0.21:
             self.model.setScaleRatio(0.21)
+
+        # 배율을 조정하면 1로 나누어 떨어지지 않음
+        if self.model.getScaleRatio() > 0.99 and self.model.getScaleRatio() < 1.001 :
+            self.model.setScaleRatio(1.0)
+
         if self.model.getScaleRatio() >= 0.21:
-            img = resizeImage(img, self.model.getScaleRatio())
-            h, w, c = img.shape
+            img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
             self.model.setImgScaled(img, w, h, c)
-            self.displayImage()
+        self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
     
     def drawLine(self):
@@ -133,9 +140,9 @@ class Canvas(QWidget):
         if not self.model.getCtrlFlag():
             return
         if event.angleDelta().y() > 0 :
-            print('wheel up')
+            self.zoomInImage()
         elif event.angleDelta().y() < 0 :
-            print('wheel down')
+            self.zoomOutImage()
 
     def mouseMoveEvent(self, event):
         if self.model.getDrawFlag() in 'No Draw':
