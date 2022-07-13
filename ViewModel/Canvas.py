@@ -45,21 +45,35 @@ class Canvas(QWidget):
             img = loadImgData(self.filepath[0])
 
             h, w, c = img.shape  # height, width, channel
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
 
-            self.model.setImgData(qPixmap, w, h)
-            self.model.setImgScaled(qPixmap, w, h)
-            self.displayImage(qPixmap, w, h)
+            self.model.setImgData(img, w, h, c)
+            self.model.setImgScaled(img, w, h, c)
+            self.displayImage()
 
-    def displayImage(self, img, w, h):
+    def displayImage(self):
+        img, w, h, c = self.model.getImgScaled()
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)       
         self.label_Canvas.setGeometry(0, 0, w, h)
-        self.label_Canvas.setPixmap(img)
+        self.label_Canvas.setPixmap(qPixmap)
 
         self.model.setMenuFlag(True)
         self.menuRefresh(self.model.getMenuFlag())
+
+    # def zoomInImage(self):
+    #     resize_img = self.model.getImgData()
+    #     self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
+    #     if self.model.getScaleRatio() > 3.05 :
+    #         self.model.setScaleRatio(3.05)
+    #     if self.model.getScaleRatio() <= 3.05 :
+    #         img = resizeImage(resize_img, self.model.getScaleRatio())
+    #     print('배율 = ', self.model.getScaleRatio())
+
+    def zoomOutImage(self):
+        pass
     
     def drawLine(self):
         self.model.setDrawFlag('Line')
