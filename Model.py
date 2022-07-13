@@ -24,9 +24,11 @@ class Model:
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
     
-    def getImgData(self): 
+    def getImgData(self):
+        if self.imgData is None :
+            return None
         return self.imgData.copy(), self.img_origin_width, self.img_origin_height
-    def setImgData(self, img, width, height): 
+    def setImgData(self, img, width, height):
         self.imgData = img.copy()
         self.img_origin_width = width
         self.img_origin_height = height
