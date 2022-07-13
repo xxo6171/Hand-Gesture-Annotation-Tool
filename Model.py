@@ -54,7 +54,7 @@ class Model:
     def getScaleRatio(self):
         return self.scale_ratio
     def setScaleRatio(self, ratio):
-        self.scale_ratio = ratio
+        self.scale_ratio = round(ratio,2)
 
     def getLabelList(self):
         return self.label_list
@@ -118,11 +118,11 @@ class Model:
         
 
     def getPrePos(self):
-        return self.pre_mouse_pos
+        return self.pre_mouse_pos.copy()
     def setPrePos(self, list):
-        self.pre_mouse_pos = list
+        self.pre_mouse_pos = list.copy()
 
     def getCurPos(self):
-        return self.cur_mouse_pos
+        return self.cur_mouse_pos.copy()
     def setCurPos(self, list):
-        self.cur_mouse_pos = list
+        self.cur_mouse_pos = list.copy()
