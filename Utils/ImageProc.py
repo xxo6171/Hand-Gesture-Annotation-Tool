@@ -5,4 +5,13 @@ def loadImgData(filepath):
     img_data = np.fromfile(filepath, np.uint8)
     img_data = cv2.imdecode(img_data, cv2.IMREAD_COLOR)
     img_data = cv2.cvtColor(img_data, cv2.COLOR_BGR2RGB)
-    return img_data
+    h,w,c = img_data.shape
+    return img_data, w, h, c
+
+def resizeImage(img, scaleRatio, interpolation):
+    if interpolation : itp = cv2.INTER_LINEAR
+    else : itp = cv2.INTER_AREA
+    img_data = cv2.resize(img, None, fx=scaleRatio, fy=scaleRatio,
+                     interpolation=itp)
+    h,w,c = img_data.shape
+    return img_data, w, h, c
