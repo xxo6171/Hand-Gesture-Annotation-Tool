@@ -5,10 +5,12 @@ class Model:
         self.img_origin = None
         self.img_origin_width = None
         self.img_origin_height = None
+        self.img_origin_channel = None
 
         self.img_scaled = None
         self.img_scaled_width = None
         self.img_scaled_height = None
+        self.img_scaled_channel = None
 
         self.scale_ratio = 1
 
@@ -27,18 +29,20 @@ class Model:
     def getImgData(self):
         if self.imgData is None :
             return None
-        return self.imgData.copy(), self.img_origin_width, self.img_origin_height
-    def setImgData(self, img, width, height):
+        return self.imgData.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
+    def setImgData(self, img, width, height, channel):
         self.imgData = img.copy()
         self.img_origin_width = width
         self.img_origin_height = height
+        self.img_origin_channel = channel
 
     def getImgScaled(self):
-        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height
-    def setImgScaled(self, img, width, height):
+        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
+    def setImgScaled(self, img, width, height, channel):
         self.img_scaled = img.copy()
         self.img_scaled_width = width
         self.img_scaled_height = height
+        self.img_scaled_channel = channel
 
 
     def getScaleRatio(self):
