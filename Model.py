@@ -16,6 +16,7 @@ class Model:
         self.object_list = []
         self.annot_info = {}
 
+        self.focus_flag = None
         self.menu_flag = None
         self.ctrl_flag = None
         self.draw_flag = 'No Draw'
@@ -58,20 +59,27 @@ class Model:
     def setAnnotInfo(self, dict):
         self.annot_info = dict
 
+    def getFocusFlag(self):
+        return self.focus_flag
+    def setFocusFlag(self, flag):
+        self.focus_flag = flag
+        
     def getMenuFlag(self):
         return self.menu_flag
     def setMenuFlag(self, flag):
         self.menu_flag = flag
+
+    def getCtrlFlag(self):
+        return self.ctrl_flag
+    def setCtrlFlag(self, flag):
+        self.ctrl_flag = flag
 
     def getDrawFlag(self):
         return self.draw_flag
     def setDrawFlag(self, flag):
         self.draw_flag = flag
 
-    def getCtrlFlag(self):
-        return self.ctrl_flag
-    def setCtrlFlag(self, flag):
-        self.ctrl_flag = flag
+
 
     def getPrePos(self):
         return self.pre_mouse_pos
