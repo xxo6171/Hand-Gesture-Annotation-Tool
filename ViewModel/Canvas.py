@@ -12,7 +12,7 @@ class Canvas(QWidget):
         # Initialize
         super().__init__()
 
-        self.keep_tracking = False
+        self.polygon_list = [-1]
         self.label_Canvas = QLabel(self)
 
         self.action_Open = view[0]
@@ -48,7 +48,6 @@ class Canvas(QWidget):
 
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.ClickFocus)
-
 
     # Refresh menu
     def menuRefresh(self, flag):
@@ -138,6 +137,8 @@ class Canvas(QWidget):
         self.draw()
         
     def mouseReleaseEvent(self, event):
+        if self.model.getDrawFlag() is None:
+            return
         pos = [event.x(), event.y()]
         tracking = self.label_Canvas.hasMouseTracking()
 
@@ -145,7 +146,7 @@ class Canvas(QWidget):
             self.polygon_list.append(pos)
 
         if tracking:
-            if self.keep_tracking:
+            if self.model.isKeepTracking():
                 self.model.setPrePos(pos)
                 self.polygon_list.append(pos)
             else:
@@ -211,7 +212,7 @@ class Canvas(QWidget):
     def drawPoly(self):
         self.model.setDrawFlag('Polygon')
         self.polygon_list = []
-        self.keep_tracking = True
+        self.model.setKeepTracking(True)
         self.stopMouseTracking()
 
     def drawGesturePoly(self):
@@ -220,26 +221,28 @@ class Canvas(QWidget):
 
     def drawRect(self):
         self.model.setDrawFlag('Rectangle')
-        self.keep_tracking = False
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawCircle(self):
         self.model.setDrawFlag('Circle')
-        self.keep_tracking = False
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawLine(self):
         self.model.setDrawFlag('Line')
-        self.keep_tracking = False
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawDot(self):
         self.model.setDrawFlag('Dot')
-        self.keep_tracking = False
+        self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def stopMouseTracking(self):
         self.label_Canvas.setMouseTracking(False)
+        self.model.setTracking(False)
 
     def startMouseTracking(self):
         self.label_Canvas.setMouseTracking(True)
+        self.model.setTracking(True)

@@ -1,3 +1,6 @@
+import copy
+from re import sub
+
 class Model:
     def __init__(self):
         self.imgData = None
@@ -17,11 +20,14 @@ class Model:
         self.label_list = []
         self.object_list = []
         self.annot_info = {}
+        self.initAnnotInfo()
 
         self.focus_flag = None
         self.menu_flag = None
         self.ctrl_flag = None
         self.draw_flag = 'No Draw'
+        self.tracking_flag = False
+        self.keep_tracking_flag = False
         
         self.pre_mouse_pos = []
         self.cur_mouse_pos = []
@@ -60,10 +66,25 @@ class Model:
     def setObjectList(self, list):
         self.object_list = list
 
+    def initAnnotInfo(self):
+        self.annot_info['shapes'] = []
+        self.annot_info['image_path'] = ''
+        self.annot_info['image_width'] = 0
+        self.annot_info['image_height'] = 0
+    def setAnnotInfo(self, filepath, width, height):
+        self.annot_info['image_path'] = filepath
+        self.annot_info['image_width'] = width
+        self.annot_info['image_height'] = height
+    def setNewShape(self, label, points_list, shape_type, rad = -1):
+        new_shape = {}
+        new_shape['label'] = label
+        new_shape['points'] = points_list
+        if rad > 0:
+            new_shape['radian'] = rad
+        new_shape['shape_type'] = shape_type
+        self.annot_info['shapes'].append(new_shape)
     def getAnnotInfo(self):
-        return self.annot_info
-    def setAnnotInfo(self, dict):
-        self.annot_info = dict
+        return copy.deepcopy(self.annot_info)
 
     def getFocusFlag(self):
         return self.focus_flag
@@ -85,7 +106,16 @@ class Model:
     def setDrawFlag(self, flag):
         self.draw_flag = flag
 
-
+    def isTracking(self):
+        return self.tracking_flag
+    def setTracking(self, flag):
+        self.tracking_flag = flag
+ 
+    def isKeepTracking(self):
+        return self.keep_tracking_flag
+    def setKeepTracking(self, flag):
+        self.keep_tracking_flag = flag
+        
 
     def getPrePos(self):
         return self.pre_mouse_pos
