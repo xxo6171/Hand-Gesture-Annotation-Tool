@@ -7,6 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
+from Utils.ConvertAnnotation import *
 
 class Canvas(QWidget):
     def __init__(self, view, model):
@@ -72,17 +73,18 @@ class Canvas(QWidget):
             self.action_Save.setEnabled(False)
 
     def openImage(self):
-        self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
-        if self.filepath[0] != '' :
-            img, w, h, c = loadImgData(self.filepath[0])
+        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
+        if self.filePath[0] != '' :
+            img, w, h, c = loadImgData(self.filePath[0])
             self.model.setImgData(img, w, h, c)
             self.model.setImgScaled(img, w, h, c)
-            self.model.setAnnotInfo(self.filepath[0], w, h)
+            self.model.setAnnotInfo(self.filePath[0], w, h)
             self.displayImage()
 
     def saveJson(self):
-        file_name = os.path.splitext(os.path.basename(self.filepath[0]))
-        print(file_name[0])
+        fileName = os.path.splitext(os.path.basename(self.filePath[0]))
+        jsonPath = os.path.dirname(self.filePath[0]) + '/' + fileName[0] + '.json'
+        dict2Json(self.model.getAnnotInfo(), jsonPath)
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
