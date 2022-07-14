@@ -40,11 +40,6 @@ class Canvas(QWidget):
 
         self.listWidget_LabelList = view[8]
 
-        self.model = model
-        self.model.setCtrlFlag(False)
-        self.model.setMenuFlag(False)
-        self.model.setFocusFlag(False)
-        self.menuRefresh(self.model.getMenuFlag())
         # Triggered connect
         self.action_Open.triggered.connect(self.openImage)
 
