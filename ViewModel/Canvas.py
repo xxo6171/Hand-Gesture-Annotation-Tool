@@ -80,12 +80,13 @@ class Canvas(QWidget):
 
     def openImage(self):
         self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
-        if self.filePath[0] != '' :
-            img, w, h, c = loadImgData(self.filePath[0])
-            self.model.setImgData(img, w, h, c)
-            self.model.setImgScaled(img, w, h, c)
-            self.model.setAnnotInfo(self.filePath[0], w, h)
-            self.displayImage()
+        if self.filePath[0] == '' :
+            return
+        img, w, h, c = loadImgData(self.filePath[0])
+        self.model.setImgData(img, w, h, c)
+        self.model.setImgScaled(img, w, h, c)
+        self.model.setAnnotInfo(self.filePath[0], w, h)
+        self.displayImage()
 
     def saveJson(self):
         fileName = os.path.splitext(os.path.basename(self.filePath[0]))
