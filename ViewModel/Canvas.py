@@ -98,6 +98,7 @@ class Canvas(QWidget):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
         qPixmap = QPixmap.fromImage(qImg)
         self.model.setImgScaled(qPixmap, w, h, c)
+        self.setDisplayAnnot()
         self.displayImage()
 
 
