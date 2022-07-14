@@ -87,18 +87,17 @@ class Canvas(QWidget):
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
 
-        if ext == '.json' :
+        if ext == '.json' or os.path.isfile(self.jsonPath):
+            print('있음')
             self.model.setAnnotDict(json2Dict(self.jsonPath))
-        else :
-            if os.path.isfile(self.jsonPath) :
-                print('있음')
-            else :
-                print('없음')
-                img, w, h, c = loadImgData(self.filePath[0])
-                self.model.setImgData(img, w, h, c)
-                self.model.setImgScaled(img, w, h, c)
-                self.model.setAnnotInfo(self.filePath[0], w, h)
-                self.displayImage()
+        else:
+            print('없음')
+            img, w, h, c = loadImgData(self.filePath[0])
+            self.model.setImgData(img, w, h, c)
+            self.model.setImgScaled(img, w, h, c)
+            self.model.setAnnotInfo(self.filePath[0], w, h)
+            self.displayImage()
+
 
     def saveJson(self):
         dict2Json(self.model.getAnnotInfo(), self.jsonPath)
