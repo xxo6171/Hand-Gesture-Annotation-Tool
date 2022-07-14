@@ -89,12 +89,11 @@ class Canvas(QWidget):
 
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
-            # !!! draw 부분 !!!
+            img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
         else :
-            # !!! autoAnnotation 부분 !!!
+            img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
 
-        img, w, h, c = loadImgData(self.filePath[0])
         self.model.setImgData(img, w, h, c)
         self.model.setImgScaled(img, w, h, c)
         self.displayImage()
