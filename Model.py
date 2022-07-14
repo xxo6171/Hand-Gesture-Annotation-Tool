@@ -20,13 +20,14 @@ class Model:
         self.annot_info = {}
         self.initAnnotInfo()
 
-        self.cur_points = []
+        self.cur_points = [-1]
         self.cur_label = ''
+        self.cur_shape_type = ''
 
         self.focus_flag = None
         self.menu_flag = None
         self.ctrl_flag = None
-        self.draw_flag = 'No Draw'
+        self.draw_flag = False
         self.tracking_flag = False
         self.keep_tracking_flag = False
         
@@ -84,13 +85,24 @@ class Model:
         new_shape['points'] = self.cur_points
         if rad > 0:
             new_shape['radian'] = rad
-        new_shape['shape_type'] = self.draw_flag
+        new_shape['shape_type'] = self.cur_shape_type
         self.annot_info['shapes'].append(new_shape)
+    def resetCurPoints(self):
+        self.cur_points = []
     def setCurPoints(self, point):
         pos = point.copy()
         self.cur_points.append(pos)
+    def getCurPoints(self):
+        return copy.deepcopy(self.cur_points)
     def setCurLabel(self, label):
         self.cur_label = label
+    def getCurLabel(self):
+        return self.cur_label
+    def setCurShapeType(self, shape_type):
+        self.cur_shape_type = shape_type
+    def getCurShapeType(self):
+        return self.cur_shape_type
+
 
     def getFocusFlag(self):
         return self.focus_flag
