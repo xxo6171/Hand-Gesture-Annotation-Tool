@@ -35,6 +35,8 @@ class Canvas(QWidget):
         self.action_Zoom_In = view[6]
         self.action_Zoom_Out = view[7]
 
+        self.listWidget_LabelList = view[8]
+
         self.model = model
         self.model.setCtrlFlag(False)
         self.model.setMenuFlag(False)
@@ -178,16 +180,15 @@ class Canvas(QWidget):
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
                     self.model.setDrawFlag('No Draw')
-                    dlg = AddLabelDialog(self.model)
+                    dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                     dlg.exec_()
                 else:
                     self.polygon_list.append(self.model.getPrePos())
             else:
                 self.stopMouseTracking()
                 self.model.setDrawFlag('No Draw')
-                dlg = AddLabelDialog(self.model)
+                dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
-
 
         if not tracking:
             self.model.setPrePos(pos)

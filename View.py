@@ -28,7 +28,7 @@ class HandAnnot(QMainWindow, main_form_class):
                                 self.action_Line,
                                 self.action_Dot         ]
 
-        self.canvas_widget = [
+        self.canvas_widgets = [
                                 self.action_Open,
                                 self.menu_Edit,
                                 self.menu_Zoom,
@@ -37,10 +37,13 @@ class HandAnnot(QMainWindow, main_form_class):
                                 self.draw_actions,
                                 self.statusBar,
                                 self.action_Zoom_In,
-                                self.action_Zoom_Out
+                                self.action_Zoom_Out,
+
+                                self.listWidget_LabelList
                             ]
 
-        self.canvas_viewmodel = Canvas(self.canvas_widget, self.model)
+        self.canvas_viewmodel = Canvas(self.canvas_widgets, self.model)
+        self.labellist_viewmodel = LabelList(self.listWidget_LabelList, self.model)
 
         self.scrollArea_Canvas.setWidget(self.canvas_viewmodel)
 

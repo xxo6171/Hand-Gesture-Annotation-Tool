@@ -2,17 +2,16 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from numpy import str0
-import Model
 
 add_label_UI_dir = 'Resource/UI/Add Lable Dialog.ui'
 add_label_form_class = uic.loadUiType(add_label_UI_dir)[0]
 
 class AddLabelDialog(QDialog, add_label_form_class):
-    def __init__(self, model):
+    def __init__(self, view, model):
         super().__init__()
         self.setupUi(self)
 
+        self.view = view
         self.model = model
         self.initListWidget()
 
@@ -24,6 +23,7 @@ class AddLabelDialog(QDialog, add_label_form_class):
         
     def initListWidget(self):
         self.label_list = self.model.getLabelList()
+
         for label in self.label_list:
             add_label = QListWidgetItem(label)
             self.listWidget_LabelList.addItem(add_label)
@@ -39,7 +39,13 @@ class AddLabelDialog(QDialog, add_label_form_class):
         label_name = self.lineEdit_NewLabel.text()
         if label_name not in self.label_list:
             self.model.setLabel(label_name)
-        self.close()
+        self.closeDialog()
 
     def closeDialog(self):
+        self.view.clear()
+        labels = self.model.getLabelList()
+
+        for label in labels:
+            add_label = QListWidgetItem(label)
+            self.view.addItem(add_label)
         self.close()
