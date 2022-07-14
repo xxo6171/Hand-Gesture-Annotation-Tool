@@ -5,7 +5,6 @@ from PyQt5.QtGui import *
 import sys
 
 from ViewModel.Canvas import Canvas
-from ViewModel.LabelList import LabelList
 from ViewModel.ObjectList import ObjectList
 
 import Model
@@ -43,7 +42,6 @@ class HandAnnot(QMainWindow, main_form_class):
                             ]
 
         self.canvas_viewmodel = Canvas(self.canvas_widgets, self.model)
-        self.labellist_viewmodel = LabelList(self.listWidget_LabelList, self.model)
 
         self.scrollArea_Canvas.setWidget(self.canvas_viewmodel)
 
