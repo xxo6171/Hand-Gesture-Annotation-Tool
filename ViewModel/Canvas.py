@@ -1,6 +1,5 @@
 import os
 import math
-import qimage2ndarray
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -84,7 +83,11 @@ class Canvas(QWidget):
         if self.filePath[0] != '' :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setImgData(img, w, h, c)
-            self.model.setImgScaled(img, w, h, c)
+
+            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+            qPixmap = QPixmap.fromImage(qImg)
+
+            self.model.setImgScaled(qPixmap, w, h, c)
             self.model.setAnnotInfo(self.filePath[0], w, h)
             self.displayImage()
 
@@ -95,13 +98,11 @@ class Canvas(QWidget):
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-
+        
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
         self.label_Canvas.setGeometry(0, 0, w, h)
-        self.label_Canvas.setPixmap(qPixmap)
+        self.label_Canvas.setPixmap(img)
 
         self.model.setMenuFlag(True)
         self.menuRefresh()
@@ -119,7 +120,12 @@ class Canvas(QWidget):
 
         if self.model.getScaleRatio() <= 3.05 :
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-            self.model.setImgScaled(img, w, h, c)
+
+            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+            qPixmap = QPixmap.fromImage(qImg)
+
+            self.model.setImgScaled(qPixmap, w, h, c)
+        self.setDisplayAnnot()
         self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
 
@@ -136,7 +142,12 @@ class Canvas(QWidget):
 
         if self.model.getScaleRatio() >= 0.21:
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-            self.model.setImgScaled(img, w, h, c)
+
+            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+            qPixmap = QPixmap.fromImage(qImg)
+
+            self.model.setImgScaled(qPixmap, w, h, c)
+        self.setDisplayAnnot()
         self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
     
@@ -196,6 +207,7 @@ class Canvas(QWidget):
         if tracking:
             if self.model.isKeepTracking():
                 if points[0] == self.model.getPrePos():
+                    print('그리기 끝')
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
                     self.model.setDrawFlag(False)
@@ -217,12 +229,11 @@ class Canvas(QWidget):
             self.startMouseTracking()
             
     def draw(self):
+        print(self.model.getCurPoints())
         draw_type = self.model.getCurShapeType()
         img, w, h, c = self.model.getImgScaled()
 
         draw_img = img.copy()
-        draw_img = QImage(draw_img.data, w, h, w * c, QImage.Format_RGB888)
-        draw_img = QPixmap.fromImage(draw_img)
 
         painter = QPainter(draw_img)
 
@@ -233,8 +244,8 @@ class Canvas(QWidget):
         if draw_type == 'No Draw':
             return
         elif draw_type == 'Polygon':
-            src_x = self.model.getCurPoints()[-1][0]
-            src_y = self.model.getCurPoints()[-1][1]
+            src_x = pre_pos[0]
+            src_y = pre_pos[1]
             click_range = 10
             start_point = self.model.getCurPoints()[0]
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
@@ -338,58 +349,58 @@ class Canvas(QWidget):
         self.model.setTracking(True)
 
     def retouch(self):
-        self.setImg()
         self.displayImage()
 
-    def setImg(self):
+    def setDisplayAnnot(self):
         dict = self.model.getAnnotInfo()
         sImg, w, h, c = self.model.getImgScaled()
         
-        draw_img = sImg.copy()
-        draw_img = QImage(draw_img.data, w, h, w * c, QImage.Format_RGB888)
-        draw_img = QPixmap.fromImage(draw_img)
+        draw_img = sImg
         painter = QPainter(draw_img)
-
+        
+        
         for shape in dict['shapes']:
             shape_type = shape['shape_type']
             points = shape['points']
             
             if shape_type == 'Polygon':
                 for idx in range(len(points)):
-                    src_x = points[idx][0]
-                    src_y = points[idx][1]
+                    src_x = points[idx][0]*w
+                    src_y = points[idx][1]*h
                     if idx == len(points):
-                        dst_x = points[0][0]
-                        dst_y = points[0][1]
+                        dst_x = points[0][0]*w
+                        dst_y = points[0][1]*h
                     else:
-                        dst_x = points[idx+1][0]
-                        dst_y = points[idx+1][1]
+                        dst_x = points[idx+1][0]*w
+                        dst_y = points[idx+1][1]*h
                     painter.drawLine(src_x, src_y, dst_x, dst_y)
 
             elif shape_type == 'Gesture Polygon':
                 pass
             elif shape_type == 'Rectangle':
-                x_pos = points[0][0]
-                y_pos = points[0][1]
-                width = points[1][0] - x_pos
-                height = points[1][1] - y_pos
+                x_pos = points[0][0]*w
+                y_pos = points[0][1]*h
+                width = (points[1][0]*w - x_pos)
+                height = (points[1][1]*h - y_pos)
+                painter.setPen(QPen(Qt.blue, 3, Qt.SolidLine))
                 painter.drawRect(x_pos, y_pos, width, height)
             elif shape_type == 'Circle':
-                x_pos = points[0][0]
-                y_pos = points[0][1]
-                rad = math.sqrt(math.pow(x_pos-points[1][0], 2) + math.pow(y_pos-points[1][1], 2))
-                painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
+                print('원')
+                x_pos = points[0][0]*w
+                y_pos = points[0][1]*h
+                rad = math.sqrt(math.pow(x_pos-points[1][0]*w, 2) + math.pow(y_pos-points[1][1]*h, 2))
+                painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
+                painter.drawEllipse(x_pos-rad, y_pos-rad, rad*2, rad*2)
             elif shape_type == 'Line':
-                src_x = points[0][0]
-                src_y = points[0][1]
-                dst_x = points[1][0]
-                dst_y = points[1][1]
+                src_x = points[0][0]*w
+                src_y = points[0][1]*h
+                dst_x = points[1][0]*w
+                dst_y = points[1][1]*h
+                painter.setPen(QPen(Qt.yellow, 3, Qt.SolidLine))
                 painter.drawLine(src_x, src_y, dst_x, dst_y)
             elif shape_type == 'Dot':
-                x = points[0][0]
-                y = points[0][1]
+                x = points[0][0]*w
+                y = points[0][1]*h
                 painter.drawPoint(x, y)
         painter.end()
-
-        # draw_img = draw_img.toImage()
-        # self.model.setImgScaled(draw_img, w, h, c)
+        self.model.setImgScaled(draw_img, w, h, c)
