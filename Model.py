@@ -31,8 +31,8 @@ class Model:
         self.tracking_flag = False
         self.keep_tracking_flag = False
         
-        self.pre_mouse_pos = []
-        self.cur_mouse_pos = []
+        self.pre_mouse_pos = [0, 0]
+        self.cur_mouse_pos = [0, 0]
     
     def getImgData(self):
         if self.img_origin is None :
@@ -91,6 +91,8 @@ class Model:
         self.cur_points = []
     def setCurPoints(self, point):
         pos = point.copy()
+        pos[0] /= self.img_scaled_width
+        pos[1] /= self.img_scaled_height
         self.cur_points.append(pos)
     def getCurPoints(self):
         return copy.deepcopy(self.cur_points)

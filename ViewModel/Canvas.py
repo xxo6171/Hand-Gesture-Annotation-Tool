@@ -179,10 +179,7 @@ class Canvas(QWidget):
         self.model.setCurPos([x_pos, y_pos])
         text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
-        try:
-            self.draw()
-        except:
-            print('error')
+        self.draw()
         
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
@@ -235,10 +232,10 @@ class Canvas(QWidget):
         if draw_type == 'No Draw':
             return
         elif draw_type == 'Polygon':
-            src_x = self.model.getCurPoints()[-1][0]#self.polygon_list[-1][0]
-            src_y = self.model.getCurPoints()[-1][1]#self.polygon_list[-1][1]
+            src_x = self.model.getCurPoints()[-1][0]
+            src_y = self.model.getCurPoints()[-1][1]
             click_range = 10
-            start_point = self.model.getCurPoints()[0]#self.polygon_list[0]
+            start_point = self.model.getCurPoints()[0]
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
                 if cur_pos[1] < start_point[1]+click_range and cur_pos[1] > start_point[1]-click_range:
                     cur_pos[0] = start_point[0]
