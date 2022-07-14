@@ -20,10 +20,14 @@ class Model:
         self.annot_info = {}
         self.initAnnotInfo()
 
+        self.cur_points = [-1]
+        self.cur_label = ''
+        self.cur_shape_type = ''
+
         self.focus_flag = None
         self.menu_flag = None
         self.ctrl_flag = None
-        self.draw_flag = 'No Draw'
+        self.draw_flag = False
         self.tracking_flag = False
         self.keep_tracking_flag = False
         
@@ -55,9 +59,9 @@ class Model:
         self.scale_ratio = round(ratio,2)
 
     def getLabelList(self):
-        return self.label_list
-    def setLabelList(self, list):
-        self.label_list = list
+        return self.label_list.copy()
+    def setLabel(self, label):
+        self.label_list.append(label)
 
     def getObjectList(self):
         return self.object_list
@@ -73,16 +77,32 @@ class Model:
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width
         self.annot_info['image_height'] = height
-    def setNewShape(self, label, points_list, shape_type, rad = -1):
-        new_shape = {}
-        new_shape['label'] = label
-        new_shape['points'] = points_list
-        if rad > 0:
-            new_shape['radian'] = rad
-        new_shape['shape_type'] = shape_type
-        self.annot_info['shapes'].append(new_shape)
     def getAnnotInfo(self):
         return copy.deepcopy(self.annot_info)
+    def setCurShapeToDict(self, rad = -1):
+        new_shape = {}
+        new_shape['label'] = self.cur_label
+        new_shape['points'] = self.cur_points
+        if rad > 0:
+            new_shape['radian'] = rad
+        new_shape['shape_type'] = self.cur_shape_type
+        self.annot_info['shapes'].append(new_shape)
+    def resetCurPoints(self):
+        self.cur_points = []
+    def setCurPoints(self, point):
+        pos = point.copy()
+        self.cur_points.append(pos)
+    def getCurPoints(self):
+        return copy.deepcopy(self.cur_points)
+    def setCurLabel(self, label):
+        self.cur_label = label
+    def getCurLabel(self):
+        return self.cur_label
+    def setCurShapeType(self, shape_type):
+        self.cur_shape_type = shape_type
+    def getCurShapeType(self):
+        return self.cur_shape_type
+
 
     def getFocusFlag(self):
         return self.focus_flag
