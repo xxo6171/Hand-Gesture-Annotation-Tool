@@ -1,5 +1,6 @@
 import os
 import math
+import qimage2ndarray
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -337,5 +338,58 @@ class Canvas(QWidget):
         self.model.setTracking(True)
 
     def retouch(self):
-        test = self.model.getAnnotInfo()
-        print(test)
+        self.setImg()
+        self.displayImage()
+
+    def setImg(self):
+        dict = self.model.getAnnotInfo()
+        sImg, w, h, c = self.model.getImgScaled()
+        
+        draw_img = sImg.copy()
+        draw_img = QImage(draw_img.data, w, h, w * c, QImage.Format_RGB888)
+        draw_img = QPixmap.fromImage(draw_img)
+        painter = QPainter(draw_img)
+
+        for shape in dict['shapes']:
+            shape_type = shape['shape_type']
+            points = shape['points']
+            
+            if shape_type == 'Polygon':
+                for idx in range(len(points)):
+                    src_x = points[idx][0]
+                    src_y = points[idx][1]
+                    if idx == len(points):
+                        dst_x = points[0][0]
+                        dst_y = points[0][1]
+                    else:
+                        dst_x = points[idx+1][0]
+                        dst_y = points[idx+1][1]
+                    painter.drawLine(src_x, src_y, dst_x, dst_y)
+
+            elif shape_type == 'Gesture Polygon':
+                pass
+            elif shape_type == 'Rectangle':
+                x_pos = points[0][0]
+                y_pos = points[0][1]
+                width = points[1][0] - x_pos
+                height = points[1][1] - y_pos
+                painter.drawRect(x_pos, y_pos, width, height)
+            elif shape_type == 'Circle':
+                x_pos = points[0][0]
+                y_pos = points[0][1]
+                rad = math.sqrt(math.pow(x_pos-points[1][0], 2) + math.pow(y_pos-points[1][1], 2))
+                painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
+            elif shape_type == 'Line':
+                src_x = points[0][0]
+                src_y = points[0][1]
+                dst_x = points[1][0]
+                dst_y = points[1][1]
+                painter.drawLine(src_x, src_y, dst_x, dst_y)
+            elif shape_type == 'Dot':
+                x = points[0][0]
+                y = points[0][1]
+                painter.drawPoint(x, y)
+        painter.end()
+
+        # draw_img = draw_img.toImage()
+        # self.model.setImgScaled(draw_img, w, h, c)
