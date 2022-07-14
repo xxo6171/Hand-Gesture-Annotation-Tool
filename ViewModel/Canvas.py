@@ -92,16 +92,12 @@ class Canvas(QWidget):
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
         else :
             img, w, h, c = loadImgData(self.filePath[0])
-            self.model.setImgData(img, w, h, c)
-
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
-
-            self.model.setImgScaled(qPixmap, w, h, c)
             self.model.setAnnotInfo(self.filePath[0], w, h)
 
         self.model.setImgData(img, w, h, c)
-        self.model.setImgScaled(img, w, h, c)
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+        self.model.setImgScaled(qPixmap, w, h, c)
         self.displayImage()
 
 
