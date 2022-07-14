@@ -39,6 +39,7 @@ class AddLabelDialog(QDialog, add_label_form_class):
         label_name = self.lineEdit_NewLabel.text()
         if label_name not in self.label_list:
             self.model.setLabel(label_name)
+        self.model.setCurLabel(label_name)
         self.closeDialog()
 
     def closeDialog(self):
