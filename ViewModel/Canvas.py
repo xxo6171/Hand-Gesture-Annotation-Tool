@@ -79,19 +79,29 @@ class Canvas(QWidget):
             self.action_Save.setEnabled(False)
 
     def openImage(self):
-        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
+        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
+
         if self.filePath[0] == '' :
             return
-        img, w, h, c = loadImgData(self.filePath[0])
-        self.model.setImgData(img, w, h, c)
-        self.model.setImgScaled(img, w, h, c)
-        self.model.setAnnotInfo(self.filePath[0], w, h)
-        self.displayImage()
+
+        self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
+        self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
+
+        if ext == '.json' :
+            pass
+        else :
+            if os.path.isfile(self.jsonPath) :
+                print('있음')
+            else :
+                print('없음')
+                img, w, h, c = loadImgData(self.filePath[0])
+                self.model.setImgData(img, w, h, c)
+                self.model.setImgScaled(img, w, h, c)
+                self.model.setAnnotInfo(self.filePath[0], w, h)
+                self.displayImage()
 
     def saveJson(self):
-        fileName = os.path.splitext(os.path.basename(self.filePath[0]))
-        jsonPath = os.path.dirname(self.filePath[0]) + '/' + fileName[0] + '.json'
-        dict2Json(self.model.getAnnotInfo(), jsonPath)
+        dict2Json(self.model.getAnnotInfo(), self.jsonPath)
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
