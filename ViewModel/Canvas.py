@@ -17,7 +17,6 @@ class Canvas(QWidget):
         self.initData(model)
 
     def initUI(self, view):
-        self.polygon_list = [-1]
         self.label_Canvas = QLabel(self)
 
         self.action_Open = view[0]
@@ -32,6 +31,7 @@ class Canvas(QWidget):
         self.action_Circle = view[4][3]
         self.action_Line = view[4][4]
         self.action_Dot = view[4][5]
+        self.action_Retouch = view[4][6]
 
         self.statusBar = view[5]
 
@@ -49,6 +49,8 @@ class Canvas(QWidget):
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
+        self.action_Retouch.triggered.connect(self.retouch)
+
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
 
@@ -161,7 +163,7 @@ class Canvas(QWidget):
             self.zoomOutImage()
 
     def mouseMoveEvent(self, event):
-        if self.model.getDrawFlag() in 'No Draw':
+        if self.model.getDrawFlag() is False:
             return
         x_pos = event.x()
         y_pos = event.y()
@@ -174,38 +176,41 @@ class Canvas(QWidget):
             print('error')
         
     def mouseReleaseEvent(self, event):
-        if self.model.getDrawFlag() is 'No Draw':
-            return
+        if self.model.getDrawFlag() is False:
+            return            
+
         pos = [event.x(), event.y()]
+        points = self.model.getCurPoints()
         tracking = self.label_Canvas.hasMouseTracking()
 
-        if len(self.polygon_list) == 0:
-            self.polygon_list.append(pos)
+        if len(points) == 0:
+            self.model.setCurPoints(pos)
 
         if tracking:
             if self.model.isKeepTracking():
-                # self.model.setPrePos(pos)
-                if self.polygon_list[0] == self.model.getPrePos():
-                    print(self.polygon_list)
+                if points[0] == self.model.getPrePos():
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
-                    self.model.setDrawFlag('No Draw')
+                    self.model.setDrawFlag(False)
                     dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                     dlg.exec_()
+                    self.model.setCurShapeToDict()
                 else:
-                    self.polygon_list.append(self.model.getPrePos())
+                    self.model.setCurPoints(self.model.getPrePos())
             else:
                 self.stopMouseTracking()
-                self.model.setDrawFlag('No Draw')
+                self.model.setCurPoints(self.model.getCurPos())
+                self.model.setDrawFlag(False)
                 dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
+                self.model.setCurShapeToDict()
 
         if not tracking:
             self.model.setPrePos(pos)
             self.startMouseTracking()
             
     def draw(self):
-        flag = self.model.getDrawFlag()
+        draw_type = self.model.getCurShapeType()
         img, w, h, c = self.model.getImgScaled()
 
         draw_img = img.copy()
@@ -218,13 +223,13 @@ class Canvas(QWidget):
         cur_pos = self.model.getCurPos()
 
         painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
-        if flag == 'No Draw':
+        if draw_type == 'No Draw':
             return
-        elif flag == 'Polygon':
-            src_x = self.polygon_list[-1][0]
-            src_y = self.polygon_list[-1][1]
+        elif draw_type == 'Polygon':
+            src_x = self.model.getCurPoints()[-1][0]#self.polygon_list[-1][0]
+            src_y = self.model.getCurPoints()[-1][1]#self.polygon_list[-1][1]
             click_range = 10
-            start_point = self.polygon_list[0]
+            start_point = self.model.getCurPoints()[0]#self.polygon_list[0]
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
                 if cur_pos[1] < start_point[1]+click_range and cur_pos[1] > start_point[1]-click_range:
                     cur_pos[0] = start_point[0]
@@ -241,16 +246,16 @@ class Canvas(QWidget):
             painter.drawPoint(src_x, src_y)
             painter.drawPoint(start_point[0], start_point[1])
 
-        elif flag == 'Gesture Polygon':
+        elif draw_type == 'Gesture Polygon':
             pass
-        elif flag == 'Rectangle':
+        elif draw_type == 'Rectangle':
             x_pos = pre_pos[0]
             y_pos = pre_pos[1]
             width = cur_pos[0] - x_pos
             height = cur_pos[1] - y_pos
             painter.drawRect(x_pos, y_pos, width, height)
 
-        elif flag == 'Circle':
+        elif draw_type == 'Circle':
             try:
                 rad = math.sqrt(math.pow(pre_pos[0]-cur_pos[0], 2) + math.pow(pre_pos[1]-cur_pos[1], 2))
             except:
@@ -259,51 +264,61 @@ class Canvas(QWidget):
             y_pos = pre_pos[1] - rad
             painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
 
-        elif flag == 'Line':
+        elif draw_type == 'Line':
             src_x = pre_pos[0]
             src_y = pre_pos[1]
             dst_x = cur_pos[0]
             dst_y = cur_pos[1]
             painter.drawLine(src_x, src_y, dst_x, dst_y)
             
-        elif flag == 'Dot':
+        elif draw_type == 'Dot':
             painter.drawPoint(cur_pos[0], cur_pos[1])
 
         painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
         painter.drawPoint(pre_pos[0], pre_pos[1])
         painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
         painter.drawPoint(cur_pos[0], cur_pos[1])
-
         painter.end()
         self.label_Canvas.setPixmap(draw_img)
 
     def drawPoly(self):
-        self.model.setDrawFlag('Polygon')
-        self.polygon_list = []
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Polygon')
+        self.model.resetCurPoints()
         self.model.setKeepTracking(True)
         self.stopMouseTracking()
 
     def drawGesturePoly(self):
-        self.model.setDrawFlag('Gesture Polygon')
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Gesture Polygon')
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def drawRect(self):
-        self.model.setDrawFlag('Rectangle')
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Rectangle')
+        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawCircle(self):
-        self.model.setDrawFlag('Circle')
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Circle')
+        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawLine(self):
-        self.model.setDrawFlag('Line')
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Line')
+        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
     def drawDot(self):
-        self.model.setDrawFlag('Dot')
+        self.model.setDrawFlag(True)
+        self.model.setCurShapeType('Dot')
+        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
         self.stopMouseTracking()
 
@@ -314,3 +329,7 @@ class Canvas(QWidget):
     def startMouseTracking(self):
         self.label_Canvas.setMouseTracking(True)
         self.model.setTracking(True)
+
+    def retouch(self):
+        test = self.model.getAnnotInfo()
+        print(test)
