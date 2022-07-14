@@ -79,6 +79,10 @@ class Canvas(QWidget):
             self.model.setImgScaled(img, w, h, c)
             self.displayImage()
 
+    def saveJson(self):
+        file_name = os.path.splitext(os.path.basename(self.filepath[0]))
+        print(file_name[0])
+
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
