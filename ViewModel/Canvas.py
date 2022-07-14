@@ -38,6 +38,7 @@ class Canvas(QWidget):
 
         # Triggered connect
         self.action_Open.triggered.connect(self.openImage)
+        self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
         self.action_Gesture_Polygon.triggered.connect(self.drawGesturePoly)
