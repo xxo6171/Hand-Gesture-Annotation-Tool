@@ -88,7 +88,7 @@ class Canvas(QWidget):
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
 
         if ext == '.json' :
-            pass
+            self.model.setAnnotDict(json2Dict(self.jsonPath))
         else :
             if os.path.isfile(self.jsonPath) :
                 print('있음')
