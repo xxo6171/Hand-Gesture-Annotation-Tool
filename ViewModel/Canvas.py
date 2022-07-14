@@ -1,3 +1,4 @@
+import os
 import math
 from tkinter import W
 from PyQt5.QtWidgets import *
