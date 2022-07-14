@@ -1,11 +1,13 @@
 import math
-from tkinter import W
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt
+
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
+
+from ViewModel.AddLabelDialog import AddLabelDialog
 
 class Canvas(QWidget):
     def __init__(self, view, model):
@@ -154,7 +156,10 @@ class Canvas(QWidget):
         self.model.setCurPos([x_pos, y_pos])
         text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
-        self.draw()
+        try:
+            self.draw()
+        except:
+            print('error')
         
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is 'No Draw':
@@ -173,11 +178,16 @@ class Canvas(QWidget):
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
                     self.model.setDrawFlag('No Draw')
+                    dlg = AddLabelDialog(self.model)
+                    dlg.exec_()
                 else:
                     self.polygon_list.append(self.model.getPrePos())
             else:
                 self.stopMouseTracking()
                 self.model.setDrawFlag('No Draw')
+                dlg = AddLabelDialog(self.model)
+                dlg.exec_()
+
 
         if not tracking:
             self.model.setPrePos(pos)
