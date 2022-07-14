@@ -1,3 +1,4 @@
+import os
 import math
 
 from PyQt5.QtWidgets import *
@@ -6,6 +7,7 @@ from PyQt5.QtGui import *
 
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
+from Utils.ConvertAnnotation import *
 
 from ViewModel.AddLabelDialog import AddLabelDialog
 
@@ -42,6 +44,7 @@ class Canvas(QWidget):
 
         # Triggered connect
         self.action_Open.triggered.connect(self.openImage)
+        self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
         self.action_Gesture_Polygon.triggered.connect(self.drawGesturePoly)
@@ -76,12 +79,18 @@ class Canvas(QWidget):
             self.action_Save.setEnabled(False)
 
     def openImage(self):
-        self.filepath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
-        if self.filepath[0] != '' :
-            img, w, h, c = loadImgData(self.filepath[0])
+        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
+        if self.filePath[0] != '' :
+            img, w, h, c = loadImgData(self.filePath[0])
             self.model.setImgData(img, w, h, c)
             self.model.setImgScaled(img, w, h, c)
+            self.model.setAnnotInfo(self.filePath[0], w, h)
             self.displayImage()
+
+    def saveJson(self):
+        fileName = os.path.splitext(os.path.basename(self.filePath[0]))
+        jsonPath = os.path.dirname(self.filePath[0]) + '/' + fileName[0] + '.json'
+        dict2Json(self.model.getAnnotInfo(), jsonPath)
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
