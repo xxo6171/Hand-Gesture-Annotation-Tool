@@ -60,9 +60,9 @@ class Model:
         self.scale_ratio = round(ratio,2)
 
     def getLabelList(self):
-        return self.label_list
-    def setLabelList(self, list):
-        self.label_list = list
+        return self.label_list.copy()
+    def setLabel(self, label):
+        self.label_list.append(label)
 
     def getObjectList(self):
         return self.object_list
