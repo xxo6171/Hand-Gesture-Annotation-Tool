@@ -1,5 +1,4 @@
 import copy
-from re import sub
 
 class Model:
     def __init__(self):
@@ -31,8 +30,8 @@ class Model:
         self.tracking_flag = False
         self.keep_tracking_flag = False
         
-        self.pre_mouse_pos = []
-        self.cur_mouse_pos = []
+        self.pre_mouse_pos = [0, 0]
+        self.cur_mouse_pos = [0, 0]
     
     def getImgData(self):
         if self.img_origin is None :
@@ -81,18 +80,18 @@ class Model:
         self.annot_info['image_height'] = height
     def getAnnotInfo(self):
         return copy.deepcopy(self.annot_info)
-    def setCurShapeToDict(self, rad = -1):
+    def setCurShapeToDict(self):
         new_shape = {}
         new_shape['label'] = self.cur_label
         new_shape['points'] = self.cur_points
-        if rad > 0:
-            new_shape['radian'] = rad
         new_shape['shape_type'] = self.cur_shape_type
         self.annot_info['shapes'].append(new_shape)
     def resetCurPoints(self):
         self.cur_points = []
     def setCurPoints(self, point):
         pos = point.copy()
+        pos[0] /= self.img_scaled_width
+        pos[1] /= self.img_scaled_height
         self.cur_points.append(pos)
     def getCurPoints(self):
         return copy.deepcopy(self.cur_points)
