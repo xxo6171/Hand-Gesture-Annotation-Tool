@@ -22,6 +22,9 @@ class Model:
         self.annot_info = {}
         self.initAnnotInfo()
 
+        self.cur_points = []
+        self.cur_label = ''
+
         self.focus_flag = None
         self.menu_flag = None
         self.ctrl_flag = None
@@ -75,16 +78,21 @@ class Model:
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width
         self.annot_info['image_height'] = height
-    def setNewShape(self, label, points_list, shape_type, rad = -1):
-        new_shape = {}
-        new_shape['label'] = label
-        new_shape['points'] = points_list
-        if rad > 0:
-            new_shape['radian'] = rad
-        new_shape['shape_type'] = shape_type
-        self.annot_info['shapes'].append(new_shape)
     def getAnnotInfo(self):
         return copy.deepcopy(self.annot_info)
+    def setCurShapeToDict(self, rad = -1):
+        new_shape = {}
+        new_shape['label'] = self.cur_label
+        new_shape['points'] = self.cur_points
+        if rad > 0:
+            new_shape['radian'] = rad
+        new_shape['shape_type'] = self.draw_flag
+        self.annot_info['shapes'].append(new_shape)
+    def setCurPoints(self, point):
+        pos = point.copy()
+        self.cur_points.append(pos)
+    def setCurLabel(self, label):
+        self.cur_label = label
 
     def getFocusFlag(self):
         return self.focus_flag
