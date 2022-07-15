@@ -43,7 +43,7 @@ class Canvas(QWidget):
         self.listWidget_LabelList = view[8]
 
         # Triggered connect
-        self.action_Open.triggered.connect(self.openImage)
+        self.action_Open.triggered.connect(self.openFile)
         self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
@@ -78,7 +78,7 @@ class Canvas(QWidget):
             self.menu_Zoom.setEnabled(False)
             self.action_Save.setEnabled(False)
 
-    def openImage(self):
+    def openFile(self):
         self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
 
         if self.filePath[0] == '' :
@@ -175,6 +175,10 @@ class Canvas(QWidget):
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
             self.model.setCtrlFlag(True)
+        if event.key() == (Qt.Key_Control and Qt.Key_O) :
+            self.openFile()
+        if event.key() == (Qt.Key_Control and Qt.Key_S) :
+            self.saveJson()
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control:
