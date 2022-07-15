@@ -72,6 +72,8 @@ class Model:
         self.annot_info['image_path'] = ''
         self.annot_info['image_width'] = 0
         self.annot_info['image_height'] = 0
+    def setAnnotDict(self, dict):
+        self.annot_info = dict.copy()
     def setAnnotInfo(self, filepath, width, height):
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width

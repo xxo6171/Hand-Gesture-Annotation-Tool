@@ -43,7 +43,7 @@ class Canvas(QWidget):
         self.listWidget_LabelList = view[8]
 
         # Triggered connect
-        self.action_Open.triggered.connect(self.openImage)
+        self.action_Open.triggered.connect(self.openFile)
         self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
@@ -78,23 +78,32 @@ class Canvas(QWidget):
             self.menu_Zoom.setEnabled(False)
             self.action_Save.setEnabled(False)
 
-    def openImage(self):
-        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
-        if self.filePath[0] != '' :
+    def openFile(self):
+        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
+
+        if self.filePath[0] == '' :
+            return
+
+        self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
+        self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
+
+        if ext == '.json' or os.path.isfile(self.jsonPath):
+            self.model.setAnnotDict(json2Dict(self.jsonPath))
+            img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
+        else :
             img, w, h, c = loadImgData(self.filePath[0])
-            self.model.setImgData(img, w, h, c)
-
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
-
-            self.model.setImgScaled(qPixmap, w, h, c)
             self.model.setAnnotInfo(self.filePath[0], w, h)
-            self.displayImage()
+
+        self.model.setImgData(img, w, h, c)
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+        self.model.setImgScaled(qPixmap, w, h, c)
+        self.setDisplayAnnot()
+        self.displayImage()
+
 
     def saveJson(self):
-        fileName = os.path.splitext(os.path.basename(self.filePath[0]))
-        jsonPath = os.path.dirname(self.filePath[0]) + '/' + fileName[0] + '.json'
-        dict2Json(self.model.getAnnotInfo(), jsonPath)
+        dict2Json(self.model.getAnnotInfo(), self.jsonPath)
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
@@ -166,6 +175,10 @@ class Canvas(QWidget):
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
             self.model.setCtrlFlag(True)
+        if event.key() == (Qt.Key_Control and Qt.Key_O) :
+            self.openFile()
+        if event.key() == (Qt.Key_Control and Qt.Key_S) :
+            self.saveJson()
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control:
