@@ -175,9 +175,9 @@ class Canvas(QWidget):
     def keyPressEvent(self, event):  # Press Control Key
         if event.key() == Qt.Key_Control:
             self.model.setCtrlFlag(True)
-        if event.key() == Qt.Key_Control and event.key() == Qt.Key_O :
+        if event.key() == (Qt.Key_Control and Qt.Key_O) :
             self.openFile()
-        if event.key() == Qt.Key_Control and event.key() == Qt.Key_S :
+        if event.key() == (Qt.Key_Control and Qt.Key_S) :
             self.saveJson()
 
     def keyReleaseEvent(self, event):  # Release Control Key
