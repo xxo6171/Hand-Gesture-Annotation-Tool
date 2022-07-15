@@ -207,7 +207,6 @@ class Canvas(QWidget):
         if tracking:
             if self.model.isKeepTracking():
                 if points[0] == self.model.getPrePos():
-                    print('그리기 끝')
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
                     self.model.setDrawFlag(False)
@@ -229,7 +228,6 @@ class Canvas(QWidget):
             self.startMouseTracking()
             
     def draw(self):
-        print(self.model.getCurPoints())
         draw_type = self.model.getCurShapeType()
         img, w, h, c = self.model.getImgScaled()
 
@@ -244,8 +242,8 @@ class Canvas(QWidget):
         if draw_type == 'No Draw':
             return
         elif draw_type == 'Polygon':
-            src_x = pre_pos[0]
-            src_y = pre_pos[1]
+            src_x = self.model.getCurPoints()[-1][0]
+            src_y = self.model.getCurPoints()[-1][1]
             click_range = 10
             start_point = self.model.getCurPoints()[0]
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
