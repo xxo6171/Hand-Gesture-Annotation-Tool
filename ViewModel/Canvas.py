@@ -86,7 +86,7 @@ class Canvas(QWidget):
 
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
-
+        self.model.initAnnotInfo()
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
