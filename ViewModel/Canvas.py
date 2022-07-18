@@ -160,9 +160,6 @@ class Canvas(QWidget):
         self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
     
-    def drawLine(self):
-        self.model.setDrawFlag('Line')
-
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
         QWidget.focusInEvent(self, event)
