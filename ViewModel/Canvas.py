@@ -197,6 +197,25 @@ class Canvas(QWidget):
         elif event.angleDelta().y() < 0 :
             self.zoomOutImage()
 
+    def contextMenuEvent(self, event):
+        if self.model.getImgData() is None: return
+
+        menu = QMenu(self)
+        action_Polygon = menu.addAction('Polygon')
+        action_Gesture_Polygon = menu.addAction('Gesture Polygon')
+        action_Rectangle = menu.addAction('Rectangle')
+        action_Circle = menu.addAction('Circle')
+        action_Line = menu.addAction('Line')
+        action_Dot = menu.addAction('Dot')
+
+        action = menu.exec(self.mapToGlobal(event.pos()))
+        if action == action_Polygon: self.drawRect()
+        elif action == action_Gesture_Polygon: self.drawGesturePoly()
+        elif action == action_Rectangle: self.drawRect()
+        elif action == action_Circle: self.drawCircle()
+        elif action == action_Line: self.drawLine()
+        elif action == action_Dot: self.drawDot()
+
     def mouseMoveEvent(self, event):
         if self.model.getDrawFlag() is False:
             return
