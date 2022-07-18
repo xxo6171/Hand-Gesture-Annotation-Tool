@@ -238,7 +238,8 @@ class Canvas(QWidget):
                 self.model.setDrawFlag(False)
                 dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
-                self.model.setCurShapeToDict()
+                if self.model.getCurLabel() != '' :
+                    self.model.setCurShapeToDict()
 
         if not tracking:
             self.model.setPrePos(pos)
