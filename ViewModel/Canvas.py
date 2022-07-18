@@ -87,6 +87,7 @@ class Canvas(QWidget):
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
         self.model.initAnnotInfo()
+        self.listWidget_LabelList.clear()
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
@@ -229,7 +230,9 @@ class Canvas(QWidget):
                     self.model.setDrawFlag(False)
                     dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                     dlg.exec_()
-                    self.model.setCurShapeToDict()
+                    if self.model.getCurLabel() != '':
+                        self.model.setCurShapeToDict()
+                    self.model.setCurLabel('')
                 else:
                     self.model.setCurPoints(self.model.getPrePos())
             else:
@@ -240,6 +243,7 @@ class Canvas(QWidget):
                 dlg.exec_()
                 if self.model.getCurLabel() != '' :
                     self.model.setCurShapeToDict()
+                self.model.setCurLabel('')
 
         if not tracking:
             self.model.setPrePos(pos)
