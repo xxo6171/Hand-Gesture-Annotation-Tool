@@ -90,8 +90,9 @@ class Canvas(QWidget):
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
-            add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][0]['label'])
-            self.listWidget_LabelList.addItem(add_label)
+            for i in range(len(self.model.getAnnotInfo()['shapes'])) :
+                add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][i]['label'])
+                self.listWidget_LabelList.addItem(add_label)
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
