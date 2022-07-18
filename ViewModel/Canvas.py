@@ -160,9 +160,6 @@ class Canvas(QWidget):
         self.displayImage()
         print('배율 = ', self.model.getScaleRatio())
     
-    def drawLine(self):
-        self.model.setDrawFlag('Line')
-
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
         QWidget.focusInEvent(self, event)
@@ -208,7 +205,9 @@ class Canvas(QWidget):
         
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
-            return            
+            return     
+
+        img, w, h, c = self.model.getImgScaled()
 
         pos = [event.x(), event.y()]
         points = self.model.getCurPoints()
@@ -217,8 +216,12 @@ class Canvas(QWidget):
         if len(points) == 0:
             self.model.setCurPoints(pos)
 
+
         if tracking:
             if self.model.isKeepTracking():
+                points[0][0] = int(points[0][0]*w)
+                points[0][1] = int(points[0][1]*h)
+                print(points[0], self.model.getPrePos())
                 if points[0] == self.model.getPrePos():
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
@@ -235,7 +238,8 @@ class Canvas(QWidget):
                 dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
                 self.model.setCurShapeToDict()
-
+        self.setDisplayAnnot()
+        self.displayImage()
         if not tracking:
             self.model.setPrePos(pos)
             self.startMouseTracking()
@@ -250,23 +254,39 @@ class Canvas(QWidget):
 
         pre_pos = self.model.getPrePos()
         cur_pos = self.model.getCurPos()
+        cur_points = self.model.getCurPoints()
 
         painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
         if draw_type == 'No Draw':
             return
         elif draw_type == 'Polygon':
-            src_x = self.model.getCurPoints()[-1][0]
-            src_y = self.model.getCurPoints()[-1][1]
+            src_x = cur_points[-1][0]*w
+            src_y = cur_points[-1][1]*h
             click_range = 10
-            start_point = self.model.getCurPoints()[0]
+            start_point = cur_points[0]
+            start_point[0] = int(start_point[0]*w)
+            start_point[1] = int(start_point[1]*h)
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
                 if cur_pos[1] < start_point[1]+click_range and cur_pos[1] > start_point[1]-click_range:
                     cur_pos[0] = start_point[0]
                     cur_pos[1] = start_point[1]
+
             self.model.setCurPos([cur_pos[0], cur_pos[1]])
             self.model.setPrePos([cur_pos[0], cur_pos[1]])
             dst_x = cur_pos[0]
             dst_y = cur_pos[1]
+
+            cur_points = self.model.getCurPoints()
+            for idx in range(len(cur_points)-1):
+                sx = cur_points[idx][0]*w
+                sy = cur_points[idx][1]*h
+                dx = cur_points[idx+1][0]*w
+                dy = cur_points[idx+1][1]*h
+                painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+                painter.drawLine(sx, sy, dx, dy)
+                painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+                painter.drawPoint(sx, sy)
+                painter.drawPoint(dx, dy)
 
             painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
             painter.drawLine(src_x, src_y, dst_x, dst_y)
@@ -360,6 +380,7 @@ class Canvas(QWidget):
         self.model.setTracking(True)
 
     def retouch(self):
+        print(self.model.getCurPoints())
         self.displayImage()
 
     def setDisplayAnnot(self):
@@ -369,44 +390,47 @@ class Canvas(QWidget):
         draw_img = sImg
         painter = QPainter(draw_img)
         
-        
         for shape in dict['shapes']:
             shape_type = shape['shape_type']
             points = shape['points']
+            for idx in range(len(points)):
+                points[idx][0] *= w
+                points[idx][1] *= h
             
             if shape_type == 'Polygon':
+                painter.setPen(QPen(Qt.magenta, 3, Qt.SolidLine))
                 for idx in range(len(points)):
-                    src_x = points[idx][0]*w
-                    src_y = points[idx][1]*h
-                    if idx == len(points):
-                        dst_x = points[0][0]*w
-                        dst_y = points[0][1]*h
+                    src_x = points[idx][0]
+                    src_y = points[idx][1]
+                    if idx == len(points)-1:
+                        dst_x = points[0][0]
+                        dst_y = points[0][1]
                     else:
-                        dst_x = points[idx+1][0]*w
-                        dst_y = points[idx+1][1]*h
+                        dst_x = points[idx+1][0]
+                        dst_y = points[idx+1][1]
+                    
                     painter.drawLine(src_x, src_y, dst_x, dst_y)
 
             elif shape_type == 'Gesture Polygon':
                 pass
             elif shape_type == 'Rectangle':
-                x_pos = points[0][0]*w
-                y_pos = points[0][1]*h
-                width = (points[1][0]*w - x_pos)
-                height = (points[1][1]*h - y_pos)
+                x_pos = points[0][0]
+                y_pos = points[0][1]
+                width = (points[1][0] - x_pos)
+                height = (points[1][1] - y_pos)
                 painter.setPen(QPen(Qt.blue, 3, Qt.SolidLine))
                 painter.drawRect(x_pos, y_pos, width, height)
             elif shape_type == 'Circle':
-                print('원')
-                x_pos = points[0][0]*w
-                y_pos = points[0][1]*h
-                rad = math.sqrt(math.pow(x_pos-points[1][0]*w, 2) + math.pow(y_pos-points[1][1]*h, 2))
+                x_pos = points[0][0]
+                y_pos = points[0][1]
+                rad = math.sqrt(math.pow(x_pos-points[1][0], 2) + math.pow(y_pos-points[1][1], 2))
                 painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
                 painter.drawEllipse(x_pos-rad, y_pos-rad, rad*2, rad*2)
             elif shape_type == 'Line':
-                src_x = points[0][0]*w
-                src_y = points[0][1]*h
-                dst_x = points[1][0]*w
-                dst_y = points[1][1]*h
+                src_x = points[0][0]
+                src_y = points[0][1]
+                dst_x = points[1][0]
+                dst_y = points[1][1]
                 painter.setPen(QPen(Qt.yellow, 3, Qt.SolidLine))
                 painter.drawLine(src_x, src_y, dst_x, dst_y)
             elif shape_type == 'Dot':
