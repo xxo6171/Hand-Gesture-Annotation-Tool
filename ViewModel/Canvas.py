@@ -332,11 +332,9 @@ class Canvas(QWidget):
             self.model.setPrePos([cur_pos[0], cur_pos[1]])
 
         elif draw_type == 'Rectangle':
-            x_pos = pre_pos[0]
-            y_pos = pre_pos[1]
-            width = cur_pos[0] - x_pos
-            height = cur_pos[1] - y_pos
-            painter.drawRect(x_pos, y_pos, width, height)
+            width = cur_pos[0] - pre_pos[1]
+            height = cur_pos[1] - pre_pos[1]
+            painter.drawRect(pre_pos[0], pre_pos[1], width, height)
 
         elif draw_type == 'Circle':
             try:
@@ -348,27 +346,26 @@ class Canvas(QWidget):
             painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
 
         elif draw_type == 'Line':
-            src_x = pre_pos[0]
-            src_y = pre_pos[1]
-            dst_x = cur_pos[0]
-            dst_y = cur_pos[1]
-            painter.drawLine(src_x, src_y, dst_x, dst_y)
+            painter.drawLine(pre_pos[0], pre_pos[1], cur_pos[0], cur_pos[1])
             
         elif draw_type == 'Dot':
             painter.drawPoint(cur_pos[0], cur_pos[1])
 
+        # 시작점, 끝점 빨간 점으로 표시
         painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
         painter.drawPoint(pre_pos[0], pre_pos[1])
         painter.drawPoint(cur_pos[0], cur_pos[1])
+
         painter.end()
 
         self.label_Canvas.setPixmap(draw_img)
 
     def drawPoly(self):
         self.model.setDrawFlag(True)
-        self.model.setCurShapeType('Polygon')
-        self.model.resetCurPoints()
         self.model.setKeepTracking(True)
+        self.model.setCurShapeType('Polygon')
+
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def drawGesturePoly(self):
@@ -398,84 +395,82 @@ class Canvas(QWidget):
         
     def drawRect(self):
         self.model.setDrawFlag(True)
-        self.model.setCurShapeType('Rectangle')
-        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
+        self.model.setCurShapeType('Rectangle')
+
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def drawCircle(self):
         self.model.setDrawFlag(True)
-        self.model.setCurShapeType('Circle')
-        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
+        self.model.setCurShapeType('Circle')
+
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def drawLine(self):
         self.model.setDrawFlag(True)
-        self.model.setCurShapeType('Line')
-        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
+        self.model.setCurShapeType('Line')
+
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def drawDot(self):
         self.model.setDrawFlag(True)
-        self.model.setCurShapeType('Dot')
-        self.model.resetCurPoints()
         self.model.setKeepTracking(False)
+        self.model.setCurShapeType('Dot')
+
+        self.model.resetCurPoints()
         self.stopMouseTracking()
 
     def stopMouseTracking(self):
+        self.model.setTracking(False)
         self.setMouseTracking(False)
         self.label_Canvas.setMouseTracking(False)
-        self.model.setTracking(False)
 
     def startMouseTracking(self):
+        self.model.setTracking(True)
         self.setMouseTracking(True)
         self.label_Canvas.setMouseTracking(True)
-        self.model.setTracking(True)
 
     def setDisplayAnnot(self):
         dict = self.model.getAnnotInfo()
         sImg, w, h, c = self.model.getImgScaled()
         
         draw_img = sImg
+
         painter = QPainter(draw_img)
         
         for shape in dict['shapes']:
             shape_type = shape['shape_type']
             points = copy.deepcopy(shape['points'])
+
+            # 정규화 해제
             for idx in range(len(points)):
                 points[idx][0] *= w
                 points[idx][1] *= h
-            
-            for point in points:
-                x_pos = point[0]
-                y_pos = point[1]
-            
+                        
             if shape_type == 'Polygon':
                 painter.setPen(QPen(Qt.magenta, 3, Qt.SolidLine))
-                for idx in range(len(points)):
-                    src_x = points[idx][0]
-                    src_y = points[idx][1]
-                    if idx == len(points)-1:
-                        dst_x = points[0][0]
-                        dst_y = points[0][1]
-                    else:
-                        dst_x = points[idx+1][0] 
-                        dst_y = points[idx+1][1]
-                    
-                    painter.drawLine(src_x, src_y, dst_x, dst_y)
+                pre = points[0]
+                for point in points:
+                    cur = point
+                    painter.drawLine(pre[0], pre[1], cur[0], cur[1])
+                    pre = point
+                painter.drawLine(points[0][0], points[0][1], pre[0], pre[1])
 
             elif shape_type == 'Gesture Polygon':
                 painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
                 nb_points = 21
-                wrist = points[0]
                 for idx in range(1, nb_points):
                     if idx%4 == 1:
                         src_pos = points[idx]
                         continue
                     dst_pos = points[idx]
                     painter.drawLine(src_pos[0], src_pos[1], dst_pos[0], dst_pos[1])
+
                 painter.drawLine(points[0][0], points[0][1], points[1][0], points[1][1])
                 painter.drawLine(points[0][0], points[0][1], points[5][0], points[5][1])
                 painter.drawLine(points[0][0], points[0][1], points[17][0], points[17][1])
@@ -483,30 +478,29 @@ class Canvas(QWidget):
                 painter.drawLine(points[9][0], points[9][1], points[13][0], points[13][1])
                 painter.drawLine(points[13][0], points[13][1], points[17][0], points[17][1])
 
-
             elif shape_type == 'Rectangle':
-                x_pos = points[0][0]
-                y_pos = points[0][1]
-                width = (points[1][0] - x_pos)
-                height = (points[1][1] - y_pos)
-                painter.setPen(QPen(Qt.blue, 3, Qt.SolidLine))
-                painter.drawRect(x_pos, y_pos, width, height)
+                width = (points[1][0] - points[0][0])
+                height = (points[1][1] - points[0][1])
+
+                color = QPen(Qt.blue, 3, Qt.SolidLine)
+                painter.setPen(color)
+                painter.drawRect(points[0][0], points[0][1], width, height)
+
             elif shape_type == 'Circle':
-                x_pos = points[0][0]
-                y_pos = points[0][1]
-                rad = math.sqrt(math.pow(x_pos-points[1][0], 2) + math.pow(y_pos-points[1][1], 2))
-                painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
-                painter.drawEllipse(x_pos-rad, y_pos-rad, rad*2, rad*2)
+                rad = math.sqrt(math.pow(points[0][0]-points[1][0], 2) + math.pow(points[0][1]-points[1][1], 2))
+
+                color = QPen(Qt.red, 3, Qt.SolidLine)
+                painter.setPen(color)
+                painter.drawEllipse(points[0][0]-rad, points[0][1]-rad, rad*2, rad*2)
+
             elif shape_type == 'Line':
-                src_x = points[0][0]
-                src_y = points[0][1]
-                dst_x = points[1][0]
-                dst_y = points[1][1]
-                painter.setPen(QPen(Qt.yellow, 3, Qt.SolidLine))
-                painter.drawLine(src_x, src_y, dst_x, dst_y)
+                color = QPen(Qt.yellow, 3, Qt.SolidLine)
+                painter.setPen(color)
+                painter.drawLine(points[0][0], points[0][1], points[1][0], points[1][1])
+
             elif shape_type == 'Dot':
-                x = points[0][0]
-                y = points[0][1]
-                painter.drawPoint(x, y)
+                painter.drawPoint(points[0][0], points[0][1])
+
         painter.end()
+
         self.model.setImgScaled(draw_img, w, h, c)
