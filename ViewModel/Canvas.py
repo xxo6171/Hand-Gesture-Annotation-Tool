@@ -88,10 +88,10 @@ class Canvas(QWidget):
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
-            for i in range(len(self.model.getAnnotInfo()['shapes'])) :
-                add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][i]['label'])
+            for idx in range(len(self.model.getAnnotInfo()['shapes'])) :
+                add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][idx]['label'])
                 self.listWidget_LabelList.addItem(add_label)
-                self.model.setLabel(self.model.getAnnotInfo()['shapes'][i]['label'])
+                self.model.setLabel(self.model.getAnnotInfo()['shapes'][idx]['label'])
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
@@ -108,12 +108,10 @@ class Canvas(QWidget):
 
     def displayImage(self):
         img, w, h, c = self.model.getImgScaled()
-        
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
         self.label_Canvas.setGeometry(0, 0, w, h)
         self.label_Canvas.setPixmap(img)
-
         self.model.setMenuFlag(True)
         self.menuRefresh()
 
@@ -121,13 +119,13 @@ class Canvas(QWidget):
         img, w, h, c = self.model.getImgData()
         interpolation = 1
         self.model.setScaleRatio(self.model.getScaleRatio() * 1.25)
-        if self.model.getScaleRatio() > 3.05 :
-            self.model.setScaleRatio(3.05)
+        ratio = self.model.getScaleRatio()
 
-        if self.model.getScaleRatio() > 0.99 and self.model.getScaleRatio() < 1.001 :
-            self.model.setScaleRatio(1.0)
+        if ratio > 3.05 : self.model.setScaleRatio(3.05)
 
-        if self.model.getScaleRatio() <= 3.05 :
+        if ratio > 0.99 and ratio < 1.001 : self.model.setScaleRatio(1.0)
+
+        if ratio <= 3.05 :
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             qPixmap = QPixmap.fromImage(qImg)
@@ -140,14 +138,13 @@ class Canvas(QWidget):
         img, w, h, c = self.model.getImgData()
         interpolation = 0
         self.model.setScaleRatio(self.model.getScaleRatio() * 0.8)
-        if self.model.getScaleRatio() < 0.21:
-            self.model.setScaleRatio(0.21)
+        ratio = self.model.getScaleRatio()
 
-        # 배율을 조정하면 1로 나누어 떨어지지 않음
-        if self.model.getScaleRatio() > 0.99 and self.model.getScaleRatio() < 1.001 :
-            self.model.setScaleRatio(1.0)
+        if ratio < 0.21: self.model.setScaleRatio(0.21)
 
-        if self.model.getScaleRatio() >= 0.21:
+        if ratio > 0.99 and ratio < 1.001 : self.model.setScaleRatio(1.0)
+
+        if ratio >= 0.21:
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             qPixmap = QPixmap.fromImage(qImg)
