@@ -57,7 +57,6 @@ class Canvas(QWidget):
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
 
-        self.setMouseTracking(True)
         self.setFocusPolicy(Qt.ClickFocus)
 
     def initData(self, model):
@@ -217,15 +216,20 @@ class Canvas(QWidget):
         elif action == action_Dot: self.drawDot()
 
     def mouseMoveEvent(self, event):
-        if self.model.getDrawFlag() is False:
-            return
         x_pos = event.x()
         y_pos = event.y()
         self.model.setCurPos([x_pos, y_pos])
         text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
-        self.draw()
+        if self.model.getDrawFlag() is True:
+            self.draw()
+        else:
+            self.retouch()
         
+    def retouch(self):
+        cur_mouse_pos = self.model.getCurPos()
+        print(cur_mouse_pos)
+
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
             return     
@@ -238,7 +242,6 @@ class Canvas(QWidget):
 
         if len(points) == 0:
             self.model.setCurPoints(pos)
-
 
         if tracking:
             if self.model.isKeepTracking():
@@ -401,16 +404,14 @@ class Canvas(QWidget):
         self.stopMouseTracking()
 
     def stopMouseTracking(self):
+        self.setMouseTracking(False)
         self.label_Canvas.setMouseTracking(False)
         self.model.setTracking(False)
 
     def startMouseTracking(self):
+        self.setMouseTracking(True)
         self.label_Canvas.setMouseTracking(True)
         self.model.setTracking(True)
-
-    def retouch(self):
-        print(self.model.getCurPoints())
-        self.displayImage()
 
     def setDisplayAnnot(self):
         dict = self.model.getAnnotInfo()
@@ -422,9 +423,15 @@ class Canvas(QWidget):
         for shape in dict['shapes']:
             shape_type = shape['shape_type']
             points = shape['points']
+
             for idx in range(len(points)):
                 points[idx][0] *= w
                 points[idx][1] *= h
+            
+            for point in points:
+                x_pos = point[0]
+                y_pos = point[1]
+                print(point)
             
             if shape_type == 'Polygon':
                 painter.setPen(QPen(Qt.magenta, 3, Qt.SolidLine))
@@ -463,8 +470,8 @@ class Canvas(QWidget):
                 painter.setPen(QPen(Qt.yellow, 3, Qt.SolidLine))
                 painter.drawLine(src_x, src_y, dst_x, dst_y)
             elif shape_type == 'Dot':
-                x = points[0][0]*w
-                y = points[0][1]*h
+                x = points[0][0]
+                y = points[0][1]
                 painter.drawPoint(x, y)
         painter.end()
         self.model.setImgScaled(draw_img, w, h, c)
