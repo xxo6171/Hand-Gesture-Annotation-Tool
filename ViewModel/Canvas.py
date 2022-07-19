@@ -224,8 +224,6 @@ class Canvas(QWidget):
         if self.model.getDrawFlag() is True:
             self.draw()
 
-        
-
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
             return
@@ -282,52 +280,57 @@ class Canvas(QWidget):
         pre_pos = self.model.getPrePos()
         cur_pos = self.model.getCurPos()
         cur_points = self.model.getCurPoints()
+        click_range = 10
+
+        # 정규화 해제
+        for point in cur_points:
+            point[0] *= w
+            point[1] *= h
 
         painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
-        if draw_type == 'No Draw':
-            return
-        elif draw_type == 'Polygon':
-            try:
-                src_x = cur_points[-1][0]*w
-                src_y = cur_points[-1][1]*h
-            except:
+
+        if draw_type == 'Polygon':
+            if cur_points == []:
                 painter.end()
                 return
-            click_range = 10
+
+            # 시작점 저장
             start_point = cur_points[0]
-            start_point[0] = int(start_point[0]*w)
-            start_point[1] = int(start_point[1]*h)
+            start_point[0] = int(start_point[0])
+            start_point[1] = int(start_point[1])
+
+            # click_range에 따라 start_point에 현재 좌표 세팅
             if cur_pos[0] < start_point[0]+click_range and cur_pos[0] > start_point[0]-click_range:
                 if cur_pos[1] < start_point[1]+click_range and cur_pos[1] > start_point[1]-click_range:
                     cur_pos[0] = start_point[0]
                     cur_pos[1] = start_point[1]
 
-            self.model.setCurPos([cur_pos[0], cur_pos[1]])
-            self.model.setPrePos([cur_pos[0], cur_pos[1]])
+            # 이전까지 그린 선들 표시
+            pre = cur_points[0]
+            for point in cur_points:
+                cur = point
+                painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+                painter.drawLine(pre[0], pre[1], cur[0], cur[1])
+                painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+                painter.drawPoint(pre[0], pre[1])
+                painter.drawPoint(cur[0], cur[1])
+                pre = point
+
+            # 현재 그리려고 하는 선 Draw
+            src_x = cur_points[-1][0]
+            src_y = cur_points[-1][1]
             dst_x = cur_pos[0]
             dst_y = cur_pos[1]
 
-            cur_points = self.model.getCurPoints()
-            for idx in range(len(cur_points)-1):
-                sx = cur_points[idx][0]*w
-                sy = cur_points[idx][1]*h
-                dx = cur_points[idx+1][0]*w
-                dy = cur_points[idx+1][1]*h
-                painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
-                painter.drawLine(sx, sy, dx, dy)
-                painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
-                painter.drawPoint(sx, sy)
-                painter.drawPoint(dx, dy)
-
             painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
             painter.drawLine(src_x, src_y, dst_x, dst_y)
-
             painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
             painter.drawPoint(src_x, src_y)
             painter.drawPoint(start_point[0], start_point[1])
 
-        elif draw_type == 'Gesture Polygon':
-            pass
+            # 현재 좌표에서 다음에 계속 그리기 위함
+            self.model.setPrePos([cur_pos[0], cur_pos[1]])
+
         elif draw_type == 'Rectangle':
             x_pos = pre_pos[0]
             y_pos = pre_pos[1]
@@ -356,9 +359,9 @@ class Canvas(QWidget):
 
         painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
         painter.drawPoint(pre_pos[0], pre_pos[1])
-        painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
         painter.drawPoint(cur_pos[0], cur_pos[1])
         painter.end()
+
         self.label_Canvas.setPixmap(draw_img)
 
     def drawPoly(self):
@@ -390,6 +393,8 @@ class Canvas(QWidget):
             self.model.setCurPoints(pos, True)
             y_pos -= 0.05
         self.model.setCurShapeToDict()
+        self.setDisplayAnnot()
+        self.displayImage()
         
     def drawRect(self):
         self.model.setDrawFlag(True)
@@ -440,10 +445,8 @@ class Canvas(QWidget):
             shape_type = shape['shape_type']
             points = copy.deepcopy(shape['points'])
             for idx in range(len(points)):
-                print(idx, points[idx], end='')
                 points[idx][0] *= w
                 points[idx][1] *= h
-                print(points[idx])
             
             for point in points:
                 x_pos = point[0]
