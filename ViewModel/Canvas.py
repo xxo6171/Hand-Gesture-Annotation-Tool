@@ -52,7 +52,6 @@ class Canvas(QWidget):
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
-        self.action_Retouch.triggered.connect(self.retouch)
 
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
@@ -221,36 +220,10 @@ class Canvas(QWidget):
         self.model.setCurPos([x_pos, y_pos])
         text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
-        try:
-            if self.model.getDrawFlag() is True:
-                self.draw()
-            else:
-                self.retouch()
-        except:
-            return
+        if self.model.getDrawFlag() is True:
+            self.draw()
+
         
-    def retouch(self):
-        try:
-            img, w, h, c = self.model.getImgScaled()
-        except:
-            return
-        cur_mouse_pos = self.model.getCurPos()
-        annotation_info = self.model.getAnnotInfo()
-        shapes = annotation_info['shapes']
-        for shape in shapes:
-            points = shape['points']#.copy()
-            for point in points:
-                x = int(point[0]*w)
-                y = int(point[1]*h)
-                if cur_mouse_pos[0] < x+30 and cur_mouse_pos[0] > x-30:
-                    if cur_mouse_pos[1] < y+30 and cur_mouse_pos[1] > y-30:
-                        break
-                        
-        point[0] = cur_mouse_pos[0]/w
-        point[1] = cur_mouse_pos[1]/h
-        self.model.setAnnotDict(annotation_info)
-        self.setDisplayAnnot()
-        self.displayImage()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
@@ -269,7 +242,6 @@ class Canvas(QWidget):
             if self.model.isKeepTracking():
                 points[0][0] = int(points[0][0]*w)
                 points[0][1] = int(points[0][1]*h)
-                print(points[0], self.model.getPrePos())
                 if points[0] == self.model.getPrePos():
                     self.model.setKeepTracking(False)
                     self.stopMouseTracking()
@@ -314,8 +286,12 @@ class Canvas(QWidget):
         if draw_type == 'No Draw':
             return
         elif draw_type == 'Polygon':
-            src_x = cur_points[-1][0]*w
-            src_y = cur_points[-1][1]*h
+            try:
+                src_x = cur_points[-1][0]*w
+                src_y = cur_points[-1][1]*h
+            except:
+                painter.end()
+                return
             click_range = 10
             start_point = cur_points[0]
             start_point[0] = int(start_point[0]*w)
@@ -392,11 +368,28 @@ class Canvas(QWidget):
         self.stopMouseTracking()
 
     def drawGesturePoly(self):
-        self.model.setDrawFlag(True)
         self.model.setCurShapeType('Gesture Polygon')
         self.model.resetCurPoints()
         self.stopMouseTracking()
 
+        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg.exec_()
+        if self.model.getCurLabel() != '' :
+            self.model.setCurShapeToDict()
+
+        self.model.setCurPoints([0.5, 0.35], True)
+        x_pos = 0.4
+        y_pos = 0.5
+        nb_points = 21
+        for idx in range(1, nb_points):
+            if idx%4 == 1:
+                x_pos += 0.05
+                y_pos = 0.5
+            pos = [round(x_pos, 2), round(y_pos, 2)]
+            self.model.setCurPoints(pos, True)
+            y_pos += 0.05
+        self.model.setCurShapeToDict()
+        
     def drawRect(self):
         self.model.setDrawFlag(True)
         self.model.setCurShapeType('Rectangle')
@@ -453,7 +446,6 @@ class Canvas(QWidget):
             for point in points:
                 x_pos = point[0]
                 y_pos = point[1]
-                print(point)
             
             if shape_type == 'Polygon':
                 painter.setPen(QPen(Qt.magenta, 3, Qt.SolidLine))

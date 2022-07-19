@@ -73,7 +73,7 @@ class Model:
         self.annot_info['image_width'] = 0
         self.annot_info['image_height'] = 0
     def setAnnotDict(self, dict):
-        self.annot_info = dict.copy()
+        self.annot_info = copy.deepcopy(dict)
     def setAnnotInfo(self, filepath, width, height):
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width
@@ -88,10 +88,11 @@ class Model:
         self.annot_info['shapes'].append(new_shape)
     def resetCurPoints(self):
         self.cur_points = []
-    def setCurPoints(self, point):
+    def setCurPoints(self, point, raw=False):
         pos = point.copy()
-        pos[0] /= self.img_scaled_width
-        pos[1] /= self.img_scaled_height
+        if not raw:
+            pos[0] /= self.img_scaled_width
+            pos[1] /= self.img_scaled_height
         self.cur_points.append(pos)
     def getCurPoints(self):
         return copy.deepcopy(self.cur_points)
