@@ -1,5 +1,6 @@
 import os
 import math
+import copy
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -377,7 +378,7 @@ class Canvas(QWidget):
         if self.model.getCurLabel() != '' :
             self.model.setCurShapeToDict()
 
-        self.model.setCurPoints([0.5, 0.35], True)
+        self.model.setCurPoints([0.5, 0.65], True)
         x_pos = 0.4
         y_pos = 0.5
         nb_points = 21
@@ -387,7 +388,7 @@ class Canvas(QWidget):
                 y_pos = 0.5
             pos = [round(x_pos, 2), round(y_pos, 2)]
             self.model.setCurPoints(pos, True)
-            y_pos += 0.05
+            y_pos -= 0.05
         self.model.setCurShapeToDict()
         
     def drawRect(self):
@@ -437,11 +438,12 @@ class Canvas(QWidget):
         
         for shape in dict['shapes']:
             shape_type = shape['shape_type']
-            points = shape['points']
-
+            points = copy.deepcopy(shape['points'])
             for idx in range(len(points)):
+                print(idx, points[idx], end='')
                 points[idx][0] *= w
                 points[idx][1] *= h
+                print(points[idx])
             
             for point in points:
                 x_pos = point[0]
@@ -456,13 +458,29 @@ class Canvas(QWidget):
                         dst_x = points[0][0]
                         dst_y = points[0][1]
                     else:
-                        dst_x = points[idx+1][0]
+                        dst_x = points[idx+1][0] 
                         dst_y = points[idx+1][1]
                     
                     painter.drawLine(src_x, src_y, dst_x, dst_y)
 
             elif shape_type == 'Gesture Polygon':
-                pass
+                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
+                nb_points = 21
+                wrist = points[0]
+                for idx in range(1, nb_points):
+                    if idx%4 == 1:
+                        src_pos = points[idx]
+                        continue
+                    dst_pos = points[idx]
+                    painter.drawLine(src_pos[0], src_pos[1], dst_pos[0], dst_pos[1])
+                painter.drawLine(points[0][0], points[0][1], points[1][0], points[1][1])
+                painter.drawLine(points[0][0], points[0][1], points[5][0], points[5][1])
+                painter.drawLine(points[0][0], points[0][1], points[17][0], points[17][1])
+                painter.drawLine(points[5][0], points[5][1], points[9][0], points[9][1])
+                painter.drawLine(points[9][0], points[9][1], points[13][0], points[13][1])
+                painter.drawLine(points[13][0], points[13][1], points[17][0], points[17][1])
+
+
             elif shape_type == 'Rectangle':
                 x_pos = points[0][0]
                 y_pos = points[0][1]
