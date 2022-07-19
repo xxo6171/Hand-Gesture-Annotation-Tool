@@ -221,14 +221,35 @@ class Canvas(QWidget):
         self.model.setCurPos([x_pos, y_pos])
         text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
         self.statusBar.showMessage(text)
-        if self.model.getDrawFlag() is True:
-            self.draw()
-        else:
-            self.retouch()
+        try:
+            if self.model.getDrawFlag() is True:
+                self.draw()
+            else:
+                self.retouch()
+        except:
+            return
         
     def retouch(self):
+        try:
+            img, w, h, c = self.model.getImgScaled()
+        except:
+            return
         cur_mouse_pos = self.model.getCurPos()
-        print(cur_mouse_pos)
+        annotation_info = self.model.getAnnotInfo()
+        shapes = annotation_info['shapes']
+        for shape in shapes:
+            points = shape['points']#.copy()
+            for point in points:
+                x = int(point[0]*w)
+                y = int(point[1]*h)
+                print(point)
+                if cur_mouse_pos[0] < x+30 and cur_mouse_pos[0] > x-30:
+                    if cur_mouse_pos[1] < y+30 and cur_mouse_pos[1] > y-30:
+                        point[0] = cur_mouse_pos[0]/w
+                        point[1] = cur_mouse_pos[1]/h
+        self.model.setAnnotDict(annotation_info)
+        self.setDisplayAnnot()
+        self.displayImage()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
