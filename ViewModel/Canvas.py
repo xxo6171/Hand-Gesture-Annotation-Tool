@@ -216,58 +216,68 @@ class Canvas(QWidget):
         elif action == action_Dot: self.drawDot()
 
     def mouseMoveEvent(self, event):
-        x_pos = event.x()
-        y_pos = event.y()
-        self.model.setCurPos([x_pos, y_pos])
-        text = '[ {x_pos}, {y_pos} ] {draw}'.format(x_pos=x_pos, y_pos=y_pos, draw = self.model.getDrawFlag())
+        cur_pos = [event.x(), event.y()]
+        self.model.setCurPos(cur_pos)
+        draw_flag = self.model.getDrawFlag()
+    
+        text = '[ {x_pos}, {y_pos} ] {draw_flag}'.format(x_pos=cur_pos[0], y_pos=cur_pos[1], draw_flag = draw_flag)
         self.statusBar.showMessage(text)
-        if self.model.getDrawFlag() is True:
+
+        if draw_flag is True:
             self.draw()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
             return
 
-        img, w, h, c = self.model.getImgScaled()
-
         pos = [event.x(), event.y()]
-        points = self.model.getCurPoints()
-        tracking = self.label_Canvas.hasMouseTracking()
 
-        if len(points) == 0:
+        img, w, h, c = self.model.getImgScaled()
+        points = self.model.getCurPoints()
+
+        # 초기화된 상태라면 첫 클릭 시 좌표를 시작 좌표로 입력
+        if points == []:
             self.model.setCurPoints(pos)
 
-        if tracking:
-            if self.model.isKeepTracking():
+        # Draw Polygon을 위한 이어그리기 플래그
+        tracking_flag = self.model.isTracking()
+        keep_tracking_flag = self.model.isKeepTracking()
+
+        if tracking_flag is True:
+            # Polygon일 때
+            if keep_tracking_flag is True:
                 points[0][0] = int(points[0][0]*w)
                 points[0][1] = int(points[0][1]*h)
+
+                # 시작점을 클릭하면 그리기 종료하는 코드
                 if points[0] == self.model.getPrePos():
-                    self.model.setKeepTracking(False)
-                    self.stopMouseTracking()
+                    keep_tracking_flag = False
+                    self.model.setKeepTracking(keep_tracking_flag)
                     self.model.setDrawFlag(False)
-                    dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
-                    dlg.exec_()
-                    if self.model.getCurLabel() != '':
-                        self.model.setCurShapeToDict()
-                    self.model.setCurLabel('')
+                    self.stopMouseTracking()
+
+                # 시작점이 아니라면 그리기 계속
                 else:
                     self.model.setCurPoints(self.model.getPrePos())
             else:
                 self.stopMouseTracking()
                 self.model.setCurPoints(self.model.getCurPos())
                 self.model.setDrawFlag(False)
+
+            # Rect, Circle, Line, Dot일 때
+            if keep_tracking_flag is False:
                 dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
-                if self.model.getCurLabel() != '' :
+                if self.model.getCurLabel() != '':
                     self.model.setCurShapeToDict()
                 self.model.setCurLabel('')
+                
+        else:
+            self.model.setPrePos(pos)
+            self.startMouseTracking()
 
         self.setDisplayAnnot()
         self.displayImage()
-       
-        if not tracking:
-            self.model.setPrePos(pos)
-            self.startMouseTracking()
             
     def draw(self):
         draw_type = self.model.getCurShapeType()
@@ -332,7 +342,7 @@ class Canvas(QWidget):
             self.model.setPrePos([cur_pos[0], cur_pos[1]])
 
         elif draw_type == 'Rectangle':
-            width = cur_pos[0] - pre_pos[1]
+            width = cur_pos[0] - pre_pos[0]
             height = cur_pos[1] - pre_pos[1]
             painter.drawRect(pre_pos[0], pre_pos[1], width, height)
 
