@@ -76,8 +76,7 @@ class Canvas(QWidget):
     def openFile(self):
         self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
 
-        if self.filePath[0] == '' :
-            return
+        if self.filePath[0] == '' : return
 
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
@@ -102,6 +101,8 @@ class Canvas(QWidget):
         self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
+        self.model.setMenuFlag(True)
+        self.menuRefresh()
 
     def saveJson(self):
         dict2Json(self.model.getAnnotInfo(), self.jsonPath)
@@ -112,8 +113,6 @@ class Canvas(QWidget):
         self.setMaximumSize(w, h)
         self.label_Canvas.setGeometry(0, 0, w, h)
         self.label_Canvas.setPixmap(img)
-        self.model.setMenuFlag(True)
-        self.menuRefresh()
 
     def zoomInImage(self):
         img, w, h, c = self.model.getImgData()
