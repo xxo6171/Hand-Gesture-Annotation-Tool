@@ -140,7 +140,6 @@ class Canvas(QWidget):
             self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
 
     def zoomOutImage(self):
         img, w, h, c = self.model.getImgData()
@@ -162,7 +161,6 @@ class Canvas(QWidget):
             self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
     
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
