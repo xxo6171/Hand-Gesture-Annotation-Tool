@@ -91,6 +91,7 @@ class Canvas(QWidget):
             for i in range(len(self.model.getAnnotInfo()['shapes'])) :
                 add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][i]['label'])
                 self.listWidget_LabelList.addItem(add_label)
+                self.model.setLabel(self.model.getAnnotInfo()['shapes'][i]['label'])
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
