@@ -140,7 +140,6 @@ class Canvas(QWidget):
             self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
 
     def zoomOutImage(self):
         img, w, h, c = self.model.getImgData()
@@ -162,7 +161,6 @@ class Canvas(QWidget):
             self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
     
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
@@ -209,7 +207,7 @@ class Canvas(QWidget):
         action_Dot = menu.addAction('Dot')
 
         action = menu.exec(self.mapToGlobal(event.pos()))
-        if action == action_Polygon: self.drawRect()
+        if action == action_Polygon: self.drawPoly()
         elif action == action_Gesture_Polygon: self.drawGesturePoly()
         elif action == action_Rectangle: self.drawRect()
         elif action == action_Circle: self.drawCircle()
