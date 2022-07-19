@@ -242,18 +242,19 @@ class Canvas(QWidget):
             for point in points:
                 x = int(point[0]*w)
                 y = int(point[1]*h)
-                print(point)
                 if cur_mouse_pos[0] < x+30 and cur_mouse_pos[0] > x-30:
                     if cur_mouse_pos[1] < y+30 and cur_mouse_pos[1] > y-30:
-                        point[0] = cur_mouse_pos[0]/w
-                        point[1] = cur_mouse_pos[1]/h
+                        break
+                        
+        point[0] = cur_mouse_pos[0]/w
+        point[1] = cur_mouse_pos[1]/h
         self.model.setAnnotDict(annotation_info)
         self.setDisplayAnnot()
         self.displayImage()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
-            return     
+            return
 
         img, w, h, c = self.model.getImgScaled()
 
