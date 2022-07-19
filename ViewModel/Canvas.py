@@ -5,16 +5,13 @@ import copy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
-
 from ViewModel.AddLabelDialog import AddLabelDialog
 
 class Canvas(QWidget):
     def __init__(self, view, model):
-        # Initialize
         super().__init__()
         self.initUI(view)
         self.initData(model)
@@ -66,7 +63,6 @@ class Canvas(QWidget):
         self.model.setFocusFlag(False)
         self.menuRefresh()
 
-    # Refresh menu
     def menuRefresh(self):
         if self.model.getMenuFlag():
             self.menu_Edit.setEnabled(True)
@@ -86,13 +82,16 @@ class Canvas(QWidget):
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
         self.model.initAnnotInfo()
+        self.model.initLabelList()
         self.listWidget_LabelList.clear()
+
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
             for i in range(len(self.model.getAnnotInfo()['shapes'])) :
                 add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][i]['label'])
                 self.listWidget_LabelList.addItem(add_label)
+                self.model.setLabel(self.model.getAnnotInfo()['shapes'][i]['label'])
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
@@ -103,7 +102,6 @@ class Canvas(QWidget):
         self.model.setImgScaled(qPixmap, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
-
 
     def saveJson(self):
         dict2Json(self.model.getAnnotInfo(), self.jsonPath)
@@ -126,20 +124,17 @@ class Canvas(QWidget):
         if self.model.getScaleRatio() > 3.05 :
             self.model.setScaleRatio(3.05)
 
-        # 배율을 조정하면 1로 나누어 떨어지지 않음
         if self.model.getScaleRatio() > 0.99 and self.model.getScaleRatio() < 1.001 :
             self.model.setScaleRatio(1.0)
 
         if self.model.getScaleRatio() <= 3.05 :
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             qPixmap = QPixmap.fromImage(qImg)
-
             self.model.setImgScaled(qPixmap, w, h, c)
+
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
 
     def zoomOutImage(self):
         img, w, h, c = self.model.getImgData()
@@ -154,14 +149,12 @@ class Canvas(QWidget):
 
         if self.model.getScaleRatio() >= 0.21:
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-
             qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
             qPixmap = QPixmap.fromImage(qImg)
-
             self.model.setImgScaled(qPixmap, w, h, c)
+
         self.setDisplayAnnot()
         self.displayImage()
-        print('배율 = ', self.model.getScaleRatio())
     
     def focusInEvent(self,event):
         self.model.setFocusFlag(True)
@@ -173,28 +166,20 @@ class Canvas(QWidget):
 
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
-        if event.key() == Qt.Key_Control:
-            self.model.setCtrlFlag(True)
-        if event.key() == (Qt.Key_Control and Qt.Key_O) :
-            self.openFile()
-        if event.key() == (Qt.Key_Control and Qt.Key_S) :
-            self.saveJson()
+        if event.key() == Qt.Key_Control: self.model.setCtrlFlag(True)
+        if event.key() == (Qt.Key_Control and Qt.Key_O) : self.openFile()
+        if event.key() == (Qt.Key_Control and Qt.Key_S) : self.saveJson()
 
     def keyReleaseEvent(self, event):  # Release Control Key
-        if event.key() == Qt.Key_Control:
-            self.model.setCtrlFlag(False)
+        if event.key() == Qt.Key_Control: self.model.setCtrlFlag(False)
 
     def wheelEvent(self, event):       # Move Mouse Wheel
-        if not self.model.getFocusFlag():
-            return
-        if self.model.getImgData() is None:
-            return
-        if not self.model.getCtrlFlag():
-            return
-        if event.angleDelta().y() > 0 :
-            self.zoomInImage()
-        elif event.angleDelta().y() < 0 :
-            self.zoomOutImage()
+        if not self.model.getFocusFlag(): return
+        if self.model.getImgData() is None: return
+        if not self.model.getCtrlFlag(): return
+
+        if event.angleDelta().y() > 0 : self.zoomInImage()
+        elif event.angleDelta().y() < 0 : self.zoomOutImage()
 
     def contextMenuEvent(self, event):
         if self.model.getImgData() is None: return
@@ -208,7 +193,7 @@ class Canvas(QWidget):
         action_Dot = menu.addAction('Dot')
 
         action = menu.exec(self.mapToGlobal(event.pos()))
-        if action == action_Polygon: self.drawRect()
+        if action == action_Polygon: self.drawPoly()
         elif action == action_Gesture_Polygon: self.drawGesturePoly()
         elif action == action_Rectangle: self.drawRect()
         elif action == action_Circle: self.drawCircle()

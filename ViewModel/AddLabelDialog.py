@@ -42,8 +42,11 @@ class AddLabelDialog(QDialog, add_label_form_class):
             return
         if label_name not in self.label_list:
             self.model.setLabel(label_name)
-        self.model.setCurLabel(label_name)
-        self.closeDialog()
+            self.model.setCurLabel(label_name)
+            self.closeDialog()
+        else:
+            QMessageBox.critical(self, '   ', 'Duplicate name')
+            self.lineEdit_NewLabel.clear()
 
     def closeDialog(self):
         self.view.clear()
