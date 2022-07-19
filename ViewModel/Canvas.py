@@ -209,7 +209,7 @@ class Canvas(QWidget):
         action_Dot = menu.addAction('Dot')
 
         action = menu.exec(self.mapToGlobal(event.pos()))
-        if action == action_Polygon: self.drawRect()
+        if action == action_Polygon: self.drawPoly()
         elif action == action_Gesture_Polygon: self.drawGesturePoly()
         elif action == action_Rectangle: self.drawRect()
         elif action == action_Circle: self.drawCircle()
