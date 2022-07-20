@@ -80,9 +80,7 @@ class Canvas(QWidget):
 
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
-        self.model.initAnnotInfo()
-        self.model.initLabelList()
-        self.listWidget_LabelList.clear()
+        self.initWindow()
 
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
@@ -101,6 +99,11 @@ class Canvas(QWidget):
         self.displayImage()
         self.model.setMenuFlag(True)
         self.menuRefresh()
+
+    def initWindow(self):
+        self.model.initAnnotInfo()
+        self.model.initLabelList()
+        self.listWidget_LabelList.clear()
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
