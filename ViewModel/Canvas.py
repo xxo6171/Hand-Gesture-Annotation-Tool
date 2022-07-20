@@ -85,10 +85,7 @@ class Canvas(QWidget):
         if ext == '.json' or os.path.isfile(self.jsonPath):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
-            for idx in range(len(self.model.getAnnotInfo()['shapes'])) :
-                add_label = QListWidgetItem(self.model.getAnnotInfo()['shapes'][idx]['label'])
-                self.listWidget_LabelList.addItem(add_label)
-                self.model.setLabel(self.model.getAnnotInfo()['shapes'][idx]['label'])
+            self.loadLabelList()
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
@@ -106,6 +103,16 @@ class Canvas(QWidget):
         self.model.initAnnotInfo()
         self.model.initLabelList()
         self.listWidget_LabelList.clear()
+
+    def loadLabelList(self):
+        label_list = []
+        for idx in range(len(self.model.getAnnotInfo()['shapes'])):
+            if self.model.getAnnotInfo()['shapes'][idx]['label'] not in label_list:
+                label_list.append(self.model.getAnnotInfo()['shapes'][idx]['label'])
+        for idx in range(len(label_list)):
+            add_label = QListWidgetItem(label_list[idx])
+            self.listWidget_LabelList.addItem(add_label)
+            self.model.setLabel(label_list[idx])
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
