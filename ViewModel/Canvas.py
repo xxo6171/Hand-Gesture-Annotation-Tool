@@ -1,3 +1,4 @@
+from configparser import Interpolation
 import os
 import math
 import copy
@@ -480,12 +481,20 @@ class Canvas(QWidget):
 
     def setDisplayAnnot(self):
         dict = self.model.getAnnotInfo()
-        sImg, w, h, c = self.model.getImgScaled()
+
+        img, w, h, c = self.model.getImgData()
+        ratio = self.model.getScaleRatio()
+        if ratio >= 1:
+            interpolation = 1
+        else:
+            interpolation = 0
+        img, w, h, c = resizeImage(img, ratio, interpolation)
+        self.img2QPixmap(img, w, h, c)
         
-        draw_img = sImg
+        simg, w, h, c = self.model.getImgScaled()
         point_scale = self.model.getClickPointRange()
 
-        painter = QPainter(draw_img)
+        painter = QPainter(simg)
 
         painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
         for shape in dict['shapes']:
@@ -605,7 +614,7 @@ class Canvas(QWidget):
                 painter.drawPoint(points[0][0], points[0][1])
 
         painter.end()
-        self.model.setImgScaled(draw_img, w, h, c)
+        self.model.setImgScaled(simg, w, h, c)
 
     def retouch(self):
         retouch_flag = self.model.getRetouchFlag()
