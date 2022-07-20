@@ -33,6 +33,8 @@ class Model:
         
         self.pre_mouse_pos = [0, 0]
         self.cur_mouse_pos = [0, 0]
+        self.click_point_range = 5
+        self.move_point = None
     
     def getImgData(self):
         if self.img_origin is None :
@@ -81,7 +83,9 @@ class Model:
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width
         self.annot_info['image_height'] = height
-    def getAnnotInfo(self):
+    def getAnnotInfo(self, no_deep=False):
+        if no_deep:
+            return self.annot_info
         return copy.deepcopy(self.annot_info)
     def setCurShapeToDict(self):
         new_shape = {}
@@ -154,3 +158,10 @@ class Model:
         return self.cur_mouse_pos.copy()
     def setCurPos(self, list):
         self.cur_mouse_pos = list.copy()
+
+    def getClickPointRange(self):
+        return self.click_point_range
+    def setMovePoint(self, point):
+        self.move_point = point
+    def getMovePoint(self):
+        return self.move_point

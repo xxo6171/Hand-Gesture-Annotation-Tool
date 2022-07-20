@@ -5,6 +5,7 @@ import copy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from numpy import half
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
@@ -205,12 +206,18 @@ class Canvas(QWidget):
         cur_pos = [event.x(), event.y()]
         self.model.setCurPos(cur_pos)
         draw_flag = self.model.getDrawFlag()
+        retouch_flag = self.model.getRetouchFlag()
     
         text = '[ {x_pos}, {y_pos} ] {draw_flag}'.format(x_pos=cur_pos[0], y_pos=cur_pos[1], draw_flag = draw_flag)
         self.statusBar.showMessage(text)
 
         if draw_flag is True:
             self.draw()
+        elif retouch_flag is True:
+            self.pointMove()
+
+    def pointMove(self):
+        pass
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
@@ -283,6 +290,7 @@ class Canvas(QWidget):
             point[0] *= w
             point[1] *= h
 
+        point_scale = self.model.getClickPointRange()
         painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
 
         if draw_type == 'Polygon':
@@ -307,7 +315,7 @@ class Canvas(QWidget):
                 cur = point
                 painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
                 painter.drawLine(pre[0], pre[1], cur[0], cur[1])
-                painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
                 painter.drawPoint(pre[0], pre[1])
                 painter.drawPoint(cur[0], cur[1])
                 pre = point
@@ -320,7 +328,7 @@ class Canvas(QWidget):
 
             painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
             painter.drawLine(src_x, src_y, dst_x, dst_y)
-            painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+            painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
             painter.drawPoint(src_x, src_y)
             painter.drawPoint(start_point[0], start_point[1])
 
@@ -348,7 +356,7 @@ class Canvas(QWidget):
             painter.drawPoint(cur_pos[0], cur_pos[1])
 
         # 시작점, 끝점 빨간 점으로 표시
-        painter.setPen(QPen(Qt.red, 10, Qt.SolidLine))
+        painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
         painter.drawPoint(pre_pos[0], pre_pos[1])
         painter.drawPoint(cur_pos[0], cur_pos[1])
 
@@ -511,4 +519,21 @@ class Canvas(QWidget):
     def mousePressEvent(self, event):
         if self.model.getDrawFlag() is True or self.model.getRetouchFlag() is False:
             return
-        print(self.model.getRetouchFlag())
+        cur_pos = [event.x(), event.y()]
+
+        click_point_range = self.model.getClickPointRange()
+        half_range = click_point_range/2
+        
+        annot_info = self.model.getAnnotInfo(no_deep=True)
+        img, w, h, c = self.model.getImgScaled()
+        
+        shapes = annot_info['shapes']
+        move_point=None
+        for shape in shapes:
+            points = shape['points']
+            for point in points:
+                if cur_pos[0] > point[0]*w-half_range and cur_pos[0] < point[0]*w+half_range:
+                    if cur_pos[1] > point[1]*h-half_range and cur_pos[1] < point[1]*h+half_range:
+                        move_point = point
+        
+        self.model.setMovePoint(move_point)
