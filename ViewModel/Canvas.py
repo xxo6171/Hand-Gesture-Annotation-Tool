@@ -50,6 +50,7 @@ class Canvas(QWidget):
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
+        self.action_Retouch.triggered.connect(self.retouch)
 
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
@@ -499,3 +500,15 @@ class Canvas(QWidget):
         painter.end()
 
         self.model.setImgScaled(draw_img, w, h, c)
+
+    def retouch(self):
+        retouch_flag = self.model.getRetouchFlag()
+        if retouch_flag is True:
+            self.model.setRetouchFlag(False)
+        else:
+            self.model.setRetouchFlag(True)
+
+    def mousePressEvent(self, event):
+        if self.model.getDrawFlag() is True or self.model.getRetouchFlag() is False:
+            return
+        print(self.model.getRetouchFlag())

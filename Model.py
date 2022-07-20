@@ -27,6 +27,7 @@ class Model:
         self.menu_flag = None
         self.ctrl_flag = None
         self.draw_flag = False
+        self.retouch_flag = False
         self.tracking_flag = False
         self.keep_tracking_flag = False
         
@@ -127,6 +128,11 @@ class Model:
         return self.draw_flag
     def setDrawFlag(self, flag):
         self.draw_flag = flag
+
+    def getRetouchFlag(self):
+        return self.retouch_flag
+    def setRetouchFlag(self, flag):
+        self.retouch_flag = flag
 
     def isTracking(self):
         return self.tracking_flag
