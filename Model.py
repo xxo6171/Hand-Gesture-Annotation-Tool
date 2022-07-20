@@ -38,7 +38,8 @@ class Model:
             return None
         return self.img_origin.copy(), self.img_origin_width, self.img_origin_height, self.img_origin_channel
     def setImgData(self, img, width, height, channel):
-        self.img_origin = img.copy()
+        if img is None : self.img_origin = None
+        else : self.img_origin = img.copy()
         self.img_origin_width = width
         self.img_origin_height = height
         self.img_origin_channel = channel
@@ -46,7 +47,8 @@ class Model:
     def getImgScaled(self):
         return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
     def setImgScaled(self, img, width, height, channel):
-        self.img_scaled = img.copy()
+        if img is None : self.img_scaled = None
+        else : self.img_scaled = img.copy()
         self.img_scaled_width = width
         self.img_scaled_height = height
         self.img_scaled_channel = channel
