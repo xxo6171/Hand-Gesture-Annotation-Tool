@@ -217,7 +217,18 @@ class Canvas(QWidget):
             self.pointMove()
 
     def pointMove(self):
-        pass
+        move_point = self.model.getMovePoint()
+        if move_point is None:
+            return
+        
+        img, w, h, c = self.model.getImgScaled()
+        cur_pos = self.model.getCurPos()
+        move_point[0] = cur_pos[0]/w
+        move_point[1] = cur_pos[1]/h
+
+        self.setDisplayAnnot()
+        self.displayImage()
+
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
