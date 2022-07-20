@@ -189,11 +189,11 @@ class Canvas(QWidget):
 
         action = menu.exec(self.mapToGlobal(event.pos()))
         if action == action_Polygon: self.drawPoly()
-        elif action == action_Gesture_Polygon: self.drawGesturePoly()
-        elif action == action_Rectangle: self.drawRect()
-        elif action == action_Circle: self.drawCircle()
-        elif action == action_Line: self.drawLine()
-        elif action == action_Dot: self.drawDot()
+        if action == action_Gesture_Polygon: self.drawGesturePoly()
+        if action == action_Rectangle: self.drawRect()
+        if action == action_Circle: self.drawCircle()
+        if action == action_Line: self.drawLine()
+        if action == action_Dot: self.drawDot()
 
     def mouseMoveEvent(self, event):
         cur_pos = [event.x(), event.y()]
