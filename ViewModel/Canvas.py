@@ -120,6 +120,7 @@ class Canvas(QWidget):
         self.model.setImgScaled(qPixmap, w, h, c)
 
     def saveJson(self):
+        if self.model.getImgData() is None : return
         dict2Json(self.model.getAnnotInfo(), self.jsonPath)
 
     def displayImage(self):
