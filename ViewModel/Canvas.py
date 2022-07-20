@@ -545,40 +545,21 @@ class Canvas(QWidget):
                     painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
                     src_pos = dst_pos
 
-                painter.drawLine(points[0][0], points[0][1], points[1][0], points[1][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[0][0], points[0][1])
-                painter.drawPoint(points[1][0], points[1][1])
+                list_hand = []
+                list_hand.append([points[0][0], points[0][1], points[1][0], points[1][1]])
+                list_hand.append([points[0][0], points[0][1], points[5][0], points[5][1]])
+                list_hand.append([points[0][0], points[0][1], points[17][0], points[17][1]])
+                list_hand.append([points[5][0], points[5][1], points[9][0], points[9][1]])
+                list_hand.append([points[9][0], points[9][1], points[13][0], points[13][1]])
+                list_hand.append([points[13][0], points[13][1], points[17][0], points[17][1]])
 
-                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                painter.drawLine(points[0][0], points[0][1], points[5][0], points[5][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[0][0], points[0][1])
-                painter.drawPoint(points[5][0], points[5][1])
+                for finger in list_hand:
+                    painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
+                    painter.drawLine(finger[0], finger[1], finger[2], finger[3])
 
-                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                painter.drawLine(points[0][0], points[0][1], points[17][0], points[17][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[0][0], points[0][1])
-                painter.drawPoint(points[17][0], points[17][1])
-
-                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                painter.drawLine(points[5][0], points[5][1], points[9][0], points[9][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[5][0], points[5][1])
-                painter.drawPoint(points[9][0], points[9][1])
-
-                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                painter.drawLine(points[9][0], points[9][1], points[13][0], points[13][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[9][0], points[9][1])
-                painter.drawPoint(points[13][0], points[13][1])
-
-                painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                painter.drawLine(points[13][0], points[13][1], points[17][0], points[17][1])
-                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                painter.drawPoint(points[13][0], points[13][1])
-                painter.drawPoint(points[17][0], points[17][1])
+                    painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
+                    painter.drawPoint(finger[0], finger[1])
+                    painter.drawPoint(finger[2], finger[3])
 
             elif shape_type == 'Rectangle':
                 width = (points[1][0] - points[0][0])
