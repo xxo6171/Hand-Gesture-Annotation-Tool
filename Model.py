@@ -33,7 +33,7 @@ class Model:
         
         self.pre_mouse_pos = [0, 0]
         self.cur_mouse_pos = [0, 0]
-        self.click_point_range = 5
+        self.click_point_range = 10
         self.move_point = None
     
     def getImgData(self):
