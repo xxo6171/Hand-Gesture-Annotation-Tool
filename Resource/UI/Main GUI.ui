@@ -240,6 +240,9 @@
    </property>
   </action>
   <action name="action_Retouch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Retouch</string>
    </property>
