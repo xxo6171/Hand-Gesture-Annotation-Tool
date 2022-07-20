@@ -96,13 +96,16 @@ class Canvas(QWidget):
             self.model.setAnnotInfo(self.filePath[0], w, h)
 
         self.model.setImgData(img, w, h, c)
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-        self.model.setImgScaled(qPixmap, w, h, c)
+        self.img2QPixmap(img, w, h, c)
         self.setDisplayAnnot()
         self.displayImage()
         self.model.setMenuFlag(True)
         self.menuRefresh()
+
+    def img2QPixmap(self, img, w, h, c):
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+        self.model.setImgScaled(qPixmap, w, h, c)
 
     def saveJson(self):
         dict2Json(self.model.getAnnotInfo(), self.jsonPath)
@@ -126,9 +129,7 @@ class Canvas(QWidget):
 
         if ratio <= 3.05 :
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
-            self.model.setImgScaled(qPixmap, w, h, c)
+            self.img2QPixmap(img, w, h, c)
 
         self.setDisplayAnnot()
         self.displayImage()
@@ -145,9 +146,7 @@ class Canvas(QWidget):
 
         if ratio >= 0.21:
             img, w, h, c = resizeImage(img, self.model.getScaleRatio(), interpolation)
-            qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-            qPixmap = QPixmap.fromImage(qImg)
-            self.model.setImgScaled(qPixmap, w, h, c)
+            self.img2QPixmap(img, w, h, c)
 
         self.setDisplayAnnot()
         self.displayImage()
