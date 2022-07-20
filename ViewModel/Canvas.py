@@ -109,10 +109,9 @@ class Canvas(QWidget):
         for idx in range(len(self.model.getAnnotInfo()['shapes'])):
             if self.model.getAnnotInfo()['shapes'][idx]['label'] not in label_list:
                 label_list.append(self.model.getAnnotInfo()['shapes'][idx]['label'])
-        for idx in range(len(label_list)):
-            add_label = QListWidgetItem(label_list[idx])
-            self.listWidget_LabelList.addItem(add_label)
-            self.model.setLabel(label_list[idx])
+        for label in label_list:
+            self.listWidget_LabelList.addItem(QListWidgetItem(label))
+            self.model.setLabel(label)
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
