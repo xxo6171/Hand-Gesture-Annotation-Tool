@@ -129,6 +129,10 @@ class Model:
             return True
         return False
 
+    def getUndoFlag(self):
+        return self.undo_flag
+    def setUndoFlag(self, flag):
+        self.undo_flag = flag
 
     def getFocusFlag(self):
         return self.focus_flag
