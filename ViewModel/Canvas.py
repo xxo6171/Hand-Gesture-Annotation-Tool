@@ -201,7 +201,8 @@ class Canvas(QWidget):
 
         menu = QMenu(self)
         action_Polygon = menu.addAction('Polygon')
-        action_Gesture_Polygon = menu.addAction('Gesture Polygon')
+        action_Right_Gesture_Polygon = menu.addAction('Right Gesture Polygon')
+        action_Left_Gesture_Polygon = menu.addAction('Left Gesture Polygon')
         action_Rectangle = menu.addAction('Rectangle')
         action_Circle = menu.addAction('Circle')
         action_Line = menu.addAction('Line')
@@ -209,7 +210,8 @@ class Canvas(QWidget):
 
         action = menu.exec(self.mapToGlobal(event.pos()))
         if action == action_Polygon: self.drawPoly()
-        if action == action_Gesture_Polygon: self.drawGesturePoly()
+        if action == action_Right_Gesture_Polygon: self.drawRightGesturePoly()
+        if action == action_Left_Gesture_Polygon: self.drawLeftGesturePoly()
         if action == action_Rectangle: self.drawRect()
         if action == action_Circle: self.drawCircle()
         if action == action_Line: self.drawLine()
