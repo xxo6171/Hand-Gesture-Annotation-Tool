@@ -22,10 +22,7 @@ def autoAnnotation(img):
             for hand_landmarks in results.multi_hand_landmarks:
                 mp_drawing.draw_landmarks(
                     image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-    return image, hand_landmarks
+    return hand_landmarks
 
 def landmarksToList(landmarks):
     if landmarks is None:
@@ -34,8 +31,12 @@ def landmarksToList(landmarks):
     pos_list = []
 
     for data_point in landmarks.landmark:
-        x_pos = data_point.x
-        y_pos = data_point.y
+        if data_point.x < 0 or data_point.y < 0:
+            x_pos = 0.5
+            y_pos = 0.5
+        else:
+            x_pos = data_point.x
+            y_pos = data_point.y
         pos_list.append([x_pos, y_pos])
 
     return pos_list
