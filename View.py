@@ -27,7 +27,8 @@ class HandAnnot(QMainWindow, main_form_class):
                                 self.action_Circle,
                                 self.action_Line,
                                 self.action_Dot,
-                                self.action_Retouch         ]
+                                self.action_Retouch,
+                                self.action_Auto_Annotation         ]
 
         self.canvas_widgets = [
                                 self.action_Open,
