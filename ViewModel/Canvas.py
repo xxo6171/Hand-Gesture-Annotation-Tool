@@ -431,7 +431,8 @@ class Canvas(QWidget):
 
         dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
         dlg.exec_()
-
+        if self.model.getCurLabel() == '' :
+            return
 
         self.model.addCurPoint([0.5, 0.65], True)
         if hand_dir == 'right':
