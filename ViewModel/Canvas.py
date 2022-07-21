@@ -184,6 +184,7 @@ class Canvas(QWidget):
         if event.key() == Qt.Key_Control: self.model.setCtrlFlag(True)
         if event.key() == (Qt.Key_Control and Qt.Key_O) : self.openFile()
         if event.key() == (Qt.Key_Control and Qt.Key_S) : self.saveJson()
+        if event.key() == (Qt.Key_Control and Qt.Key_Z): self.undo()
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control: self.model.setCtrlFlag(False)
@@ -641,5 +642,10 @@ class Canvas(QWidget):
 
         self.model.setCurShapeType('Gesture Polygon')
         self.model.setCurShapeToDict()
+        self.setDisplayAnnot()
+        self.displayImage()
+
+    def undo(self):
+        self.model.setUndoFlag(True)
         self.setDisplayAnnot()
         self.displayImage()
