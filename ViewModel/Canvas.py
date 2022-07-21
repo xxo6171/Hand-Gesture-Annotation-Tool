@@ -99,6 +99,7 @@ class Canvas(QWidget):
 
         self.model.setImgData(img, w, h, c)
         self.img2QPixmap(img, w, h, c)
+        self.model.pushAnnot(self.model.getAnnotInfo())
         self.setDisplayAnnot()
         self.displayImage()
         self.model.setMenuFlag(True)
@@ -312,6 +313,7 @@ class Canvas(QWidget):
                 dlg.exec_()
                 if self.model.getCurLabel() != '':
                     self.model.setCurShapeToDict()
+                    self.model.pushAnnot(self.model.getAnnotInfo())
                 self.model.setCurLabel('')
                 
         else:
@@ -455,6 +457,7 @@ class Canvas(QWidget):
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
         self.model.setCurShapeToDict()
+        self.model.pushAnnot(self.model.getAnnotInfo())
         self.model.setCurLabel('')
         self.setDisplayAnnot()
         self.displayImage()
