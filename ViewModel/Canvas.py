@@ -505,7 +505,13 @@ class Canvas(QWidget):
         self.label_Canvas.setMouseTracking(True)
 
     def setDisplayAnnot(self):
-        dict = self.model.getAnnotInfo()
+        if self.model.getUndoFlag():
+            self.model.popAnnot()
+            dict = self.model.topAnnot()
+            self.model.setAnnotDict(dict)
+            self.model.setUndoFlag(False)
+        else:
+            dict = self.model.topAnnot()
 
         img, w, h, c = self.model.getImgData()
         ratio = self.model.getScaleRatio()
