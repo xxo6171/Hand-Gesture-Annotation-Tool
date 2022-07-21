@@ -14,6 +14,7 @@ class Model:
 
         self.scale_ratio = 1
 
+        self.annot = []
         self.label_list = []
         self.object_list = []
         self.annot_info = {}
