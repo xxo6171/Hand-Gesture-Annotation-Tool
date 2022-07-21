@@ -116,6 +116,19 @@ class Model:
     def getCurShapeType(self):
         return self.cur_shape_type
 
+    def topAnnot(self):
+        return self.annot[-1]
+    def popAnnot(self):
+        if self.isEmptyAnnot():
+            return copy.deepcopy(self.topAnnot())
+        return copy.deepcopy(self.annot.pop(-1))
+    def pushAnnot(self, dict):
+        self.annot.append(copy.deepcopy(dict))
+    def isEmptyAnnot(self):
+        if len(self.annot) == 1 :
+            return True
+        return False
+
 
     def getFocusFlag(self):
         return self.focus_flag
