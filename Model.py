@@ -99,6 +99,9 @@ class Model:
         self.annot_info['shapes'].append(new_shape)
     def resetCurPoints(self):
         self.cur_points = []
+    def deleteShape(self, idx):
+        del self.annot_info['shapes'][idx]
+        del self.object_list[idx]
     def addCurPoint(self, point, raw=False):
         pos = point.copy()
         if not raw:

@@ -50,12 +50,16 @@ class AddObjectDialog(QDialog, add_label_form_class):
         self.view_ObjectList.clear()
         annot_info = self.model.getAnnotInfo(True)
         shapes = annot_info['shapes']
+        if not shapes:
+            return
         self.model.addObjectList(shapes[-1])
 
         object_list = self.model.getObjectList()
         obj_number = 0
         for object in object_list:
-            add_object = QListWidgetItem('object_' + str(obj_number))
+            obj_type = shapes[obj_number]['shape_type']
+            obj_label = shapes[obj_number]['label']
+            add_object = QListWidgetItem(obj_type + '_' + obj_label)
             self.view_ObjectList.addItem(add_object)
             obj_number += 1
 
