@@ -6,12 +6,13 @@ from PyQt5.QtGui import *
 add_label_UI_dir = 'Resource/UI/Add Lable Dialog.ui'
 add_label_form_class = uic.loadUiType(add_label_UI_dir)[0]
 
-class AddLabelDialog(QDialog, add_label_form_class):
+class AddObjectDialog(QDialog, add_label_form_class):
     def __init__(self, view, model):
         super().__init__()
         self.setupUi(self)
 
-        self.view = view
+        self.view_LabelList = view[0]
+        self.view_ObjectList = view[1]
         self.model = model
         self.initListWidget()
 
@@ -45,16 +46,29 @@ class AddLabelDialog(QDialog, add_label_form_class):
         self.model.setCurLabel(label_name)
         self.closeDialog()
 
+    def setObject(self):
+        self.view_ObjectList.clear()
+        annot_info = self.model.getAnnotInfo(True)
+        shapes = annot_info['shapes']
+        self.model.addObjectList(shapes[-1])
+
+        object_list = self.model.getObjectList()
+        obj_number = 0
+        for object in object_list:
+            add_object = QListWidgetItem('object_' + str(obj_number))
+            self.view_ObjectList.addItem(add_object)
+            obj_number += 1
+
     def closeDialog(self):
-        self.view.clear()
+        self.view_LabelList.clear()
         labels = self.model.getLabelList()
 
         for label in labels:
             add_label = QListWidgetItem(label)
-            self.view.addItem(add_label)
+            self.view_LabelList.addItem(add_label)
 
         if self.model.getCurLabel() != '':
-                self.model.setCurShapeToDict()
+            self.model.setCurShapeToDict()
         self.model.setCurLabel('')
-        
+        self.setObject()
         self.close()

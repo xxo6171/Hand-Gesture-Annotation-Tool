@@ -10,7 +10,7 @@ from numpy import half
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
-from ViewModel.AddLabelDialog import AddLabelDialog
+from ViewModel.AddObjectDialog import AddObjectDialog
 
 class Canvas(QWidget):
     def __init__(self, view, model):
@@ -42,7 +42,7 @@ class Canvas(QWidget):
         self.action_Zoom_In = view[6]
         self.action_Zoom_Out = view[7]
 
-        self.listWidget_LabelList = view[8]
+        self.list_widgets = view[8]
 
         # Triggered connect
         self.action_Open.triggered.connect(self.openFile)
@@ -109,7 +109,7 @@ class Canvas(QWidget):
         self.model.setImgScaled(None, None, None, None)
         self.model.initAnnotInfo()
         self.model.initLabelList()
-        self.listWidget_LabelList.clear()
+        self.list_widgets[0].clear()
 
     def loadLabelList(self):
         label_list = []
@@ -117,7 +117,7 @@ class Canvas(QWidget):
             if self.model.getAnnotInfo()['shapes'][idx]['label'] not in label_list:
                 label_list.append(self.model.getAnnotInfo()['shapes'][idx]['label'])
         for label in label_list:
-            self.listWidget_LabelList.addItem(QListWidgetItem(label))
+            self.list_widgets[1].addItem(QListWidgetItem(label))
             self.model.setLabel(label)
 
     def img2QPixmap(self, img, w, h, c):
@@ -307,7 +307,7 @@ class Canvas(QWidget):
 
             # Rect, Circle, Line, Dot일 때
             if keep_tracking_flag is False:
-                dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+                dlg = AddObjectDialog(self.list_widgets, self.model)
                 dlg.exec_()
                 
         else:
@@ -446,7 +446,7 @@ class Canvas(QWidget):
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
 
-        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg = AddObjectDialog(self.list_widgets, self.model)
         dlg.exec_()
 
         self.setDisplayAnnot()
@@ -632,7 +632,7 @@ class Canvas(QWidget):
             return
         self.model.setCurPoints(hand_list)
 
-        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg = AddObjectDialog(self.list_widgets, self.model)
         dlg.exec_()
 
         self.setDisplayAnnot()

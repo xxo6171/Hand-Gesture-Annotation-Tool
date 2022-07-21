@@ -71,8 +71,8 @@ class Model:
 
     def getObjectList(self):
         return self.object_list
-    def setObjectList(self, list):
-        self.object_list = list
+    def addObjectList(self, object):
+        self.object_list.append(object)
 
     def initAnnotInfo(self):
         self.annot_info['shapes'] = []
