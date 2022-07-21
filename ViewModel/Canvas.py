@@ -452,6 +452,7 @@ class Canvas(QWidget):
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
         self.model.setCurShapeToDict()
+        self.model.setCurLabel('')
         self.setDisplayAnnot()
         self.displayImage()
         
