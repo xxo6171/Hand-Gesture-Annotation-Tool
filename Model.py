@@ -35,6 +35,8 @@ class Model:
         self.cur_mouse_pos = [0, 0]
         self.click_point_range = 10
         self.move_point = None
+
+        self.selected_object_idx = None
     
     def getImgData(self):
         if self.img_origin is None :
@@ -169,3 +171,8 @@ class Model:
         self.move_point = point
     def getMovePoint(self):
         return self.move_point
+
+    def setSelectedObjectIndex(self, idx):
+        self.selected_object_idx = idx
+    def getSelectedObjectIndex(self):
+        return self.selected_object_idx
