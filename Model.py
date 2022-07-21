@@ -35,6 +35,8 @@ class Model:
         self.cur_mouse_pos = [0, 0]
         self.click_point_range = 10
         self.move_point = None
+
+        self.selected_object_idx = None
     
     def getImgData(self):
         if self.img_origin is None :
@@ -71,8 +73,8 @@ class Model:
 
     def getObjectList(self):
         return self.object_list
-    def setObjectList(self, list):
-        self.object_list = list
+    def addObjectList(self, object):
+        self.object_list.append(object)
 
     def initAnnotInfo(self):
         self.annot_info['shapes'] = []
@@ -97,6 +99,9 @@ class Model:
         self.annot_info['shapes'].append(new_shape)
     def resetCurPoints(self):
         self.cur_points = []
+    def deleteShape(self, idx):
+        del self.annot_info['shapes'][idx]
+        del self.object_list[idx]
     def addCurPoint(self, point, raw=False):
         pos = point.copy()
         if not raw:
@@ -169,3 +174,8 @@ class Model:
         self.move_point = point
     def getMovePoint(self):
         return self.move_point
+
+    def setSelectedObjectIndex(self, idx):
+        self.selected_object_idx = idx
+    def getSelectedObjectIndex(self):
+        return self.selected_object_idx

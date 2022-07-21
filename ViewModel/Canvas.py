@@ -10,7 +10,7 @@ from numpy import half
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
-from ViewModel.AddLabelDialog import AddLabelDialog
+from ViewModel.AddObjectDialog import AddObjectDialog
 
 class Canvas(QWidget):
     def __init__(self, view, model):
@@ -42,7 +42,7 @@ class Canvas(QWidget):
         self.action_Zoom_In = view[6]
         self.action_Zoom_Out = view[7]
 
-        self.listWidget_LabelList = view[8]
+        self.list_widgets = view[8]
 
         # Triggered connect
         self.action_Open.triggered.connect(self.openFile)
@@ -60,6 +60,10 @@ class Canvas(QWidget):
 
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
+
+        # object list
+        self.list_widgets[1].itemClicked.connect(self.objectClicked)
+        self.list_widgets[1].itemDoubleClicked.connect(self.objectDoubleClicked)
 
         self.setFocusPolicy(Qt.ClickFocus)
 
@@ -109,7 +113,7 @@ class Canvas(QWidget):
         self.model.setImgScaled(None, None, None, None)
         self.model.initAnnotInfo()
         self.model.initLabelList()
-        self.listWidget_LabelList.clear()
+        self.list_widgets[0].clear()
 
     def loadLabelList(self):
         label_list = []
@@ -117,7 +121,7 @@ class Canvas(QWidget):
             if self.model.getAnnotInfo()['shapes'][idx]['label'] not in label_list:
                 label_list.append(self.model.getAnnotInfo()['shapes'][idx]['label'])
         for label in label_list:
-            self.listWidget_LabelList.addItem(QListWidgetItem(label))
+            self.list_widgets[1].addItem(QListWidgetItem(label))
             self.model.setLabel(label)
 
     def img2QPixmap(self, img, w, h, c):
@@ -307,11 +311,8 @@ class Canvas(QWidget):
 
             # Rect, Circle, Line, Dot일 때
             if keep_tracking_flag is False:
-                dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+                dlg = AddObjectDialog(self.list_widgets, self.model)
                 dlg.exec_()
-                if self.model.getCurLabel() != '':
-                    self.model.setCurShapeToDict()
-                self.model.setCurLabel('')
                 
         else:
             self.model.setPrePos(pos)
@@ -431,11 +432,6 @@ class Canvas(QWidget):
         self.model.resetCurPoints()
         self.stopMouseTracking()
 
-        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
-        dlg.exec_()
-        if self.model.getCurLabel() == '' :
-            return
-
         self.model.addCurPoint([0.5, 0.65], True)
         if hand_dir == 'right':
             x_pos = 0.4
@@ -453,8 +449,10 @@ class Canvas(QWidget):
             pos = [round(x_pos, 2), round(y_pos, 2)]
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
-        self.model.setCurShapeToDict()
-        self.model.setCurLabel('')
+
+        dlg = AddObjectDialog(self.list_widgets, self.model)
+        dlg.exec_()
+
         self.setDisplayAnnot()
         self.displayImage()
         
@@ -626,6 +624,8 @@ class Canvas(QWidget):
             self.model.setRetouchFlag(True)
 
     def autoAnnotationAction(self):
+        self.model.setCurShapeType('Gesture Polygon')
+
         img, w, h, c = self.model.getImgData()
         landmarks = autoAnnotation(img)
         hand_list = landmarksToList(landmarks)
@@ -636,10 +636,90 @@ class Canvas(QWidget):
             return
         self.model.setCurPoints(hand_list)
 
-        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg = AddObjectDialog(self.list_widgets, self.model)
         dlg.exec_()
 
-        self.model.setCurShapeType('Gesture Polygon')
-        self.model.setCurShapeToDict()
+        self.setDisplayAnnot()
+        self.displayImage()
+
+    def objectClicked(self):
+        img, w, h, c = self.model.getImgData()
+        ratio = self.model.getScaleRatio()
+        if ratio >= 1:
+            interpolation = 1
+        else:
+            interpolation = 0
+        img, w, h, c = resizeImage(img, ratio, interpolation)
+        self.img2QPixmap(img, w, h, c)
+        self.setDisplayAnnot()
+
+        img, w, h, c = self.model.getImgScaled()
+        object_idx = self.list_widgets[1].currentRow()
+        self.model.setSelectedObjectIndex(object_idx)
+
+        object_shape = self.model.getObjectList()[object_idx]
+        points = copy.deepcopy(object_shape['points'])
+        for point in points:
+            point[0] *= w
+            point[1] *= h
+        
+        shape_type = object_shape['shape_type']
+        painter = QPainter(img)
+        painter.setPen(QPen(Qt.darkBlue, 10, Qt.SolidLine))
+
+        if shape_type == 'Polygon':
+            pre = points[0]
+
+            for point in points:
+                cur = point
+                painter.drawLine(pre[0], pre[1], cur[0], cur[1])
+                pre = point
+            painter.drawLine(points[0][0], points[0][1], pre[0], pre[1])
+
+        elif shape_type == 'Gesture Polygon':
+            nb_points = 21
+            for idx in range(1, nb_points):
+                if idx%4 == 1:
+                    src_pos = points[idx]
+                    continue
+                dst_pos = points[idx]
+                painter.drawLine(src_pos[0], src_pos[1], dst_pos[0], dst_pos[1])
+                src_pos = dst_pos
+
+            list_hand = []
+            list_hand.append([points[0][0], points[0][1], points[1][0], points[1][1]])
+            list_hand.append([points[0][0], points[0][1], points[5][0], points[5][1]])
+            list_hand.append([points[0][0], points[0][1], points[17][0], points[17][1]])
+            list_hand.append([points[5][0], points[5][1], points[9][0], points[9][1]])
+            list_hand.append([points[9][0], points[9][1], points[13][0], points[13][1]])
+            list_hand.append([points[13][0], points[13][1], points[17][0], points[17][1]])
+
+            for finger in list_hand:
+                painter.drawLine(finger[0], finger[1], finger[2], finger[3])
+
+        elif shape_type == 'Rectangle':
+            width = (points[1][0] - points[0][0])
+            height = (points[1][1] - points[0][1])
+
+            painter.drawRect(points[0][0], points[0][1], width, height)
+
+        elif shape_type == 'Circle':
+            rad = math.sqrt(math.pow(points[0][0]-points[1][0], 2) + math.pow(points[0][1]-points[1][1], 2))
+
+            painter.drawEllipse(points[0][0]-rad, points[0][1]-rad, rad*2, rad*2)
+
+        elif shape_type == 'Line':
+            painter.drawLine(points[0][0], points[0][1], points[1][0], points[1][1])
+
+        painter.end()
+
+        self.model.setImgScaled(img, w, h, c)
+        self.displayImage()
+
+    def objectDoubleClicked(self):
+        object_idx = self.model.getSelectedObjectIndex()
+        self.model.deleteShape(object_idx)
+        self.list_widgets[1].takeItem(object_idx)
+
         self.setDisplayAnnot()
         self.displayImage()
