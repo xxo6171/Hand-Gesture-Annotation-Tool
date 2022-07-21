@@ -21,7 +21,8 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.draw_actions = [
                                 self.action_Polygon,
-                                self.action_Gesture_Polygon,
+                                self.action_Right_Gesture,
+                                self.action_Left_Gesture,
                                 self.action_Rectangle,
                                 self.action_Circle,
                                 self.action_Line,

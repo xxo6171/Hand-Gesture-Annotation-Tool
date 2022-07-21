@@ -28,12 +28,13 @@ class Canvas(QWidget):
         self.action_Save = view[3]
 
         self.action_Polygon = view[4][0]
-        self.action_Gesture_Polygon = view[4][1]
-        self.action_Rectangle = view[4][2]
-        self.action_Circle = view[4][3]
-        self.action_Line = view[4][4]
-        self.action_Dot = view[4][5]
-        self.action_Retouch = view[4][6]
+        self.action_Right_Gesture = view[4][1]
+        self.action_Left_Gesture = view[4][2]
+        self.action_Rectangle = view[4][3]
+        self.action_Circle = view[4][4]
+        self.action_Line = view[4][5]
+        self.action_Dot = view[4][6]
+        self.action_Retouch = view[4][7]
 
         self.statusBar = view[5]
 
@@ -47,7 +48,8 @@ class Canvas(QWidget):
         self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
-        self.action_Gesture_Polygon.triggered.connect(self.drawGesturePoly)
+        self.action_Right_Gesture.triggered.connect(self.drawRightGesturePoly)
+        self.action_Left_Gesture.triggered.connect(self.drawLeftGesturePoly)
         self.action_Rectangle.triggered.connect(self.drawRect)
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
@@ -414,7 +416,13 @@ class Canvas(QWidget):
         self.model.resetCurPoints()
         self.stopMouseTracking()
 
-    def drawGesturePoly(self):
+    def drawRightGesturePoly(self):
+        self.drawGesturePoly('right')
+
+    def drawLeftGesturePoly(self):
+        self.drawGesturePoly('left')
+
+    def drawGesturePoly(self, hand_dir):
         self.model.setCurShapeType('Gesture Polygon')
         self.model.resetCurPoints()
         self.stopMouseTracking()
@@ -422,13 +430,20 @@ class Canvas(QWidget):
         dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
         dlg.exec_()
 
+
         self.model.setCurPoints([0.5, 0.65], True)
-        x_pos = 0.4
+        if hand_dir == 'right':
+            x_pos = 0.4
+        elif hand_dir == 'left':
+            x_pos = 0.6
         y_pos = 0.5
         nb_points = 21
         for idx in range(1, nb_points):
             if idx%4 == 1:
-                x_pos += 0.05
+                if hand_dir == 'right':
+                    x_pos += 0.05
+                elif hand_dir == 'left':
+                    x_pos -= 0.05
                 y_pos = 0.5
             pos = [round(x_pos, 2), round(y_pos, 2)]
             self.model.setCurPoints(pos, True)
