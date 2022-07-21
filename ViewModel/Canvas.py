@@ -28,12 +28,14 @@ class Canvas(QWidget):
         self.action_Save = view[3]
 
         self.action_Polygon = view[4][0]
-        self.action_Gesture_Polygon = view[4][1]
-        self.action_Rectangle = view[4][2]
-        self.action_Circle = view[4][3]
-        self.action_Line = view[4][4]
-        self.action_Dot = view[4][5]
-        self.action_Retouch = view[4][6]
+        self.action_Right_Gesture = view[4][1]
+        self.action_Left_Gesture = view[4][2]
+        self.action_Rectangle = view[4][3]
+        self.action_Circle = view[4][4]
+        self.action_Line = view[4][5]
+        self.action_Dot = view[4][6]
+        self.action_Retouch = view[4][7]
+        self.action_Auto_Annotation = view[4][8]
 
         self.statusBar = view[5]
 
@@ -47,12 +49,14 @@ class Canvas(QWidget):
         self.action_Save.triggered.connect(self.saveJson)
 
         self.action_Polygon.triggered.connect(self.drawPoly)
-        self.action_Gesture_Polygon.triggered.connect(self.drawGesturePoly)
+        self.action_Right_Gesture.triggered.connect(self.drawRightGesturePoly)
+        self.action_Left_Gesture.triggered.connect(self.drawLeftGesturePoly)
         self.action_Rectangle.triggered.connect(self.drawRect)
         self.action_Circle.triggered.connect(self.drawCircle)
         self.action_Line.triggered.connect(self.drawLine)
         self.action_Dot.triggered.connect(self.drawDot)
         self.action_Retouch.triggered.connect(self.retouch)
+        self.action_Auto_Annotation.triggered.connect(self.autoAnnotationAction)
 
         self.action_Zoom_In.triggered.connect(self.zoomInImage)
         self.action_Zoom_Out.triggered.connect(self.zoomOutImage)
@@ -272,7 +276,7 @@ class Canvas(QWidget):
 
         # 초기화된 상태라면 첫 클릭 시 좌표를 시작 좌표로 입력
         if points == []:
-            self.model.setCurPoints(pos)
+            self.model.addCurPoint(pos)
 
         # Draw Polygon을 위한 이어그리기 플래그
         tracking_flag = self.model.isTracking()
@@ -293,10 +297,10 @@ class Canvas(QWidget):
 
                 # 시작점이 아니라면 그리기 계속
                 else:
-                    self.model.setCurPoints(self.model.getPrePos())
+                    self.model.addCurPoint(self.model.getPrePos())
             else:
                 self.stopMouseTracking()
-                self.model.setCurPoints(self.model.getCurPos())
+                self.model.addCurPoint(self.model.getCurPos())
                 self.model.setDrawFlag(False)
 
             # Rect, Circle, Line, Dot일 때
@@ -414,7 +418,13 @@ class Canvas(QWidget):
         self.model.resetCurPoints()
         self.stopMouseTracking()
 
-    def drawGesturePoly(self):
+    def drawRightGesturePoly(self):
+        self.drawGesturePoly('right')
+
+    def drawLeftGesturePoly(self):
+        self.drawGesturePoly('left')
+
+    def drawGesturePoly(self, hand_dir):
         self.model.setCurShapeType('Gesture Polygon')
         self.model.resetCurPoints()
         self.stopMouseTracking()
@@ -422,16 +432,23 @@ class Canvas(QWidget):
         dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
         dlg.exec_()
 
-        self.model.setCurPoints([0.5, 0.65], True)
-        x_pos = 0.4
+
+        self.model.addCurPoint([0.5, 0.65], True)
+        if hand_dir == 'right':
+            x_pos = 0.4
+        elif hand_dir == 'left':
+            x_pos = 0.6
         y_pos = 0.5
         nb_points = 21
         for idx in range(1, nb_points):
             if idx%4 == 1:
-                x_pos += 0.05
+                if hand_dir == 'right':
+                    x_pos += 0.05
+                elif hand_dir == 'left':
+                    x_pos -= 0.05
                 y_pos = 0.5
             pos = [round(x_pos, 2), round(y_pos, 2)]
-            self.model.setCurPoints(pos, True)
+            self.model.addCurPoint(pos, True)
             y_pos -= 0.05
         self.model.setCurShapeToDict()
         self.setDisplayAnnot()
@@ -604,3 +621,21 @@ class Canvas(QWidget):
         else:
             self.model.setRetouchFlag(True)
 
+    def autoAnnotationAction(self):
+        img, w, h, c = self.model.getImgData()
+        landmarks = autoAnnotation(img)
+        hand_list = landmarksToList(landmarks)
+        if hand_list is False:
+            title = 'Error: 자동으로 좌표를 찾을 수 없습니다.' 
+            text = 'Mediapipe Hands에서 손 좌표 찾기에 실패했습니다.'
+            QMessageBox.about(self, title, text)
+            return
+        self.model.setCurPoints(hand_list)
+
+        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg.exec_()
+
+        self.model.setCurShapeType('Gesture Polygon')
+        self.model.setCurShapeToDict()
+        self.setDisplayAnnot()
+        self.displayImage()

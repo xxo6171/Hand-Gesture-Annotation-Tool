@@ -157,7 +157,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -193,7 +193,10 @@
       <bool>false</bool>
      </property>
      <addaction name="action_Polygon"/>
-     <addaction name="action_Gesture_Polygon"/>
+     <addaction name="separator"/>
+     <addaction name="action_Right_Gesture"/>
+     <addaction name="action_Left_Gesture"/>
+     <addaction name="separator"/>
      <addaction name="action_Rectangle"/>
      <addaction name="action_Circle"/>
      <addaction name="action_Line"/>
@@ -265,9 +268,9 @@
     <string>Polygon</string>
    </property>
   </action>
-  <action name="action_Gesture_Polygon">
+  <action name="action_Right_Gesture">
    <property name="text">
-    <string>Gesture Polygon</string>
+    <string>Right Gesture</string>
    </property>
   </action>
   <action name="action_Rectangle">
@@ -329,6 +332,11 @@
   <action name="action_Image_from_IP_Camera">
    <property name="text">
     <string>Image from IP Camera</string>
+   </property>
+  </action>
+  <action name="action_Left_Gesture">
+   <property name="text">
+    <string>Left Gesture</string>
    </property>
   </action>
  </widget>

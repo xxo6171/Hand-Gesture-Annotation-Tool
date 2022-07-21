@@ -97,12 +97,14 @@ class Model:
         self.annot_info['shapes'].append(new_shape)
     def resetCurPoints(self):
         self.cur_points = []
-    def setCurPoints(self, point, raw=False):
+    def addCurPoint(self, point, raw=False):
         pos = point.copy()
         if not raw:
             pos[0] /= self.img_scaled_width
             pos[1] /= self.img_scaled_height
         self.cur_points.append(pos)
+    def setCurPoints(self, points):
+        self.cur_points = points.copy()
     def getCurPoints(self):
         return copy.deepcopy(self.cur_points)
     def setCurLabel(self, label):
