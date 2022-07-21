@@ -30,6 +30,7 @@ class Model:
         self.retouch_flag = False
         self.tracking_flag = False
         self.keep_tracking_flag = False
+        self.undo_flag = False
         
         self.pre_mouse_pos = [0, 0]
         self.cur_mouse_pos = [0, 0]
