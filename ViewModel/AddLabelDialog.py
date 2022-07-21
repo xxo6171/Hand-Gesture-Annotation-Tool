@@ -52,4 +52,9 @@ class AddLabelDialog(QDialog, add_label_form_class):
         for label in labels:
             add_label = QListWidgetItem(label)
             self.view.addItem(add_label)
+
+        if self.model.getCurLabel() != '':
+                self.model.setCurShapeToDict()
+        self.model.setCurLabel('')
+        
         self.close()

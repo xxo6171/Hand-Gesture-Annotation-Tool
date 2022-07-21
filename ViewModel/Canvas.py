@@ -309,9 +309,6 @@ class Canvas(QWidget):
             if keep_tracking_flag is False:
                 dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
                 dlg.exec_()
-                if self.model.getCurLabel() != '':
-                    self.model.setCurShapeToDict()
-                self.model.setCurLabel('')
                 
         else:
             self.model.setPrePos(pos)
@@ -431,11 +428,6 @@ class Canvas(QWidget):
         self.model.resetCurPoints()
         self.stopMouseTracking()
 
-        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
-        dlg.exec_()
-        if self.model.getCurLabel() == '' :
-            return
-
         self.model.addCurPoint([0.5, 0.65], True)
         if hand_dir == 'right':
             x_pos = 0.4
@@ -453,8 +445,10 @@ class Canvas(QWidget):
             pos = [round(x_pos, 2), round(y_pos, 2)]
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
-        self.model.setCurShapeToDict()
-        self.model.setCurLabel('')
+
+        dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
+        dlg.exec_()
+
         self.setDisplayAnnot()
         self.displayImage()
         
@@ -626,6 +620,8 @@ class Canvas(QWidget):
             self.model.setRetouchFlag(True)
 
     def autoAnnotationAction(self):
+        self.model.setCurShapeType('Gesture Polygon')
+
         img, w, h, c = self.model.getImgData()
         landmarks = autoAnnotation(img)
         hand_list = landmarksToList(landmarks)
@@ -639,7 +635,5 @@ class Canvas(QWidget):
         dlg = AddLabelDialog(self.listWidget_LabelList, self.model)
         dlg.exec_()
 
-        self.model.setCurShapeType('Gesture Polygon')
-        self.model.setCurShapeToDict()
         self.setDisplayAnnot()
         self.displayImage()
