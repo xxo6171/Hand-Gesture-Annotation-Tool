@@ -108,6 +108,7 @@ class Canvas(QWidget):
     def initWindow(self):
         self.model.setImgData(None, None, None, None)
         self.model.setImgScaled(None, None, None, None)
+        self.model.initAnnotStack()
         self.model.initAnnotInfo()
         self.model.initLabelList()
         self.listWidget_LabelList.clear()
