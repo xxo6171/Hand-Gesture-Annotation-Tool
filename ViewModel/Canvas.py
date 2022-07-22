@@ -232,7 +232,7 @@ class Canvas(QWidget):
     def mousePressEvent(self, event):
         if self.model.getDrawFlag() is True or self.model.getRetouchFlag() is False:
             return
-
+        
         cur_pos = [event.x(), event.y()]
 
         click_point_range = self.model.getClickPointRange()
@@ -249,6 +249,7 @@ class Canvas(QWidget):
                 if cur_pos[0] > point[0]*w-half_range and cur_pos[0] < point[0]*w+half_range:
                     if cur_pos[1] > point[1]*h-half_range and cur_pos[1] < point[1]*h+half_range:
                         move_point = point
+                        self.model.pushAnnot(self.model.getAnnotInfo())
         
         self.model.setMovePoint(move_point)    
 
@@ -280,7 +281,7 @@ class Canvas(QWidget):
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
-            self.model.pushAnnot(self.model.getAnnotInfo())
+            # self.model.pushAnnot(self.model.getAnnotInfo())
             return
 
         pos = [event.x(), event.y()]
@@ -323,7 +324,7 @@ class Canvas(QWidget):
                 dlg.exec_()
                 if self.model.getCurLabel() != '':
                     self.model.setCurShapeToDict()
-                    self.model.pushAnnot(self.model.getAnnotInfo())
+                    # self.model.pushAnnot(self.model.getAnnotInfo())
                 self.model.setCurLabel('')
                 
         else:
@@ -466,7 +467,7 @@ class Canvas(QWidget):
         dlg.exec_()
         if self.model.getCurLabel() != '':
             self.model.setCurShapeToDict()
-            self.model.pushAnnot(self.model.getAnnotInfo())
+            # self.model.pushAnnot(self.model.getAnnotInfo())
         self.model.setCurLabel('')
 
         self.setDisplayAnnot()
@@ -733,6 +734,7 @@ class Canvas(QWidget):
         self.displayImage()
 
     def objectDoubleClicked(self):
+        self.model.pushAnnot(self.model.getAnnotInfo())
         object_idx = self.model.getSelectedObjectIndex()
         self.model.deleteShape(object_idx)
         self.list_widgets[1].takeItem(object_idx)
@@ -742,6 +744,11 @@ class Canvas(QWidget):
 
     def undo(self):
         if not self.model.getUndoFlag() : return
+
+        self.model.setAnnotDict(self.model.popAnnot())
+        self.model.setUndoFlag(False)
+        self.setDisplayAnnot()
+        self.displayImage()
 
         self.list_widgets[1].clear()
         annot_info = self.model.getAnnotInfo(True)
@@ -754,8 +761,3 @@ class Canvas(QWidget):
             obj_label = shapes[idx]['label']
             add_object = QListWidgetItem(obj_type + '_' + obj_label)
             self.list_widgets[1].addItem(add_object)
-
-        self.model.setAnnotDict(self.model.popAnnot())
-        self.model.setUndoFlag(False)
-        self.setDisplayAnnot()
-        self.displayImage()

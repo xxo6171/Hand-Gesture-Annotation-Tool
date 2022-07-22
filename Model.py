@@ -119,21 +119,12 @@ class Model:
     def initAnnotStack(self):
         self.top = len(self.annot)
         self.annot.clear()
-    def topAnnot(self):
-        return self.annot[-1]
     def popAnnot(self):
-        if self.isEmptyAnnot():
-            return copy.deepcopy(self.topAnnot())
-        self.annot.pop(-1)
-        self.top -= 1
-        return copy.deepcopy(self.topAnnot())
+        if len(self.annot) == 1:
+            return copy.deepcopy(self.annot[0])
+        return copy.deepcopy(self.annot.pop())
     def pushAnnot(self, dict):
         self.annot.append(copy.deepcopy(dict))
-        self.top += 1
-    def isEmptyAnnot(self):
-        if self.top == 1 :
-            return True
-        return False
 
     def getUndoFlag(self):
         return self.undo_flag
