@@ -183,10 +183,15 @@ class Canvas(QWidget):
 
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
-        if event.key() == Qt.Key_Control: self.model.setCtrlFlag(True)
-        if event.key() == (Qt.Key_Control and Qt.Key_O) : self.openFile()
-        if event.key() == (Qt.Key_Control and Qt.Key_S) : self.saveJson()
-        if event.key() == (Qt.Key_Control and Qt.Key_Z): self.undo()
+        if event.key() == Qt.Key_Control:
+            self.model.setCtrlFlag(True)
+        if event.key() == (Qt.Key_Control and Qt.Key_O) :
+            self.openFile()
+        if event.key() == (Qt.Key_Control and Qt.Key_S) :
+            self.saveJson()
+        if event.key() == (Qt.Key_Control and Qt.Key_Z):
+            self.model.setUndoFlag(True)
+            self.undo()
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control: self.model.setCtrlFlag(False)
@@ -266,12 +271,12 @@ class Canvas(QWidget):
         cur_pos = self.model.getCurPos()
         move_point[0] = cur_pos[0]/w
         move_point[1] = cur_pos[1]/h
-
         self.setDisplayAnnot()
         self.displayImage()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
+            self.model.pushAnnot(self.model.getAnnotInfo())
             return
 
         pos = [event.x(), event.y()]
@@ -506,13 +511,7 @@ class Canvas(QWidget):
         self.label_Canvas.setMouseTracking(True)
 
     def setDisplayAnnot(self):
-        if self.model.getUndoFlag():
-            self.model.popAnnot()
-            dict = self.model.topAnnot()
-            self.model.setAnnotDict(dict)
-            self.model.setUndoFlag(False)
-        else:
-            dict = self.model.topAnnot()
+        dict = self.model.getAnnotInfo()
 
         img, w, h, c = self.model.getImgData()
         ratio = self.model.getScaleRatio()
@@ -656,6 +655,9 @@ class Canvas(QWidget):
         self.displayImage()
 
     def undo(self):
-        self.model.setUndoFlag(True)
+        if not self.model.getUndoFlag() : return
+
+        self.model.setAnnotDict(self.model.popAnnot())
+        self.model.setUndoFlag(False)
         self.setDisplayAnnot()
         self.displayImage()
