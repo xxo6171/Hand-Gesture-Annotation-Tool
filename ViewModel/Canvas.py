@@ -743,6 +743,7 @@ class Canvas(QWidget):
         self.displayImage()
 
     def undo(self):
+        if self.model.getImgData() is None: return
         if not self.model.getUndoFlag() : return
 
         self.model.setAnnotDict(self.model.popAnnot())
