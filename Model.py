@@ -13,7 +13,7 @@ class Model:
         self.img_scaled_channel = None
 
         self.scale_ratio = 1
-
+        self.top = 0
         self.annot = []
         self.label_list = []
         self.object_list = []
@@ -119,17 +119,21 @@ class Model:
         return self.cur_shape_type
 
     def initAnnotStack(self):
+        self.top = len(self.annot)
         self.annot.clear()
     def topAnnot(self):
         return self.annot[-1]
     def popAnnot(self):
         if self.isEmptyAnnot():
             return copy.deepcopy(self.topAnnot())
-        return copy.deepcopy(self.annot.pop(-1))
+        self.annot.pop(-1)
+        self.top -= 1
+        return copy.deepcopy(self.topAnnot())
     def pushAnnot(self, dict):
         self.annot.append(copy.deepcopy(dict))
+        self.top += 1
     def isEmptyAnnot(self):
-        if len(self.annot) == 1 :
+        if self.top == 1 :
             return True
         return False
 
