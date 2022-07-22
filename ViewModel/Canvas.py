@@ -461,12 +461,13 @@ class Canvas(QWidget):
             pos = [round(x_pos, 2), round(y_pos, 2)]
             self.model.addCurPoint(pos, True)
             y_pos -= 0.05
-        self.model.setCurShapeToDict()
-        self.model.pushAnnot(self.model.getAnnotInfo())
-        self.model.setCurLabel('')
 
         dlg = AddObjectDialog(self.list_widgets, self.model)
         dlg.exec_()
+        if self.model.getCurLabel() != '':
+            self.model.setCurShapeToDict()
+            self.model.pushAnnot(self.model.getAnnotInfo())
+        self.model.setCurLabel('')
 
         self.setDisplayAnnot()
         self.displayImage()
