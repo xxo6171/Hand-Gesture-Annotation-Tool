@@ -29,6 +29,9 @@ class HandAnnot(QMainWindow, main_form_class):
                                 self.action_Dot,
                                 self.action_Retouch,
                                 self.action_Auto_Annotation         ]
+        self.list_widgets = [
+                                self.listWidget_LabelList,
+                                self.listWidget_ObjectList          ]
 
         self.canvas_widgets = [
                                 self.action_Open,
@@ -41,7 +44,7 @@ class HandAnnot(QMainWindow, main_form_class):
                                 self.action_Zoom_In,
                                 self.action_Zoom_Out,
 
-                                self.listWidget_LabelList
+                                self.list_widgets
                             ]
 
         self.canvas_viewmodel = Canvas(self.canvas_widgets, self.model)
