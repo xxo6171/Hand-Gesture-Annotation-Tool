@@ -6,6 +6,7 @@ from PyQt5.QtGui import *
 add_label_UI_dir = 'Resource/UI/Add Lable Dialog.ui'
 add_label_form_class = uic.loadUiType(add_label_UI_dir)[0]
 
+
 class AddObjectDialog(QDialog, add_label_form_class):
     def __init__(self, view, model):
         super().__init__()
@@ -21,7 +22,7 @@ class AddObjectDialog(QDialog, add_label_form_class):
 
         self.pushButton_OK.clicked.connect(self.setLabel)
         self.pushButton_Cancel.clicked.connect(self.closeDialog)
-        
+
     def initListWidget(self):
         self.label_list = self.model.getLabelList()
 
@@ -36,9 +37,9 @@ class AddObjectDialog(QDialog, add_label_form_class):
     def doubleClickItem(self):
         self.setLabel()
 
-    def setLabel(self): 
+    def setLabel(self):
         label_name = self.lineEdit_NewLabel.text()
-        if label_name == '' :
+        if label_name == '':
             self.closeDialog()
             return
         if label_name not in self.label_list:
@@ -52,16 +53,15 @@ class AddObjectDialog(QDialog, add_label_form_class):
         shapes = annot_info['shapes']
         if not shapes:
             return
-        self.model.addObjectList(shapes[-1])
+        # self.model.addObjectList(shapes[-1])
 
-        object_list = self.model.getObjectList()
-        obj_number = 0
-        for object in object_list:
-            obj_type = shapes[obj_number]['shape_type']
-            obj_label = shapes[obj_number]['label']
+        # object_list = self.model.getObjectList()
+
+        for idx in range(len(shapes)):
+            obj_type = shapes[idx]['shape_type']
+            obj_label = shapes[idx]['label']
             add_object = QListWidgetItem(obj_type + '_' + obj_label)
             self.view_ObjectList.addItem(add_object)
-            obj_number += 1
 
     def closeDialog(self):
         self.view_LabelList.clear()

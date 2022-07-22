@@ -103,6 +103,7 @@ class Canvas(QWidget):
 
         self.model.setImgData(img, w, h, c)
         self.img2QPixmap(img, w, h, c)
+        self.model.pushAnnot(self.model.getAnnotInfo())
         self.setDisplayAnnot()
         self.displayImage()
         self.model.setMenuFlag(True)
@@ -111,6 +112,7 @@ class Canvas(QWidget):
     def initWindow(self):
         self.model.setImgData(None, None, None, None)
         self.model.setImgScaled(None, None, None, None)
+        self.model.initAnnotStack()
         self.model.initAnnotInfo()
         self.model.initLabelList()
         self.list_widgets[0].clear()
@@ -185,9 +187,15 @@ class Canvas(QWidget):
 
     # Image scaling using keyboard, mouse wheel event
     def keyPressEvent(self, event):  # Press Control Key
-        if event.key() == Qt.Key_Control: self.model.setCtrlFlag(True)
-        if event.key() == (Qt.Key_Control and Qt.Key_O) : self.openFile()
-        if event.key() == (Qt.Key_Control and Qt.Key_S) : self.saveJson()
+        if event.key() == Qt.Key_Control:
+            self.model.setCtrlFlag(True)
+        if event.key() == (Qt.Key_Control and Qt.Key_O) :
+            self.openFile()
+        if event.key() == (Qt.Key_Control and Qt.Key_S) :
+            self.saveJson()
+        if event.key() == (Qt.Key_Control and Qt.Key_Z):
+            self.model.setUndoFlag(True)
+            self.undo()
 
     def keyReleaseEvent(self, event):  # Release Control Key
         if event.key() == Qt.Key_Control: self.model.setCtrlFlag(False)
@@ -267,12 +275,12 @@ class Canvas(QWidget):
         cur_pos = self.model.getCurPos()
         move_point[0] = cur_pos[0]/w
         move_point[1] = cur_pos[1]/h
-
         self.setDisplayAnnot()
         self.displayImage()
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
+            self.model.pushAnnot(self.model.getAnnotInfo())
             return
 
         pos = [event.x(), event.y()]
@@ -313,6 +321,10 @@ class Canvas(QWidget):
             if keep_tracking_flag is False:
                 dlg = AddObjectDialog(self.list_widgets, self.model)
                 dlg.exec_()
+                if self.model.getCurLabel() != '':
+                    self.model.setCurShapeToDict()
+                    self.model.pushAnnot(self.model.getAnnotInfo())
+                self.model.setCurLabel('')
                 
         else:
             self.model.setPrePos(pos)
@@ -452,6 +464,10 @@ class Canvas(QWidget):
 
         dlg = AddObjectDialog(self.list_widgets, self.model)
         dlg.exec_()
+        if self.model.getCurLabel() != '':
+            self.model.setCurShapeToDict()
+            self.model.pushAnnot(self.model.getAnnotInfo())
+        self.model.setCurLabel('')
 
         self.setDisplayAnnot()
         self.displayImage()
@@ -721,5 +737,13 @@ class Canvas(QWidget):
         self.model.deleteShape(object_idx)
         self.list_widgets[1].takeItem(object_idx)
 
+        self.setDisplayAnnot()
+        self.displayImage()
+
+    def undo(self):
+        if not self.model.getUndoFlag() : return
+
+        self.model.setAnnotDict(self.model.popAnnot())
+        self.model.setUndoFlag(False)
         self.setDisplayAnnot()
         self.displayImage()

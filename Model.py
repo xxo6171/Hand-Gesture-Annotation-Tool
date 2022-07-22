@@ -13,7 +13,8 @@ class Model:
         self.img_scaled_channel = None
 
         self.scale_ratio = 1
-
+        self.top = 0
+        self.annot = []
         self.label_list = []
         self.object_list = []
         self.annot_info = {}
@@ -30,6 +31,7 @@ class Model:
         self.retouch_flag = False
         self.tracking_flag = False
         self.keep_tracking_flag = False
+        self.undo_flag = False
         
         self.pre_mouse_pos = [0, 0]
         self.cur_mouse_pos = [0, 0]
@@ -121,6 +123,29 @@ class Model:
     def getCurShapeType(self):
         return self.cur_shape_type
 
+    def initAnnotStack(self):
+        self.top = len(self.annot)
+        self.annot.clear()
+    def topAnnot(self):
+        return self.annot[-1]
+    def popAnnot(self):
+        if self.isEmptyAnnot():
+            return copy.deepcopy(self.topAnnot())
+        self.annot.pop(-1)
+        self.top -= 1
+        return copy.deepcopy(self.topAnnot())
+    def pushAnnot(self, dict):
+        self.annot.append(copy.deepcopy(dict))
+        self.top += 1
+    def isEmptyAnnot(self):
+        if self.top == 1 :
+            return True
+        return False
+
+    def getUndoFlag(self):
+        return self.undo_flag
+    def setUndoFlag(self, flag):
+        self.undo_flag = flag
 
     def getFocusFlag(self):
         return self.focus_flag
