@@ -53,9 +53,6 @@ class AddObjectDialog(QDialog, add_label_form_class):
         shapes = annot_info['shapes']
         if not shapes:
             return
-        # self.model.addObjectList(shapes[-1])
-
-        # object_list = self.model.getObjectList()
 
         for idx in range(len(shapes)):
             obj_type = shapes[idx]['shape_type']
