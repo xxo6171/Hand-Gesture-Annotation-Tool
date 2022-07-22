@@ -16,7 +16,6 @@ class Model:
         self.top = 0
         self.annot = []
         self.label_list = []
-        self.object_list = []
         self.annot_info = {}
         self.initAnnotInfo()
 
@@ -73,11 +72,6 @@ class Model:
     def setLabel(self, label):
         self.label_list.append(label)
 
-    def getObjectList(self):
-        return self.object_list
-    def addObjectList(self, object):
-        self.object_list.append(object)
-
     def initAnnotInfo(self):
         self.annot_info['shapes'] = []
         self.annot_info['image_path'] = ''
@@ -103,7 +97,6 @@ class Model:
         self.cur_points = []
     def deleteShape(self, idx):
         del self.annot_info['shapes'][idx]
-        del self.object_list[idx]
     def addCurPoint(self, point, raw=False):
         pos = point.copy()
         if not raw:

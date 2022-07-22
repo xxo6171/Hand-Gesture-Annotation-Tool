@@ -673,7 +673,7 @@ class Canvas(QWidget):
         object_idx = self.list_widgets[1].currentRow()
         self.model.setSelectedObjectIndex(object_idx)
 
-        object_shape = self.model.getObjectList()[object_idx]
+        object_shape = self.model.getAnnotInfo()['shapes'][object_idx]
         points = copy.deepcopy(object_shape['points'])
         for point in points:
             point[0] *= w
@@ -742,6 +742,18 @@ class Canvas(QWidget):
 
     def undo(self):
         if not self.model.getUndoFlag() : return
+
+        self.list_widgets[1].clear()
+        annot_info = self.model.getAnnotInfo(True)
+        shapes = annot_info['shapes']
+        if not shapes:
+            return
+
+        for idx in range(len(shapes)):
+            obj_type = shapes[idx]['shape_type']
+            obj_label = shapes[idx]['label']
+            add_object = QListWidgetItem(obj_type + '_' + obj_label)
+            self.list_widgets[1].addItem(add_object)
 
         self.model.setAnnotDict(self.model.popAnnot())
         self.model.setUndoFlag(False)
