@@ -118,6 +118,8 @@ class Model:
     def getCurShapeType(self):
         return self.cur_shape_type
 
+    def initAnnotStack(self):
+        self.annot.clear()
     def topAnnot(self):
         return self.annot[-1]
     def popAnnot(self):
