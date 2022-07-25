@@ -596,22 +596,18 @@ class Canvas(QWidget):
                     painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
                     src_pos = dst_pos
 
-                list_hand = []
-                list_hand.append([points[0][0], points[0][1], points[1][0], points[1][1]])
-                list_hand.append([points[0][0], points[0][1], points[5][0], points[5][1]])
-                list_hand.append([points[0][0], points[0][1], points[17][0], points[17][1]])
-                list_hand.append([points[5][0], points[5][1], points[9][0], points[9][1]])
-                list_hand.append([points[9][0], points[9][1], points[13][0], points[13][1]])
-                list_hand.append([points[13][0], points[13][1], points[17][0], points[17][1]])
+                list_hand = [(0, 1), (0, 5), (0, 17), (5, 9), (9, 13), (13, 17)]
 
-                for finger in list_hand:
+                for idx in list_hand:
+                    src = idx[0]
+                    dst = idx[1]
                     painter.setPen(QPen(Qt.cyan, 3, Qt.SolidLine))
-                    painter.drawLine(finger[0], finger[1], finger[2], finger[3])
+                    painter.drawLine(points[src][0], points[src][1], points[dst][0], points[dst][1])
 
                     painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
-                    painter.drawPoint(finger[0], finger[1])
-                    painter.drawPoint(finger[2], finger[3])
-
+                    painter.drawPoint(points[src][0], points[src][1])
+                    painter.drawPoint(points[dst][0], points[dst][1])
+     
             elif shape_type == 'Rectangle':
                 width = (points[1][0] - points[0][0])
                 height = (points[1][1] - points[0][1])
@@ -719,16 +715,12 @@ class Canvas(QWidget):
                 painter.drawLine(src_pos[0], src_pos[1], dst_pos[0], dst_pos[1])
                 src_pos = dst_pos
 
-            list_hand = []
-            list_hand.append([points[0][0], points[0][1], points[1][0], points[1][1]])
-            list_hand.append([points[0][0], points[0][1], points[5][0], points[5][1]])
-            list_hand.append([points[0][0], points[0][1], points[17][0], points[17][1]])
-            list_hand.append([points[5][0], points[5][1], points[9][0], points[9][1]])
-            list_hand.append([points[9][0], points[9][1], points[13][0], points[13][1]])
-            list_hand.append([points[13][0], points[13][1], points[17][0], points[17][1]])
+            list_hand = [(0, 1), (0, 5), (0, 17), (5, 9), (9, 13), (13, 17)]
 
-            for finger in list_hand:
-                painter.drawLine(finger[0], finger[1], finger[2], finger[3])
+            for idx in list_hand:
+                src = idx[0]
+                dst = idx[1]
+                painter.drawLine(points[src][0], points[src][1], points[dst][0], points[dst][1])
 
         elif shape_type == 'Rectangle':
             width = (points[1][0] - points[0][0])
