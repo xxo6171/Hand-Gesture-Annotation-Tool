@@ -630,6 +630,7 @@ class Canvas(QWidget):
                 painter.setPen(color)
                 painter.drawEllipse(points[0][0]-rad, points[0][1]-rad, rad*2, rad*2)
                 painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
+                painter.drawPoint(points[0][0], points[0][1])
                 painter.drawPoint(points[1][0], points[1][1])
 
 
