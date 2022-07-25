@@ -32,7 +32,7 @@
    <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="mouseTracking">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="focusPolicy">
    <enum>Qt::NoFocus</enum>
@@ -59,8 +59,11 @@
       <height>841</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="mouseTracking">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
@@ -68,45 +71,26 @@
     <property name="title">
      <string>Canvas</string>
     </property>
-    <widget class="QLabel" name="label_Canvas">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>1280</width>
-       <height>821</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>ArrowCursor</cursorShape>
-     </property>
-     <property name="mouseTracking">
-      <bool>true</bool>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="text">
-      <string>Display Canvas</string>
-     </property>
-    </widget>
     <widget class="QScrollArea" name="scrollArea_Canvas">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>20</y>
        <width>1280</width>
-       <height>811</height>
+       <height>810</height>
       </rect>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>CrossCursor</cursorShape>
      </property>
      <property name="mouseTracking">
       <bool>true</bool>
      </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
      <property name="widgetResizable">
       <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <widget class="QWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
@@ -114,19 +98,11 @@
         <x>0</x>
         <y>0</y>
         <width>1278</width>
-        <height>809</height>
+        <height>808</height>
        </rect>
-      </property>
-      <property name="mouseTracking">
-       <bool>true</bool>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
       </property>
      </widget>
     </widget>
-    <zorder>scrollArea_Canvas</zorder>
-    <zorder>label_Canvas</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_LabelList">
     <property name="geometry">
@@ -161,9 +137,9 @@
      </rect>
     </property>
     <property name="title">
-     <string>Polygon List</string>
+     <string>Object List</string>
     </property>
-    <widget class="QListWidget" name="listWidget_PolygonList">
+    <widget class="QListWidget" name="listWidget_ObjectList">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -174,16 +150,6 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>340</x>
-      <y>0</y>
-      <width>120</width>
-      <height>80</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -191,7 +157,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -227,7 +193,10 @@
       <bool>false</bool>
      </property>
      <addaction name="action_Polygon"/>
-     <addaction name="action_Gesture_Polygon"/>
+     <addaction name="separator"/>
+     <addaction name="action_Right_Gesture"/>
+     <addaction name="action_Left_Gesture"/>
+     <addaction name="separator"/>
      <addaction name="action_Rectangle"/>
      <addaction name="action_Circle"/>
      <addaction name="action_Line"/>
@@ -248,19 +217,9 @@
     <addaction name="separator"/>
     <addaction name="action_Fit"/>
    </widget>
-   <widget class="QMenu" name="menu_TEST">
-    <property name="title">
-     <string>TEST</string>
-    </property>
-    <addaction name="action_Add_Label"/>
-    <addaction name="action_Delete_Label"/>
-    <addaction name="separator"/>
-    <addaction name="action_Image_from_IP_Camera"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Zoom"/>
-   <addaction name="menu_TEST"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="cursor">
@@ -284,6 +243,9 @@
    </property>
   </action>
   <action name="action_Retouch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Retouch</string>
    </property>
@@ -306,9 +268,9 @@
     <string>Polygon</string>
    </property>
   </action>
-  <action name="action_Gesture_Polygon">
+  <action name="action_Right_Gesture">
    <property name="text">
-    <string>Gesture Polygon</string>
+    <string>Right Gesture</string>
    </property>
   </action>
   <action name="action_Rectangle">
@@ -370,6 +332,11 @@
   <action name="action_Image_from_IP_Camera">
    <property name="text">
     <string>Image from IP Camera</string>
+   </property>
+  </action>
+  <action name="action_Left_Gesture">
+   <property name="text">
+    <string>Left Gesture</string>
    </property>
   </action>
  </widget>
