@@ -97,6 +97,14 @@ class Canvas(QWidget):
             self.model.setAnnotDict(json2Dict(self.jsonPath))
             img, w, h, c = loadImgData(self.model.getAnnotInfo()['image_path'])
             self.loadLabelList()
+
+            annot_info = self.model.getAnnotInfo(no_deep = True)
+            shapes = annot_info['shapes']
+            for shape in shapes:
+                points = shape['points']
+                for point in points:
+                    point[0] /= w
+                    point[1] /= h
         else :
             img, w, h, c = loadImgData(self.filePath[0])
             self.model.setAnnotInfo(self.filePath[0], w, h)
