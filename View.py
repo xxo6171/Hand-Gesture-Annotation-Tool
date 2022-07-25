@@ -5,7 +5,6 @@ from PyQt5.QtGui import *
 import sys
 
 from ViewModel.Canvas import Canvas
-from ViewModel.ObjectList import ObjectList
 
 import Model
 
