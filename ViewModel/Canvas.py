@@ -85,7 +85,7 @@ class Canvas(QWidget):
             self.action_Save.setEnabled(False)
 
     def openFile(self):
-        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
+        self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png)')
 
         if self.filePath[0] == '' : return
 
