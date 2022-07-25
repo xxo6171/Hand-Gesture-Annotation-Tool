@@ -1,4 +1,3 @@
-from configparser import Interpolation
 import os
 import math
 import copy
@@ -6,7 +5,6 @@ import copy
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from numpy import half
 from Utils.ImageProc import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
@@ -308,7 +306,7 @@ class Canvas(QWidget):
         points = self.model.getCurPoints()
 
         # 초기화된 상태라면 첫 클릭 시 좌표를 시작 좌표로 입력
-        if points == []:
+        if points == [] and self.model.getCurShapeType() is not 'Dot':
             self.model.addCurPoint(pos)
 
         # Draw Polygon을 위한 이어그리기 플래그
@@ -520,6 +518,7 @@ class Canvas(QWidget):
 
         self.model.resetCurPoints()
         self.stopMouseTracking()
+        self.startMouseTracking()
 
     def stopMouseTracking(self):
         self.model.setTracking(False)
