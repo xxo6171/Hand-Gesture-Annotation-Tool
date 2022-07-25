@@ -86,7 +86,7 @@ class Canvas(QWidget):
         self.filePath = QFileDialog.getOpenFileName(self, 'Open File',filter='Images(*.jpg *.jpeg *.png *.json)')
 
         if self.filePath[0] == '' : return
-
+        self.list_widgets[1].clear()
         self.fileName, ext = os.path.splitext(os.path.basename(self.filePath[0]))
         self.jsonPath = os.path.dirname(self.filePath[0]) + '/' + self.fileName + '.json'
         self.initWindow()
@@ -115,6 +115,7 @@ class Canvas(QWidget):
         self.model.setMenuFlag(True)
         self.menuRefresh()
 
+
     def initWindow(self):
         self.model.setImgData(None, None, None, None)
         self.model.setImgScaled(None, None, None, None)
@@ -129,8 +130,21 @@ class Canvas(QWidget):
             if self.model.getAnnotInfo()['shapes'][idx]['label'] not in label_list:
                 label_list.append(self.model.getAnnotInfo()['shapes'][idx]['label'])
         for label in label_list:
-            self.list_widgets[1].addItem(QListWidgetItem(label))
+            self.list_widgets[0].addItem(QListWidgetItem(label))
             self.model.setLabel(label)
+        self.setObject()
+
+    def setObject(self):
+        annot_info = self.model.getAnnotInfo(True)
+        shapes = annot_info['shapes']
+        if not shapes:
+            return
+
+        for idx in range(len(shapes)):
+            obj_type = shapes[idx]['shape_type']
+            obj_label = shapes[idx]['label']
+            add_object = QListWidgetItem(obj_type + '_' + obj_label)
+            self.list_widgets[1].addItem(add_object)
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
