@@ -132,8 +132,19 @@ class Canvas(QWidget):
         self.model.setImgScaled(qPixmap, w, h, c)
 
     def saveJson(self):
-        if self.model.getImgData() is None : return
-        dict2Json(self.model.getAnnotInfo(), self.jsonPath)
+        img, w, h, c = self.model.getImgData()
+        if img is None : return
+
+        annot_info = self.model.getAnnotInfo()
+
+        shapes = annot_info['shapes']
+        for shape in shapes:
+            points = shape['points']
+            for point in points:
+                point[0] = int(point[0]*w)
+                point[1] = int(point[1]*h)
+
+        dict2Json(annot_info, self.jsonPath)
 
     def displayImage(self):
         self.label_Canvas.clear()
@@ -281,7 +292,6 @@ class Canvas(QWidget):
 
     def mouseReleaseEvent(self, event):
         if self.model.getDrawFlag() is False:
-            # self.model.pushAnnot(self.model.getAnnotInfo())
             return
 
         pos = [event.x(), event.y()]
@@ -324,7 +334,6 @@ class Canvas(QWidget):
                 dlg.exec_()
                 if self.model.getCurLabel() != '':
                     self.model.setCurShapeToDict()
-                    # self.model.pushAnnot(self.model.getAnnotInfo())
                 self.model.setCurLabel('')
                 
         else:
@@ -467,7 +476,6 @@ class Canvas(QWidget):
         dlg.exec_()
         if self.model.getCurLabel() != '':
             self.model.setCurShapeToDict()
-            # self.model.pushAnnot(self.model.getAnnotInfo())
         self.model.setCurLabel('')
 
         self.setDisplayAnnot()
