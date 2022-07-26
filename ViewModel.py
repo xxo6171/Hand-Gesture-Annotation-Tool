@@ -24,10 +24,26 @@ class ViewModel(QWidget):
         self.Zoom = Zoom(self.scroll_area, self.Model)
 
         # Actions Init
-        self.action = view
+        self.initActions()
 
         # Actions Connections
-        self.action.triggered.connect(self.method)
+        self.action_Open.triggered.connect(self.openFile)
+        self.action_Save.triggered.connect(self.saveJson)
+        self.action_Exit.triggered.connect(self.exit)
+
+        self.action_Polygon.triggered.connect(self.setPolygon)
+        self.action_Right_Gesture.triggered.connect(self.setRightGesture)
+        self.action_Left_Gesture.triggered.connect(self.setLeftGesture)
+        self.action_Rectangle.triggered.connect(self.setRect)
+        self.action_Circle.triggered.connect(self.setCircle)
+        self.action_Line.triggered.connect(self.setLine)
+        self.action_Dot.triggered.connect(self.setDot)
+
+        self.action_Retouch.triggered.connect(self.setRetouch)
+        self.action_Auto_Annotation.triggered.connect(self.setAuto)
+
+        self.action_Zoom_In.triggered.connect(self.setZoomIn)
+        self.action_Zoom_Out.triggered.connect(self.setZoomOut)
     
     def initActions(self):
         # File Actions
@@ -53,6 +69,53 @@ class ViewModel(QWidget):
 
         # Zoom Actions
         zoom_actions = self.viewActions[2]
-        
+
         self.action_Zoom_In = zoom_actions[0]
         self.action_Zoom_Out = zoom_actions[1]
+    
+    # ----- File Actions -----
+    def openFile(self):
+        pass
+
+    def saveJson(self):
+        pass
+
+    def exit(self):
+        pass
+
+
+    # ----- Edit Actions -----
+    def setPolygon(self):
+        pass
+
+    def setRightGesture(self):
+        pass
+
+    def setLeftGesture(self):
+        pass
+
+    def setRect(self):
+        pass
+
+    def setCircle(self):
+        pass
+
+    def setLine(self):
+        pass
+
+    def setDot(self):
+        pass
+
+    def setRetouch(self):
+        pass
+
+    def setAuto(self):
+        pass
+
+
+    # ----- Zoom Actions -----
+    def setZoomIn(self):
+        pass
+    
+    def setZoomOut(self):
+        pass
