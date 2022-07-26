@@ -10,6 +10,7 @@ class Display(QWidget):
         self.canvas = canvas
         self.scroll_area = scroll_area
 
+
     def setScrollArea(self):
         pass
 

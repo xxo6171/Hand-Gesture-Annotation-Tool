@@ -45,6 +45,7 @@ class ViewModel(QWidget):
         self.action_Zoom_In.triggered.connect(self.setZoomIn)
         self.action_Zoom_Out.triggered.connect(self.setZoomOut)
     
+
     def initActions(self):
         # File Actions
         file_actions = self.viewActions[0]
@@ -72,6 +73,7 @@ class ViewModel(QWidget):
 
         self.action_Zoom_In = zoom_actions[0]
         self.action_Zoom_Out = zoom_actions[1]
+    
     
     # ----- File Actions -----
     def openFile(self):
@@ -116,6 +118,6 @@ class ViewModel(QWidget):
     # ----- Zoom Actions -----
     def setZoomIn(self):
         pass
-    
+
     def setZoomOut(self):
         pass

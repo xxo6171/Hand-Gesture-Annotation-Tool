@@ -13,5 +13,9 @@ class Draw(QWidget):
         self.canvas = QLabel(self)
         self.scroll_area = view
 
-        # Display Class Init
+        # Init Display Class
         self.Display = Display(self.canvas, self.scroll_area, self.Model)
+
+
+    def setCanvas(self):
+        pass
