@@ -23,7 +23,31 @@ class HandAnnot(QMainWindow, main_form_class):
         components = []
         
         actions = []
-        widgets = []
+        file_actions = [    self.action_Open,
+                            self.action_Save,
+                            self.action_Exit        ]
+
+        edit_actions = [    self.action_Polygon,
+                            self.action_Right_Gesture,
+                            self.action_Left_Gesture,
+                            self.action_Rectangle,
+                            self.action_Circle,
+                            self.action_Line,
+                            self.action_Dot,
+
+                            self.action_Retouch,
+                            self.action_Auto_Annotation     ]
+
+        zoom_actions = [    self.action_Zoom_In,
+                            self.action_Zoom_Out    ]
+
+        actions.append(file_actions)
+        actions.append(edit_actions)
+        actions.append(zoom_actions)
+
+        widgets = [     self.scrollArea_Canvas,
+                        self.listWidget_LabelList,
+                        self.listWidget_ObjectList  ]
         
         components.append(actions)
         components.append(widgets)
