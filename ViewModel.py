@@ -20,7 +20,7 @@ class ViewModel(QWidget):
         self.object_list = self.viewWidgets[1]
         
         # Function Class Init
-        self.Draw = Draw(self.scroll_area, self.Model)
+        self.Draw = Draw([self.scroll_area, self.label_list, self.object_list], self.Model)
         self.Zoom = Zoom(self.scroll_area, self.Model)
 
         # Actions Init
@@ -74,7 +74,7 @@ class ViewModel(QWidget):
         self.action_Zoom_In = zoom_actions[0]
         self.action_Zoom_Out = zoom_actions[1]
     
-    
+
     # ----- File Actions -----
     def openFile(self):
         pass
@@ -121,3 +121,14 @@ class ViewModel(QWidget):
 
     def setZoomOut(self):
         pass
+
+
+    # ----- Key Event -----
+    def keyPressEvent(self, event):
+        pass
+
+    def keyReleaseEvent(self, event):
+        pass
+
+
+    # ----- Undo -----

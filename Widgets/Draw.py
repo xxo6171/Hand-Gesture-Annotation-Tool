@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 # from PyQt5.QtGui import *
 
 from Widgets.Display import *
+from Widgets.AddObjectDialog import *
 
 class Draw(QWidget):
     def __init__(self, view, model):
@@ -11,7 +12,9 @@ class Draw(QWidget):
         self.Model = model
 
         self.canvas = QLabel(self)
-        self.scroll_area = view
+        self.scroll_area = view[0]
+        self.label_list = view[1]
+        self.object_list = view[2]
 
         # Init Display Class
         self.Display = Display(self.canvas, self.scroll_area, self.Model)
@@ -22,6 +25,11 @@ class Draw(QWidget):
         pass
 
 
+    # ----- Context Menu Event -----
+    def contextMenuEvent(self, event):
+        pass    
+    
+    
     # ----- Mouse Event -----
     def mousePressEvent(self, event):
         pass
@@ -44,7 +52,23 @@ class Draw(QWidget):
     def draw(self):
         pass
 
+    def setObject(self):
+        pass
+
 
     # ----- Retouch -----
     def movePoint(self):
+        pass
+
+    
+    # ----- Object List Click Event -----
+    def objectClicked(self):
+        pass
+
+    def objectDoubleClicked(self):
+        pass
+
+
+    # ----- Delete -----
+    def deleteObject(self):
         pass
