@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import *
 # from PyQt5.QtGui import *
 import sys
 
-import Model
-import ViewModel
+from Model import *
+from ViewModel import *
 
 mainUI_dir = 'Resource/UI/Main GUI.ui'
 main_form_class = uic.loadUiType(mainUI_dir)[0]
@@ -16,8 +16,8 @@ class HandAnnot(QMainWindow, main_form_class):
         self.setupUi(self)
 
         # Binding
-        self.Model = Model.Model()
-        self.ViewModel = ViewModel.ViewModel(self.getComponents(), self.Model)
+        self.Model = Model()
+        self.ViewModel = ViewModel(self.getComponents(), self.Model)
     
     def getComponents(self):
         components = []
