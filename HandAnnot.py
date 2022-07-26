@@ -14,11 +14,8 @@ class HandAnnot(QMainWindow, main_form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        # Binding
-        self.Model = Model()
-        self.ViewModel = ViewModel(self.getComponents(), self.Model)
-    
+        
+        self.binding()
 
     def getComponents(self):
         components = []
@@ -54,6 +51,11 @@ class HandAnnot(QMainWindow, main_form_class):
         components.append(widgets)
 
         return components
+
+    def binding(self):
+        # Binding
+        self.Model = Model()
+        self.ViewModel = ViewModel(self.getComponents(), self.Model)
 
 
 if __name__=='__main__':

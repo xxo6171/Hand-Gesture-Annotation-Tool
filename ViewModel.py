@@ -25,27 +25,10 @@ class ViewModel(QWidget):
 
         # Actions Init
         self.initActions()
+        self.actionConnect()
 
-        # Actions Connections
-        self.action_Open.triggered.connect(self.openFile)
-        self.action_Save.triggered.connect(self.saveJson)
-        self.action_Exit.triggered.connect(self.exit)
-
-        self.action_Polygon.triggered.connect(self.setPolygon)
-        self.action_Right_Gesture.triggered.connect(self.setRightGesture)
-        self.action_Left_Gesture.triggered.connect(self.setLeftGesture)
-        self.action_Rectangle.triggered.connect(self.setRect)
-        self.action_Circle.triggered.connect(self.setCircle)
-        self.action_Line.triggered.connect(self.setLine)
-        self.action_Dot.triggered.connect(self.setDot)
-
-        self.action_Retouch.triggered.connect(self.setRetouch)
-        self.action_Auto_Annotation.triggered.connect(self.setAuto)
-
-        self.action_Zoom_In.triggered.connect(self.setZoomIn)
-        self.action_Zoom_Out.triggered.connect(self.setZoomOut)
     
-
+    # ----- Init -----
     def initActions(self):
         # File Actions
         file_actions = self.viewActions[0]
@@ -74,6 +57,25 @@ class ViewModel(QWidget):
         self.action_Zoom_In = zoom_actions[0]
         self.action_Zoom_Out = zoom_actions[1]
     
+    def actionConnect(self):
+        self.action_Open.triggered.connect(self.openFile)
+        self.action_Save.triggered.connect(self.saveJson)
+        self.action_Exit.triggered.connect(self.exit)
+
+        self.action_Polygon.triggered.connect(self.setPolygon)
+        self.action_Right_Gesture.triggered.connect(self.setRightGesture)
+        self.action_Left_Gesture.triggered.connect(self.setLeftGesture)
+        self.action_Rectangle.triggered.connect(self.setRect)
+        self.action_Circle.triggered.connect(self.setCircle)
+        self.action_Line.triggered.connect(self.setLine)
+        self.action_Dot.triggered.connect(self.setDot)
+
+        self.action_Retouch.triggered.connect(self.setRetouch)
+        self.action_Auto_Annotation.triggered.connect(self.setAuto)
+
+        self.action_Zoom_In.triggered.connect(self.setZoomIn)
+        self.action_Zoom_Out.triggered.connect(self.setZoomOut)
+
 
     # ----- File Actions -----
     def openFile(self):

@@ -33,22 +33,14 @@ class Zoom(QWidget):
         pass
 
 
-    # ----- Key Event -----
-    def keyPressEvent(self, event):
-        pass
-
-    def keyReleaseEvent(self, event):
-        pass
-
-
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         pass
 
 
     # ----- Zoom -----
-    def ZoomIn(self):
+    def zoomIn(self):
         pass
-    
-    def ZoomOut(self):
+
+    def zoomOut(self):
         pass
