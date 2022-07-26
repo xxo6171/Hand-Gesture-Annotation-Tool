@@ -17,5 +17,34 @@ class Draw(QWidget):
         self.Display = Display(self.canvas, self.scroll_area, self.Model)
 
 
+    # ----- Set View -----
     def setCanvas(self):
+        pass
+
+
+    # ----- Mouse Event -----
+    def mousePressEvent(self, event):
+        pass
+
+    def mouseMoveEvent(self, event):
+        pass
+
+    def mouseReleaseEvent(self, event):
+        pass
+
+
+    def startMouseTracking(self):
+        pass
+
+    def stopMouseTracking(self):
+        pass
+
+
+    # ----- Draw -----
+    def draw(self):
+        pass
+
+
+    # ----- Retouch -----
+    def movePoint(self):
         pass
