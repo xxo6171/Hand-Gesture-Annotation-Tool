@@ -9,3 +9,23 @@ def dict2Json(dict, filepath) :
 def json2Dict(filepath) :
     with open(filepath) as f:
         return json.load(f)
+
+def normalization(annot_dict, w, h):
+    shapes = annot_dict['shapes']
+    for shape in shapes:
+        points = shape['points']
+        for point in points:
+            point[0] /= w
+            point[1] /= h
+
+    return annot_dict
+
+def denormalization(annot_dict, w, h):
+    shapes = annot_dict['shapes']
+    for shape in shapes:
+        points = shape['points']
+        for point in points:
+            point[0] /= w
+            point[1] /= h
+            
+    return annot_dict
