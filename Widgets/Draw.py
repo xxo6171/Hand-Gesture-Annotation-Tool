@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from pyparsing import opAssoc
 # from PyQt5.QtCore import *
 # from PyQt5.QtGui import *
 
@@ -45,20 +46,25 @@ class Draw(QWidget):
     def mouseReleaseEvent(self, event):
         pass
 
-
-    def startMouseTracking(self):
-        pass
-
-    def stopMouseTracking(self):
-        pass
+    def setTracking(self, tracking, keep_tracking):
+        self.Model.setTracking(tracking)
+        self.Model.setKeepTracking(keep_tracking)
+        self.setMouseTracking(tracking)
+        self.canvas.setMouseTracking(tracking)
 
 
     # ----- Draw -----
     def draw(self):
         pass
+    
+    def addObject(self):
+        dlg = AddObjectDialog([self.label_list, self.object_list], self.Model)
+        dlg.exec_()
 
-    def setObject(self):
-        pass
+        if self.Model.getCurLabel() != '':
+            self.Model.setCurShapeToDict()
+
+        self.Model.setCurLabel('')
 
 
     # ----- Retouch -----

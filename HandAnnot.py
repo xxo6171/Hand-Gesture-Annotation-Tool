@@ -139,25 +139,57 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Edit Actions -----
     def setPolygon(self):
-        pass
+        self.setDraw('Polygon', keep_tracking=True)
 
     def setRightGesture(self):
-        pass
+        self.setGesture('right')
 
     def setLeftGesture(self):
-        pass
+        self.setGesture('left')
 
     def setRect(self):
-        pass
+        self.setDraw('Rectangle')
 
     def setCircle(self):
-        pass
+        self.setDraw('Circle')
 
     def setLine(self):
-        pass
+        self.setDraw('Line')
 
     def setDot(self):
-        pass
+        self.setDraw('Dot', tracking = True)
+
+    def setDraw(self, shape, tracking = False, keep_tracking=False):
+        self.Model.setDrawFlag(True)
+        self.Model.setCurShapeType(shape)
+        self.Model.resetCurPoints()
+
+        self.Draw.setTracking(tracking, keep_tracking)
+
+        self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape = shape))
+
+    def setGesture(self, hand_dir):
+        self.setDraw('Gesture Polygon')
+        
+        self.Model.addCurPoint([0.5, 0.65], True)
+        if hand_dir == 'right':
+            x_pos = 0.4
+        elif hand_dir == 'left':
+            x_pos = 0.6
+        y_pos = 0.5
+        nb_points = 21
+        for idx in range(1, nb_points):
+            if idx%4 == 1:
+                if hand_dir == 'right':
+                    x_pos += 0.05
+                elif hand_dir == 'left':
+                    x_pos -= 0.05
+                y_pos = 0.5
+            pos = [round(x_pos, 2), round(y_pos, 2)]
+            self.Model.addCurPoint(pos, True)
+            y_pos -= 0.05
+
+        self.Draw.addObject()
 
     def setRetouch(self):
         pass
