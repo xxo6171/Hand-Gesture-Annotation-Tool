@@ -24,6 +24,11 @@ class HandAnnot(QMainWindow, main_form_class):
         self.binding()
         self.actionConnect()
 
+        # Disable Menu
+        self.menu_Edit.setEnabled(False)
+        self.menu_Zoom.setEnabled(False)
+        self.action_Save.setEnabled(False)
+
     def binding(self):
         self.Model = Model()
 
@@ -111,6 +116,13 @@ class HandAnnot(QMainWindow, main_form_class):
             self.menu_Zoom.setEnabled(False)
             self.action_Save.setEnabled(False)
 
+
+    def img2QPixmap(self, img, w, h, c):
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+
+        return qPixmap
+
     ''' 없애는 방법 생각해야함'''
     def initWindow(self):
         self.Model.setImgData(None, None, None, None)
@@ -119,11 +131,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initAnnotInfo()
         self.Model.initLabelList()
 
-    def img2QPixmap(self, img, w, h, c):
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-
-        return qPixmap
 
     def saveJson(self):
         pass
