@@ -66,15 +66,15 @@ class HandAnnot(QMainWindow, main_form_class):
         if file_path == '': 
             return
 
+        # Initialize Data in Model
+        self.initData()
+
         # Extract Image File Name
         base_name = os.path.basename(file_path)
         file_name, extension_type = os.path.splitext(base_name)
 
         # Set *.json File Name for Exist Check
         json_path = os.path.dirname(file_path) + '/' + file_name + '.json'
-
-        '''!!!! 여기 과연 필요할까 !!!!'''
-        self.initWindow()
 
         # Load Image From File Path
         img, w, h, c = loadImgData(file_path)
@@ -87,7 +87,6 @@ class HandAnnot(QMainWindow, main_form_class):
             cur_annot_info = self.Model.getAnnotInfo()
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.model.setAnnotDict(normalized_annot_info)
-
         else :
             self.Model.setAnnotInfo(file_path, w, h)
 
@@ -101,6 +100,10 @@ class HandAnnot(QMainWindow, main_form_class):
         # Activate Menu
         self.Model.setMenuFlag(True)
         self.menuRefresh()
+
+        # Set List Widgets
+
+        # Display Canvas
 
     def menuRefresh(self):
         if self.Model.getMenuFlag():
@@ -118,8 +121,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         return qPixmap
 
-    ''' 없애는 방법 생각해야함'''
-    def initWindow(self):
+    def initData(self):
         self.Model.setImgData(None, None, None, None)
         self.Model.setImgScaled(None, None, None, None)
         self.Model.initAnnotStack()
