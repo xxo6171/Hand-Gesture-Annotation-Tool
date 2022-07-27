@@ -116,7 +116,6 @@ class HandAnnot(QMainWindow, main_form_class):
             self.menu_Zoom.setEnabled(False)
             self.action_Save.setEnabled(False)
 
-
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
         qPixmap = QPixmap.fromImage(qImg)
