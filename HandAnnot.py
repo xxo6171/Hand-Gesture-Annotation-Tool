@@ -104,7 +104,8 @@ class HandAnnot(QMainWindow, main_form_class):
         # Set List Widgets
 
         # Display Canvas
-
+        self.Draw.setCanvas()
+    
     def menuRefresh(self):
         if self.Model.getMenuFlag():
             self.menu_Edit.setEnabled(True)

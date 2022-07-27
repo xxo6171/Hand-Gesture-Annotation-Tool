@@ -10,12 +10,13 @@ class Display(QWidget):
         self.canvas = canvas
         self.scroll_area = scroll_area
 
-
-    def setScrollArea(self):
-        pass
-
     def setDisplayAnnotInfo(self):
         pass
 
-    def displayImage(self):
-        pass
+    def displayImage(self, img, w, h):
+        self.canvas.clear()
+
+        self.canvas.setGeometry(0, 0, w, h)
+        self.canvas.setPixmap(img)
+
+        self.scroll_area.setWidget(self.canvas)

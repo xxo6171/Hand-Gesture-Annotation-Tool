@@ -22,7 +22,12 @@ class Draw(QWidget):
 
     # ----- Set View -----
     def setCanvas(self):
-        pass
+        img, w, h, c = self.Model.getImgScaled()
+
+        self.setMinimumSize(w, h)
+        self.setMaximumSize(w, h)
+
+        self.Display.displayImage(img, w, h)
 
 
     # ----- Context Menu Event -----
