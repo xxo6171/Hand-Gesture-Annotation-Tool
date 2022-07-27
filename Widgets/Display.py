@@ -18,5 +18,3 @@ class Display(QWidget):
 
         self.canvas.setGeometry(0, 0, w, h)
         self.canvas.setPixmap(img)
-
-        self.scroll_area.setWidget(self.canvas)

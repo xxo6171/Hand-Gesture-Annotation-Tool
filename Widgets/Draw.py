@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-from pyparsing import opAssoc
 # from PyQt5.QtCore import *
 # from PyQt5.QtGui import *
 
@@ -29,6 +28,7 @@ class Draw(QWidget):
         self.setMaximumSize(w, h)
 
         self.Display.displayImage(img, w, h)
+        self.scroll_area.setWidget(self)
 
 
     # ----- Context Menu Event -----
