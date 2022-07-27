@@ -84,14 +84,10 @@ class HandAnnot(QMainWindow, main_form_class):
             opened_annot_info = json2Dict(json_path)
             self.Model.setAnnotDict(opened_annot_info)
 
-            '''!!! 정규화 - 많이 쓰이기 때문에 함수화 팔요 !!!'''
-            cur_annot_info = self.Model.getAnnotInfo(no_deep = True)
-            shapes = cur_annot_info['shapes']
-            for shape in shapes:
-                points = shape['points']
-                for point in points:
-                    point[0] /= w
-                    point[1] /= h
+            cur_annot_info = self.Model.getAnnotInfo()
+            normalized_annot_info = normalization(cur_annot_info, w, h)
+            self.model.setAnnotDict(normalized_annot_info)
+
         else :
             self.Model.setAnnotInfo(file_path, w, h)
 
