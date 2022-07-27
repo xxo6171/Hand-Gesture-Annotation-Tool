@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 # from PyQt5.QtCore import *
 # from PyQt5.QtGui import *
+import math
 
 from Widgets.Display import *
 from Widgets.AddObjectDialog import *
@@ -41,10 +42,18 @@ class Draw(QWidget):
         pass
 
     def mouseMoveEvent(self, event):
-        print("아")
+        pos = [event.x(), event.y()]
+        self.Model.setCurPos(pos)
+
+        draw_flag = self.Model.getDrawFlag()
+        retouch_flag = self.Model.getRetouchFlag()
+    
+        if draw_flag is True:
+            self.draw()
+        elif retouch_flag is True:
+            self.movePoint()
 
     def mouseReleaseEvent(self, event):
-        print("킹")
         # Draw 활성화 되었을 때만 기능 작동
         if self.Model.getDrawFlag() is False:
             return
@@ -62,48 +71,137 @@ class Draw(QWidget):
         # 플래그 상태 확인
         tracking_flag = self.Model.isTracking()
         keep_tracking_flag = self.Model.isKeepTracking()
-
+        
         # 그리기 시작
         if tracking_flag is False:
             self.Model.setPrePos(pos)
-            self.setTracking(tracking = True, keep_tracking = False)
+            self.setTracking(tracking = True)
 
         # 그리기 완료 시
         else:
             # Polygon일 때
             if keep_tracking_flag is True:
-                points[0][0] = int(points[0][0]*w)
-                points[0][1] = int(points[0][1]*h)
-
                 # 시작점을 클릭하면 그리기 종료하는 코드
                 if points[0] == self.Model.getPrePos():
-                    self.setTracking(tracking = False, keep_tracking = False)
+                    self.setTracking(tracking = False)
+                    self.Model.setKeepTracking(False)
                     self.Model.setDrawFlag(False)
 
                 # 시작점이 아니라면 그리기 계속
                 else:
-                    self.Model.addCurPoint(self.Model.getPrePos())
+                    self.Model.addCurPoint(pos)
+
+                    # 현재 좌표에서 다음에 계속 그리기 위함
+                    self.Model.setPrePos(pos)
 
             # Rect, Circle, Line, Dot일 때
             else:
-                self.setTracking(tracking = False, keep_tracking = False)
+                self.setTracking(tracking = False)
                 self.Model.setDrawFlag(False)
-                self.Model.addCurPoint(self.Model.getCurPos())
+                self.Model.addCurPoint(pos)
 
             # 그리기 종료 후 Object 추가
             if keep_tracking_flag is False:
                 self.addObject()
 
-    def setTracking(self, tracking, keep_tracking=False):
+    def setTracking(self, tracking):
         self.Model.setTracking(tracking)
-        self.Model.setKeepTracking(keep_tracking)
         self.setMouseTracking(tracking)
         self.canvas.setMouseTracking(tracking)
 
 
     # ----- Draw -----
     def draw(self):
-        pass
+        draw_type = self.Model.getCurShapeType()
+        img, w, h, c = self.Model.getImgScaled()
+
+        pre_pos = self.Model.getPrePos()
+        cur_pos = self.Model.getCurPos()
+
+        print(pre_pos, cur_pos)
+        cur_points = self.Model.getCurPoints()
+
+        # 정규화 해제
+        for point in cur_points:
+            point[0] *= w
+            point[1] *= h
+
+        point_scale = self.Model.getClickPointRange()
+
+        draw_img = img.copy()
+        painter = QPainter(draw_img)
+        painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+
+        if draw_type == 'Polygon':
+            if cur_points == []:
+                painter.end()
+                return
+
+            # 시작점 저장
+            start_point = cur_points[0]
+            start_point[0] = int(start_point[0])
+            start_point[1] = int(start_point[1])
+
+            # click_range에 따라 start_point에 현재 좌표 세팅
+            if cur_pos[0] < start_point[0]+point_scale and cur_pos[0] > start_point[0]-point_scale:
+                if cur_pos[1] < start_point[1]+point_scale and cur_pos[1] > start_point[1]-point_scale:
+                    cur_pos[0] = start_point[0]
+                    cur_pos[1] = start_point[1]
+
+            # 이전까지 그린 선들 표시
+            pre = cur_points[0]
+            for point in cur_points:
+                cur = point
+                painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+                painter.drawLine(pre[0], pre[1], cur[0], cur[1])
+                painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
+                painter.drawPoint(pre[0], pre[1])
+                painter.drawPoint(cur[0], cur[1])
+                pre = point
+
+            # 현재 그리려고 하는 선 Draw
+            src_x = cur_points[-1][0]
+            src_y = cur_points[-1][1]
+            dst_x = cur_pos[0]
+            dst_y = cur_pos[1]
+
+            painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
+            painter.drawLine(src_x, src_y, dst_x, dst_y)
+            painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
+            painter.drawPoint(src_x, src_y)
+            painter.drawPoint(start_point[0], start_point[1])
+
+            
+
+
+        elif draw_type == 'Rectangle':
+            width = cur_pos[0] - pre_pos[0]
+            height = cur_pos[1] - pre_pos[1]
+            painter.drawRect(pre_pos[0], pre_pos[1], width, height)
+
+        elif draw_type == 'Circle':
+            try:
+                rad = math.sqrt(math.pow(pre_pos[0]-cur_pos[0], 2) + math.pow(pre_pos[1]-cur_pos[1], 2))
+            except:
+                rad = 0
+            x_pos = pre_pos[0] - rad
+            y_pos = pre_pos[1] - rad
+            painter.drawEllipse(x_pos, y_pos, rad*2, rad*2)
+
+        elif draw_type == 'Line':
+            painter.drawLine(pre_pos[0], pre_pos[1], cur_pos[0], cur_pos[1])
+            
+        elif draw_type == 'Dot':
+            painter.drawPoint(cur_pos[0], cur_pos[1])
+
+        # 시작점, 끝점 빨간 점으로 표시
+        painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
+        painter.drawPoint(pre_pos[0], pre_pos[1])
+        painter.drawPoint(cur_pos[0], cur_pos[1])
+
+        painter.end()
+
+        self.canvas.setPixmap(draw_img)
     
     def addObject(self):
         dlg = AddObjectDialog([self.label_list, self.object_list], self.Model)

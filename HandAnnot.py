@@ -139,7 +139,8 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Edit Actions -----
     def setPolygon(self):
-        self.setDraw('Polygon', keep_tracking=True)
+        self.setDraw('Polygon')
+        self.Model.setKeepTracking(True)
 
     def setRightGesture(self):
         self.setGesture('right')
@@ -182,14 +183,12 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.Draw.addObject()
 
-    def setDraw(self, shape, tracking = False, keep_tracking=False):
+    def setDraw(self, shape, tracking = False):
         self.Draw.setCanvas()
 
         self.Model.setDrawFlag(True)
         self.Model.setCurShapeType(shape)
         self.Model.resetCurPoints()
-
-        self.Draw.setTracking(tracking, keep_tracking)
 
         self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape = shape))
         
