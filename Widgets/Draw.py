@@ -82,7 +82,11 @@ class Draw(QWidget):
             # Polygon일 때
             if keep_tracking_flag is True:
                 # 시작점을 클릭하면 그리기 종료하는 코드
-                if points[0] == self.Model.getPrePos():
+                start_pos = points[0].copy()
+                start_pos[0] = int(start_pos[0]*w)
+                start_pos[1] = int(start_pos[1]*h)
+
+                if start_pos == self.Model.getCurPos():
                     self.setTracking(tracking = False)
                     self.Model.setKeepTracking(False)
                     self.Model.setDrawFlag(False)
@@ -91,9 +95,6 @@ class Draw(QWidget):
                 else:
                     self.Model.addCurPoint(pos)
 
-                    # 현재 좌표에서 다음에 계속 그리기 위함
-                    self.Model.setPrePos(pos)
-
             # Rect, Circle, Line, Dot일 때
             else:
                 self.setTracking(tracking = False)
@@ -101,6 +102,7 @@ class Draw(QWidget):
                 self.Model.addCurPoint(pos)
 
             # 그리기 종료 후 Object 추가
+            keep_tracking_flag = self.Model.isKeepTracking()
             if keep_tracking_flag is False:
                 self.addObject()
 
@@ -118,7 +120,6 @@ class Draw(QWidget):
         pre_pos = self.Model.getPrePos()
         cur_pos = self.Model.getCurPos()
 
-        print(pre_pos, cur_pos)
         cur_points = self.Model.getCurPoints()
 
         # 정규화 해제
@@ -147,6 +148,7 @@ class Draw(QWidget):
                 if cur_pos[1] < start_point[1]+point_scale and cur_pos[1] > start_point[1]-point_scale:
                     cur_pos[0] = start_point[0]
                     cur_pos[1] = start_point[1]
+                    self.Model.setCurPos(cur_pos)
 
             # 이전까지 그린 선들 표시
             pre = cur_points[0]
@@ -170,9 +172,6 @@ class Draw(QWidget):
             painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
             painter.drawPoint(src_x, src_y)
             painter.drawPoint(start_point[0], start_point[1])
-
-            
-
 
         elif draw_type == 'Rectangle':
             width = cur_pos[0] - pre_pos[0]
