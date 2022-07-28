@@ -158,22 +158,30 @@ class HandAnnot(QMainWindow, main_form_class):
         self.setDraw('Line')
 
     def setDot(self):
-        self.setDraw('Dot', tracking = True)
+        self.setDraw('Dot')
+        self.Draw.setTracking(True)
 
     def setGesture(self, hand_dir):
-        self.setDraw('Gesture Polygon')
+        self.setDraw('Gesture Polygon', draw=False)
         
+        # 손목 Point
         self.Model.addCurPoint([0.5, 0.65], True)
+
+        # 엄지손가락 시작점 설정
         if hand_dir == 'right':
             x_pos = 0.4
         elif hand_dir == 'left':
             x_pos = 0.6
         y_pos = 0.5
+
+        # 점찍기 시작
         nb_points = 21
         for idx in range(1, nb_points):
             if idx%4 == 1:
+                # 오른손은 왼쪽에서 오른쪽
                 if hand_dir == 'right':
                     x_pos += 0.05
+                # 왼손은 오른쪽에서 왼쪽
                 elif hand_dir == 'left':
                     x_pos -= 0.05
                 y_pos = 0.5
@@ -183,10 +191,10 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.Draw.addObject()
 
-    def setDraw(self, shape, tracking = False):
+    def setDraw(self, shape, draw=True):
         self.Draw.setCanvas()
 
-        self.Model.setDrawFlag(True)
+        self.Model.setDrawFlag(draw)
         self.Model.setCurShapeType(shape)
         self.Model.resetCurPoints()
 

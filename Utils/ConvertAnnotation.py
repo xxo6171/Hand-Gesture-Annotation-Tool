@@ -25,7 +25,7 @@ def denormalization(annot_dict, w, h):
     for shape in shapes:
         points = shape['points']
         for point in points:
-            point[0] /= w
-            point[1] /= h
+            point[0] *= w
+            point[1] *= h
             
     return annot_dict

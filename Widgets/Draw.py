@@ -23,6 +23,7 @@ class Draw(QWidget):
 
     # ----- Set View -----
     def setCanvas(self):
+        self.Display.setDisplayAnnotInfo()
         img, w, h, c = self.Model.getImgScaled()
 
         self.setMinimumSize(w, h)
@@ -210,6 +211,7 @@ class Draw(QWidget):
             self.Model.setCurShapeToDict()
 
         self.Model.setCurLabel('')
+        self.setCanvas()
 
 
     # ----- Retouch -----
