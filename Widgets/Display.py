@@ -22,13 +22,14 @@ class Display(QWidget):
 
     def setDisplayAnnotInfo(self):
         img, w, h, c = self.Model.getImgData()
-        ratio = self.Model.getScaleRatio()
+        scaled_w, scaled_h, scaled_c = self.Model.getImgScaled(no_img=True)
         annot_info = self.Model.getAnnotInfo()
         point_scale = self.Model.getClickPointRange()
 
         qimg = self.img2QPixmap(img, w, h, c)
+        qimg = qimg.scaled(scaled_w, scaled_h)
 
-        annot_info = denormalization(annot_info, w, h)
+        annot_info = denormalization(annot_info, scaled_w, scaled_h)
         painter = QPainter(qimg)
 
         painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
@@ -122,8 +123,7 @@ class Display(QWidget):
                 painter.drawPoint(points[0][0], points[0][1])
 
         painter.end()
-
-        self.Model.setImgScaled(qimg, w, h, c)
+        self.Model.setImgScaled(qimg, scaled_w, scaled_w, scaled_c)
 
     def displayImage(self, img, w, h):
         self.canvas.clear()
