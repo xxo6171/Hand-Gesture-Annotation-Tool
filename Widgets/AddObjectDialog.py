@@ -69,7 +69,6 @@ class AddObjectDialog(QDialog, add_label_form_class):
             self.view_LabelList.addItem(add_label)
 
         if self.model.getCurLabel() != '':
-            print(self.model.getAnnotInfo())
             self.model.pushAnnot(self.model.getAnnotInfo())
             self.model.setCurShapeToDict()
         self.model.setCurLabel('')
