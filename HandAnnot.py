@@ -209,11 +209,38 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Zoom Actions -----
     def setZoomIn(self):
-        pass
+        img, w, h, c = self.Model.getImgData()
+        interpolation = 1
+        self.Model.setScaleRatio(self.Model.getScaleRatio() * 1.25)
+        ratio = self.Model.getScaleRatio()
+
+        if ratio > 3.05 : self.Model.setScaleRatio(3.05)
+
+        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
+
+        if ratio <= 3.05 :
+            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
+            img_scaled = self.img2QPixmap(img, w, h, c)
+            self.Model.setImgScaled(img_scaled, w, h, c)
+
+        self.Draw.setCanvas()
 
     def setZoomOut(self):
-        pass
+        img, w, h, c = self.Model.getImgData()
+        interpolation = 0
+        self.Model.setScaleRatio(self.Model.getScaleRatio() * 0.8)
+        ratio = self.Model.getScaleRatio()
 
+        if ratio < 0.21: self.Model.setScaleRatio(0.21)
+
+        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
+
+        if ratio >= 0.21:
+            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
+            img_scaled = self.img2QPixmap(img, w, h, c)
+            self.Model.setImgScaled(img_scaled, w, h, c)
+
+        self.Draw.setCanvas()
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
