@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-# from PyQt5.QtCore import *
+from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from Utils.ConvertAnnotation import *
@@ -28,8 +28,7 @@ class Display(QWidget):
 
         qimg = self.img2QPixmap(img, w, h, c)
 
-        annot_info = normalization(annot_info, w, h)
-
+        annot_info = denormalization(annot_info, w, h)
         painter = QPainter(qimg)
 
         painter.setPen(QPen(Qt.red, point_scale, Qt.SolidLine))
@@ -124,7 +123,7 @@ class Display(QWidget):
 
         painter.end()
 
-        self.model.setImgScaled(qimg, w, h, c)
+        self.Model.setImgScaled(qimg, w, h, c)
 
     def displayImage(self, img, w, h):
         self.canvas.clear()
