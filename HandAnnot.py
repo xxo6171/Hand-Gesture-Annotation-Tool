@@ -158,10 +158,11 @@ class HandAnnot(QMainWindow, main_form_class):
         self.setDraw('Line')
 
     def setDot(self):
-        self.setDraw('Dot', tracking = True)
+        self.setDraw('Dot')
+        self.Draw.setTracking(True)
 
     def setGesture(self, hand_dir):
-        self.setDraw('Gesture Polygon')
+        self.setDraw('Gesture Polygon', draw=False)
         
         # 손목 Point
         self.Model.addCurPoint([0.5, 0.65], True)
@@ -190,10 +191,10 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.Draw.addObject()
 
-    def setDraw(self, shape, tracking = False):
+    def setDraw(self, shape, draw=True):
         self.Draw.setCanvas()
 
-        self.Model.setDrawFlag(True)
+        self.Model.setDrawFlag(draw)
         self.Model.setCurShapeType(shape)
         self.Model.resetCurPoints()
 
