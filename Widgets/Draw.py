@@ -9,16 +9,15 @@ from Widgets.AddObjectDialog import *
 class Draw(QWidget):
     def __init__(self, view, Model):
         super().__init__()
-
+        
         self.Model = Model
 
         self.canvas = QLabel(self)
-        self.scroll_area = view[0]
-        self.label_list = view[1]
-        self.object_list = view[2]
+        self.label_list = view[0]
+        self.object_list = view[1]
 
         # Init Display Class
-        self.Display = Display(self.canvas, self.scroll_area, self.Model)
+        self.Display = Display(self.canvas, self.Model)
 
 
     # ----- Set View -----
@@ -30,7 +29,6 @@ class Draw(QWidget):
         self.setMaximumSize(w, h)
 
         self.Display.displayImage(img, w, h)
-        self.scroll_area.setWidget(self)
 
 
     # ----- Context Menu Event -----
@@ -62,7 +60,7 @@ class Draw(QWidget):
         # 마우스 뗏을 때 좌표 저장
         pos = [event.x(), event.y()]
 
-        img, w, h, c = self.Model.getImgScaled()
+        w, h, c = self.Model.getImgScaled(no_img=True)
         points = self.Model.getCurPoints()
 
         # 초기화된 상태라면 첫 클릭 시 좌표를 시작 좌표로 입력
