@@ -6,10 +6,10 @@ import math
 from Widgets.Display import *
 from Widgets.AddObjectDialog import *
 
-class Draw(QWidget):
+class Draw(QWidget) -> None:
     def __init__(self, view, Model):
         super().__init__()
-
+        
         self.Model = Model
 
         self.canvas = QLabel(self)

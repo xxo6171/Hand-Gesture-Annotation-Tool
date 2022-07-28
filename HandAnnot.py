@@ -244,10 +244,12 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
-        pass
+        if event.key() == Qt.Key_Control:
+            self.Zoom.setCanvas()
 
     def keyReleaseEvent(self, event):
-        pass
+        if event.key() == Qt.Key_Control:
+            self.Draw.setCanvas()
 
 
     # ----- Undo -----
