@@ -32,21 +32,12 @@ class Zoom(QWidget):
         self.Display.displayImage(img, w, h)
     
 
-    # ----- Focus Event -----
-    def focusInEvent(self, event):
-        print('Zoom Focus In')
-
-    def focusOutEvent(self, event):
-        print('Zoom Focus Out')
-
-
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         if event.angleDelta().y() > 0:
             self.zoomIn()
         elif event.angleDelta().y() < 0:
             self.zoomOut()
-        self.setCanvas()
 
 
     # ----- Zoom -----
@@ -64,6 +55,8 @@ class Zoom(QWidget):
             img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
             img_scaled = self.img2QPixmap(img, w, h, c)
             self.Model.setImgScaled(img_scaled, w, h, c)
+            
+        self.setCanvas()
 
     def zoomOut(self):
         img, w, h, c = self.Model.getImgData()
@@ -79,6 +72,8 @@ class Zoom(QWidget):
             img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
             img_scaled = self.img2QPixmap(img, w, h, c)
             self.Model.setImgScaled(img_scaled, w, h, c)
+
+        self.setCanvas()
         
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)

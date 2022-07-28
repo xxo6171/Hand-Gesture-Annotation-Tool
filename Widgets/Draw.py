@@ -19,6 +19,10 @@ class Draw(QWidget):
         # Init Display Class
         self.Display = Display(self.canvas, self.Model)
 
+        # Connect Object List
+        self.object_list.itemClicked.connect(self.objectClicked)
+        self.object_list.itemDoubleClicked.connect(self.objectDoubleClicked)
+
 
     # ----- Set View -----
     def setCanvas(self):
@@ -38,7 +42,28 @@ class Draw(QWidget):
     
     # ----- Mouse Event -----
     def mousePressEvent(self, event):
-        pass
+        if self.Model.getDrawFlag() is True or self.Model.getRetouchFlag() is False:
+            return
+
+        cur_pos = [event.x(), event.y()]
+
+        click_point_range = self.Model.getClickPointRange()/2
+        
+
+        annot_info = self.Model.getAnnotInfo(no_deep=True)
+        w, h, c = self.Model.getImgScaled(no_img=True)
+
+        shapes = annot_info['shapes']
+        move_point=None
+        for shape in shapes:
+            points = shape['points']
+            for point in points:
+                if cur_pos[0] > point[0]*w-click_point_range and cur_pos[0] < point[0]*w+click_point_range:
+                    if cur_pos[1] > point[1]*h-click_point_range and cur_pos[1] < point[1]*h+click_point_range:
+                        move_point = point
+                        self.Model.pushAnnot(self.Model.getAnnotInfo())
+        
+        self.Model.setMovePoint(move_point)    
 
     def mouseMoveEvent(self, event):
         pos = [event.x(), event.y()]
@@ -214,15 +239,24 @@ class Draw(QWidget):
 
     # ----- Retouch -----
     def movePoint(self):
-        pass
+        move_point = self.Model.getMovePoint()
+        if move_point is None:
+            return
+        
+        w, h, c = self.Model.getImgScaled(no_img=True)
+        cur_pos = self.Model.getCurPos()
+        move_point[0] = cur_pos[0]/w
+        move_point[1] = cur_pos[1]/h
+
+        self.setCanvas()
 
     
     # ----- Object List Click Event -----
     def objectClicked(self):
-        pass
+        print('Click!')
 
     def objectDoubleClicked(self):
-        pass
+        print('Double Click!')
 
 
     # ----- Delete -----
