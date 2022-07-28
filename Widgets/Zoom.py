@@ -31,15 +31,7 @@ class Zoom(QWidget):
 
         self.Display.displayImage(img, w, h)
     
-
-    # ----- Focus Event -----
-    def focusInEvent(self, event):
-        print('Zoom Focus In')
-
-    def focusOutEvent(self, event):
-        print('Zoom Focus Out')
-
-
+    
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         if event.angleDelta().y() > 0:

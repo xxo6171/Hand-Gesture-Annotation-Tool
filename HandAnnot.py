@@ -10,6 +10,7 @@ from Model import *
 from Widgets.Draw import *
 from Widgets.Zoom import *
 
+from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
 from Utils.ImageProc import *
 
@@ -210,7 +211,19 @@ class HandAnnot(QMainWindow, main_form_class):
         pass
 
     def setAuto(self):
-        pass
+        self.Model.setCurShapeType('Gesture Polygon')
+
+        img, w, h, c = self.Model.getImgData()
+        landmarks = autoAnnotation(img)
+        hand_list = landmarksToList(landmarks)
+        if hand_list is False:
+            title = 'Error: 자동으로 좌표를 찾을 수 없습니다.' 
+            text = 'Mediapipe Hands에서 손 좌표 찾기에 실패했습니다.'
+            QMessageBox.about(self, title, text)
+            return
+        self.Model.setCurPoints(hand_list)
+
+        self.Draw.addObject()
 
 
     # ----- Zoom Actions -----
@@ -221,6 +234,7 @@ class HandAnnot(QMainWindow, main_form_class):
     def setZoomOut(self):
         self.Zoom.zoomOut()
         self.Draw.setCanvas()
+
 
     # ----- Key Event -----
     def keyPressEvent(self, event):

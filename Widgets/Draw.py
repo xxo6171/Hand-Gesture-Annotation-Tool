@@ -19,6 +19,10 @@ class Draw(QWidget):
         # Init Display Class
         self.Display = Display(self.canvas, self.Model)
 
+        # Connect Object List
+        self.object_list.itemClicked.connect(self.objectClicked)
+        self.object_list.itemDoubleClicked.connect(self.objectDoubleClicked)
+
 
     # ----- Set View -----
     def setCanvas(self):
@@ -219,10 +223,10 @@ class Draw(QWidget):
     
     # ----- Object List Click Event -----
     def objectClicked(self):
-        pass
+        print('Click!')
 
     def objectDoubleClicked(self):
-        pass
+        print('Double Click!')
 
 
     # ----- Delete -----
