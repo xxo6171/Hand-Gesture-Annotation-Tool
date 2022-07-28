@@ -32,8 +32,14 @@ class HandAnnot(QMainWindow, main_form_class):
     def binding(self):
         self.Model = Model()
 
-        self.Draw = Draw([self.scrollArea_Canvas, self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
-        self.Zoom = Zoom(self.scrollArea_Canvas, self.Model)
+        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
+        self.Zoom = Zoom(self.Model)
+
+        self.stacked_widget = QStackedWidget()
+        self.stacked_widget.addWidget(self.Draw)
+        self.stacked_widget.addWidget(self.Zoom)
+
+        self.scrollArea_Canvas.setWidget(self.stacked_widget)
 
     def actionConnect(self):
         self.action_Open.triggered.connect(self.openFile)
@@ -105,6 +111,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         # Display Canvas
         self.Draw.setCanvas()
+        self.Zoom.setCanvas()
     
     def menuRefresh(self):
         if self.Model.getMenuFlag():
@@ -128,7 +135,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initAnnotStack()
         self.Model.initAnnotInfo()
         self.Model.initLabelList()
-
 
     def saveJson(self):
         pass
@@ -209,47 +215,20 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Zoom Actions -----
     def setZoomIn(self):
-        img, w, h, c = self.Model.getImgData()
-        interpolation = 1
-        self.Model.setScaleRatio(self.Model.getScaleRatio() * 1.25)
-        ratio = self.Model.getScaleRatio()
-
-        if ratio > 3.05 : self.Model.setScaleRatio(3.05)
-
-        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
-
-        if ratio <= 3.05 :
-            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
-            img_scaled = self.img2QPixmap(img, w, h, c)
-            self.Model.setImgScaled(img_scaled, w, h, c)
-
-        self.Draw.setCanvas()
+        self.Zoom.zoomIn()
 
     def setZoomOut(self):
-        img, w, h, c = self.Model.getImgData()
-        interpolation = 0
-        self.Model.setScaleRatio(self.Model.getScaleRatio() * 0.8)
-        ratio = self.Model.getScaleRatio()
-
-        if ratio < 0.21: self.Model.setScaleRatio(0.21)
-
-        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
-
-        if ratio >= 0.21:
-            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
-            img_scaled = self.img2QPixmap(img, w, h, c)
-            self.Model.setImgScaled(img_scaled, w, h, c)
-
-        self.Draw.setCanvas()
+        self.Zoom.zoomOut()
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Control:
-            self.Zoom.setCanvas()
+            self.stacked_widget.setCurrentWidget(self.Zoom)
 
     def keyReleaseEvent(self, event):
         if event.key() == Qt.Key_Control:
             self.Draw.setCanvas()
+            self.stacked_widget.setCurrentWidget(self.Draw)
 
 
     # ----- Undo -----

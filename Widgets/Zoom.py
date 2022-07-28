@@ -4,18 +4,18 @@ from PyQt5.QtCore import *
 
 from Widgets.Display import *
 
+from Utils.ImageProc import *
+
 class Zoom(QWidget):
-    def __init__(self, view, model):
+    def __init__(self, model):
         super().__init__()
-        self.deleteLater()
 
         self.Model = model
 
         self.canvas = QLabel(self)
-        self.scroll_area = view
 
         # Init Display Class
-        self.Display = Display(self.canvas, self.scroll_area, self.Model)
+        self.Display = Display(self.canvas, self.Model)
 
         # Set Focus Policy
         self.setFocusPolicy(Qt.ClickFocus)
@@ -30,7 +30,6 @@ class Zoom(QWidget):
         self.setMaximumSize(w, h)
 
         self.Display.displayImage(img, w, h)
-        self.scroll_area.setWidget(self)
     
 
     # ----- Focus Event -----
@@ -44,14 +43,45 @@ class Zoom(QWidget):
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         if event.angleDelta().y() > 0:
-            print('Zoom Wheel Up')
+            self.zoomIn()
         elif event.angleDelta().y() < 0:
-            print('Zoom Wheel Down')
+            self.zoomOut()
+        self.setCanvas()
 
 
     # ----- Zoom -----
     def zoomIn(self):
-        pass
+        img, w, h, c = self.Model.getImgData()
+        interpolation = 1
+        self.Model.setScaleRatio(self.Model.getScaleRatio() * 1.25)
+        ratio = self.Model.getScaleRatio()
+
+        if ratio > 3.05 : self.Model.setScaleRatio(3.05)
+
+        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
+
+        if ratio <= 3.05 :
+            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
+            img_scaled = self.img2QPixmap(img, w, h, c)
+            self.Model.setImgScaled(img_scaled, w, h, c)
 
     def zoomOut(self):
-        pass
+        img, w, h, c = self.Model.getImgData()
+        interpolation = 0
+        self.Model.setScaleRatio(self.Model.getScaleRatio() * 0.8)
+        ratio = self.Model.getScaleRatio()
+
+        if ratio < 0.21: self.Model.setScaleRatio(0.21)
+
+        if ratio > 0.99 and ratio < 1.001 : self.Model.setScaleRatio(1.0)
+
+        if ratio >= 0.21:
+            img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
+            img_scaled = self.img2QPixmap(img, w, h, c)
+            self.Model.setImgScaled(img_scaled, w, h, c)
+        
+    def img2QPixmap(self, img, w, h, c):
+        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
+        qPixmap = QPixmap.fromImage(qImg)
+
+        return qPixmap

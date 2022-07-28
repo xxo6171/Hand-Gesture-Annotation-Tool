@@ -7,12 +7,11 @@ from Utils.ConvertAnnotation import *
 import math, copy
 
 class Display(QWidget):
-    def __init__(self, canvas, scroll_area, model):
+    def __init__(self, canvas, model):
         super().__init__()
         self.Model = model
 
         self.canvas = canvas
-        self.scroll_area = scroll_area
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)

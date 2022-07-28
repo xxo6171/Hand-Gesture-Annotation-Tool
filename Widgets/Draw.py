@@ -6,19 +6,18 @@ import math
 from Widgets.Display import *
 from Widgets.AddObjectDialog import *
 
-class Draw(QWidget) -> None:
+class Draw(QWidget):
     def __init__(self, view, Model):
         super().__init__()
         
         self.Model = Model
 
         self.canvas = QLabel(self)
-        self.scroll_area = view[0]
-        self.label_list = view[1]
-        self.object_list = view[2]
+        self.label_list = view[0]
+        self.object_list = view[1]
 
         # Init Display Class
-        self.Display = Display(self.canvas, self.scroll_area, self.Model)
+        self.Display = Display(self.canvas, self.Model)
 
 
     # ----- Set View -----
@@ -30,7 +29,6 @@ class Draw(QWidget) -> None:
         self.setMaximumSize(w, h)
 
         self.Display.displayImage(img, w, h)
-        self.scroll_area.setWidget(self)
 
 
     # ----- Context Menu Event -----
