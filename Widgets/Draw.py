@@ -60,7 +60,7 @@ class Draw(QWidget):
         # 마우스 뗏을 때 좌표 저장
         pos = [event.x(), event.y()]
 
-        img, w, h, c = self.Model.getImgScaled()
+        w, h, c = self.Model.getImgScaled(no_img=True)
         points = self.Model.getCurPoints()
 
         # 초기화된 상태라면 첫 클릭 시 좌표를 시작 좌표로 입력
