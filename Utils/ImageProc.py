@@ -11,5 +11,5 @@ def resizeImage(img, scaleRatio, interpolation):
     else : itp = cv2.INTER_AREA
     img_data = cv2.resize(img, None, fx=scaleRatio, fy=scaleRatio,
                      interpolation=itp)
-    h,w,c = img_data.shape
+    h, w, c = img_data.shape
     return img_data, w, h, c
