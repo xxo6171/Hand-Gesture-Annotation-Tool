@@ -31,7 +31,7 @@ class Zoom(QWidget):
 
         self.Display.displayImage(img, w, h)
     
-    
+
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         if event.angleDelta().y() > 0:
@@ -55,6 +55,7 @@ class Zoom(QWidget):
             img, w, h, c = resizeImage(img, self.Model.getScaleRatio(), interpolation)
             img_scaled = self.img2QPixmap(img, w, h, c)
             self.Model.setImgScaled(img_scaled, w, h, c)
+            
         self.setCanvas()
 
     def zoomOut(self):
