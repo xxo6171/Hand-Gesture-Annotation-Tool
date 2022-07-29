@@ -9,6 +9,8 @@ import os
 from Model import *
 from Widgets.Draw import *
 from Widgets.Zoom import *
+from Widgets.Delete import *
+from Widgets.Display import *
 
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
@@ -33,8 +35,10 @@ class HandAnnot(QMainWindow, main_form_class):
     def binding(self):
         self.Model = Model()
 
-        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
-        self.Zoom = Zoom(self.Model)
+        self.Display = Display(self.Model)
+        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model, self.Display)
+        self.Zoom = Zoom(self.Model, self.Display)
+        self.Delete = Delete([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model, self.Display)
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.Draw)
@@ -141,7 +145,7 @@ class HandAnnot(QMainWindow, main_form_class):
         pass
 
     def exit(self):
-        pass
+        self.close()
 
 
     # ----- Edit Actions -----
@@ -213,7 +217,6 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Model.setRetouchFlag(False)
         else:
             self.Model.setRetouchFlag(True)
-
 
     def setAuto(self):
         self.Model.setCurShapeType('Gesture Polygon')

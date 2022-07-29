@@ -7,11 +7,9 @@ from Utils.ConvertAnnotation import *
 import math, copy
 
 class Display(QWidget):
-    def __init__(self, canvas, model):
+    def __init__(self, model):
         super().__init__()
         self.Model = model
-
-        self.canvas = canvas
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
@@ -124,8 +122,9 @@ class Display(QWidget):
         painter.end()
         self.Model.setImgScaled(qimg, scaled_w, scaled_h, scaled_c)
 
-    def displayImage(self, img, w, h):
-        self.canvas.clear()
+    def displayImage(self, canvas, img, w, h):
+        canvas = canvas
+        canvas.clear()
 
-        self.canvas.setGeometry(0, 0, w, h)
-        self.canvas.setPixmap(img)
+        canvas.setGeometry(0, 0, w, h)
+        canvas.setPixmap(img)
