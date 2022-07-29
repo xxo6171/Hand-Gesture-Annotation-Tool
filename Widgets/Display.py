@@ -122,7 +122,7 @@ class Display(QWidget):
                 painter.drawPoint(points[0][0], points[0][1])
 
         painter.end()
-        self.Model.setImgScaled(qimg, scaled_w, scaled_w, scaled_c)
+        self.Model.setImgScaled(qimg, scaled_w, scaled_h, scaled_c)
 
     def displayImage(self, img, w, h):
         self.canvas.clear()
