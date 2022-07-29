@@ -3,36 +3,33 @@ from PyQt5.QtWidgets import *
 # from PyQt5.QtGui import *
 import math
 
-from Widgets.Display import *
 from Widgets.AddObjectDialog import *
 
 class Draw(QWidget):
-    def __init__(self, view, Model):
+    def __init__(self, view, model, display):
         super().__init__()
         
-        self.Model = Model
+        self.Model = model
 
         self.canvas = QLabel(self)
+        
         self.label_list = view[0]
         self.object_list = view[1]
 
         # Init Display Class
-        self.Display = Display(self.canvas, self.Model)
-
-        # Connect Object List
-        self.object_list.itemClicked.connect(self.objectClicked)
-        self.object_list.itemDoubleClicked.connect(self.objectDoubleClicked)
+        self.Display = display
 
 
     # ----- Set View -----
-    def setCanvas(self):
-        self.Display.setDisplayAnnotInfo()
+    def setCanvas(self, reset_canvas=True):
+        if reset_canvas:
+            self.Display.setDisplayAnnotInfo()
         img, w, h, c = self.Model.getImgScaled()
 
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
 
-        self.Display.displayImage(img, w, h)
+        self.Display.displayImage(self.canvas, img, w, h)
 
 
     # ----- Context Menu Event -----
@@ -249,16 +246,3 @@ class Draw(QWidget):
         move_point[1] = cur_pos[1]/h
 
         self.setCanvas()
-
-    
-    # ----- Object List Click Event -----
-    def objectClicked(self):
-        print('Click!')
-
-    def objectDoubleClicked(self):
-        print('Double Click!')
-
-
-    # ----- Delete -----
-    def deleteObject(self):
-        pass
