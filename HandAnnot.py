@@ -38,7 +38,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Display = Display(self.Model)
         self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model, self.Display)
         self.Zoom = Zoom(self.Model, self.Display)
-        self.Delete = Delete([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model, self.Display)
+        self.Delete = Delete(self.Model, self.Display)
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.Draw)
@@ -64,6 +64,10 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.action_Zoom_In.triggered.connect(self.setZoomIn)
         self.action_Zoom_Out.triggered.connect(self.setZoomOut)
+
+        # Connect Object List
+        self.listWidget_ObjectList.itemClicked.connect(self.objectClicked)
+        self.listWidget_ObjectList.itemDoubleClicked.connect(self.objectDoubleClicked)
 
 
     # ----- File Actions -----
@@ -97,7 +101,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
             cur_annot_info = self.Model.getAnnotInfo()
             normalized_annot_info = normalization(cur_annot_info, w, h)
-            self.model.setAnnotDict(normalized_annot_info)
+            self.Model.setAnnotDict(normalized_annot_info)
         else :
             self.Model.setAnnotInfo(file_path, w, h)
 
@@ -111,8 +115,6 @@ class HandAnnot(QMainWindow, main_form_class):
         # Activate Menu
         self.Model.setMenuFlag(True)
         self.menuRefresh()
-
-        # Set List Widgets
 
         # Display Canvas
         self.Draw.setCanvas()
@@ -255,6 +257,21 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
 
+
+    # ----- Delete -----
+    def objectClicked(self):
+        idx = self.listWidget_ObjectList.currentRow()        
+        self.Model.setSelectedObjectIndex(idx)
+
+        self.Delete.displaySelectedObject()
+        self.Draw.setCanvas(reset_canvas=False)
+
+    def objectDoubleClicked(self):
+        idx = self.Model.getSelectedObjectIndex()
+
+        self.Delete.deleteObject()
+        self.listWidget_ObjectList.takeItem(idx)
+        self.Draw.setCanvas(reset_canvas=False)
 
     # ----- Undo -----
     def undo(self):

@@ -12,6 +12,7 @@ class Draw(QWidget):
         self.Model = model
 
         self.canvas = QLabel(self)
+        
         self.label_list = view[0]
         self.object_list = view[1]
 
@@ -20,8 +21,9 @@ class Draw(QWidget):
 
 
     # ----- Set View -----
-    def setCanvas(self):
-        self.Display.setDisplayAnnotInfo()
+    def setCanvas(self, reset_canvas=True):
+        if reset_canvas:
+            self.Display.setDisplayAnnotInfo()
         img, w, h, c = self.Model.getImgScaled()
 
         self.setMinimumSize(w, h)
