@@ -61,6 +61,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.action_Retouch.triggered.connect(self.setRetouch)
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
+        self.action_Undo.triggered.connect(self.undo)
 
         self.action_Zoom_In.triggered.connect(self.setZoomIn)
         self.action_Zoom_Out.triggered.connect(self.setZoomOut)
@@ -235,6 +236,9 @@ class HandAnnot(QMainWindow, main_form_class):
 
         self.Draw.addObject()
 
+    def undo(self):
+        print('undo')
+
 
     # ----- Zoom Actions -----
     def setZoomIn(self):
@@ -248,11 +252,17 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
+        if self.Model.getImgData() is None:
+            return
+
         if event.key() == Qt.Key_Control:
             self.Zoom.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Zoom)
 
     def keyReleaseEvent(self, event):
+        if self.Model.getImgData() is None:
+            return
+        
         if event.key() == Qt.Key_Control:
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
@@ -273,9 +283,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.listWidget_ObjectList.takeItem(idx)
         self.Draw.setCanvas(reset_canvas=False)
 
-    # ----- Undo -----
-    def undo(self):
-        pass
 
 
 if __name__=='__main__':
