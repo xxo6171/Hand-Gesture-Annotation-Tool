@@ -43,7 +43,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.Draw)
         self.stacked_widget.addWidget(self.Zoom)
-
         self.scrollArea_Canvas.setWidget(self.stacked_widget)
 
     def actionConnect(self):
