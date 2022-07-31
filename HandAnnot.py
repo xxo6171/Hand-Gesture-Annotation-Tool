@@ -27,10 +27,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.binding()
         self.actionConnect()
 
-        # Disable Menu
-        self.menu_Edit.setEnabled(False)
-        self.menu_Zoom.setEnabled(False)
-        self.action_Save.setEnabled(False)
+        self.menuRefresh()
 
     def binding(self):
         self.Model = Model()
@@ -121,14 +118,12 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Zoom.setCanvas()
     
     def menuRefresh(self):
-        if self.Model.getMenuFlag():
-            self.menu_Edit.setEnabled(True)
-            self.menu_Zoom.setEnabled(True)
-            self.action_Save.setEnabled(True)
-        else:
-            self.menu_Edit.setEnabled(False)
-            self.menu_Zoom.setEnabled(False)
-            self.action_Save.setEnabled(False)
+        # 메뉴 플래그가 True면 TF=True, False면 TF=False
+        TF = True if self.Model.getMenuFlag() else False
+        # 메뉴 아이템 배열에 저장
+        mItems = [self.menu_Edit, self.menu_Zoom, self.action_Save]
+        for mItem in mItems:
+            mItem.setEnabled(TF)
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
