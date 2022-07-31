@@ -206,6 +206,8 @@
     <addaction name="action_Retouch"/>
     <addaction name="separator"/>
     <addaction name="action_Auto_Annotation"/>
+    <addaction name="separator"/>
+    <addaction name="action_Undo"/>
    </widget>
    <widget class="QMenu" name="menu_Zoom">
     <property name="title">
@@ -336,6 +338,14 @@
   <action name="action_Left_Gesture">
    <property name="text">
     <string>Left Gesture</string>
+   </property>
+  </action>
+  <action name="action_Undo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
  </widget>
