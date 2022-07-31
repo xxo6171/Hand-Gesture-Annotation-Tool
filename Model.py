@@ -24,7 +24,7 @@ class Model:
         self.cur_shape_type = ''
 
         self.focus_flag = None
-        self.menu_flag = None
+        self.menu_flag = False
         self.ctrl_flag = None
         self.draw_flag = False
         self.retouch_flag = False
