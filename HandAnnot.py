@@ -145,12 +145,10 @@ class HandAnnot(QMainWindow, main_form_class):
             self.listWidget_ObjectList.addItem(QListWidgetItem(obj_type + '_' + obj_label))
 
     def menuRefresh(self):
-        # 메뉴 플래그가 True면 TF=True, False면 TF=False
-        TF = True if self.Model.getMenuFlag() else False
         # 메뉴 아이템 배열에 저장
         mItems = [self.menu_Edit, self.menu_Zoom, self.action_Save]
         for mItem in mItems:
-            mItem.setEnabled(TF)
+            mItem.setEnabled(self.Model.getMenuFlag())
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
