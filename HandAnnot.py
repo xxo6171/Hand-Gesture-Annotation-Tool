@@ -81,25 +81,20 @@ class HandAnnot(QMainWindow, main_form_class):
         # Initialize Data in Model
         self.initData()
 
-        # Extract Image File Name
-        base_name = os.path.basename(file_path)
-        file_name, extension_type = os.path.splitext(base_name)
-
-        # Set *.json File Name for Exist Check
-        json_path = os.path.dirname(file_path) + '/' + file_name + '.json'
-
         # Load Image From File Path
         img, w, h, c = loadImgData(file_path)
 
-        if ( extension_type == '.json' ) or ( os.path.isfile(json_path) ):
+        if self.isExistJsonFile(file_path):
+            # Json 파일이 존재할 경우 json 데이터 불러온 후 dict에 저장
             # Save Loaded Annotation Info to Model
-            opened_annot_info = json2Dict(json_path)
+            opened_annot_info = json2Dict(self.jsonPath)
             self.Model.setAnnotDict(opened_annot_info)
 
             cur_annot_info = self.Model.getAnnotInfo()
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.Model.setAnnotDict(normalized_annot_info)
-        else :
+        else:
+            # 존재하지 않을 경우 이미지의 경로, width, height dict에 저장
             self.Model.setAnnotInfo(file_path, w, h)
 
         # Save Original Image to Model
@@ -119,7 +114,7 @@ class HandAnnot(QMainWindow, main_form_class):
 
     def isExistJsonFile(self, filePath):
         # 파일 이름과, 확장자 분리하여 변수에 저장
-        fileName, ext = os.path.splitext(os.path.basename(filePath))
+        fileName = os.path.splitext(os.path.basename(filePath))[0]
         # Json 경로명 넣기
         self.jsonPath = os.path.dirname(filePath) + '/' + fileName + '.json'
 
