@@ -12,23 +12,31 @@
 ## Features
 - [x] Create *Polygon, Hand Gesture, Rectangle, Circle, Line, Dot* for Image Annotation
 
-  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Action.png" alt="image-20220801140559289" style="zoom: 25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Polygon.png" alt="image-20220801141136646" style="zoom: 25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Gesture.png" alt="image-20220801141841416" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" style="zoom:25%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Action.png" alt="image-20220801140559289" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Polygon.png" alt="image-20220801141136646" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Gesture.png" alt="image-20220801141841416" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" width="48%" />
 
 - [x] Retouch Things by Points Move
 
-  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Retouch_Before.png" alt="image-20220801142039426" style="zoom:33%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Retouch_After.png" alt="image-20220801142113560" style="zoom:33%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Retouch_Before.png" alt="image-20220801142039426" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Retouch_After.png" alt="image-20220801142113560" width="48%" />
 
 - [x] Auto *Hand Gesture Annotation* by Mediapipe Hands
 
-  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Auto_Before.png" alt="image-20220801141605636" style="zoom:33%;" />s<img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Auto_After.png" alt="image-20220801141620506" style="zoom:33%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Auto_Before.png" alt="image-20220801141605636" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Auto_After.png" alt="image-20220801141620506" width="48%" />
 
 - [x] Zoom In & Out
 
-  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_Before.png" alt="image-20220801142245269" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_In.png" alt="image-20220801142307207" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_Out.png" alt="image-20220801142331061" style="zoom: 25%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Zoom_Before.png" alt="image-20220801142245269" width="32%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Zoom_In.png" alt="image-20220801142307207" width="32%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Zoom_Out.png" alt="image-20220801142331061" width="32%" />
 
 - [x] Select( Click ) & Delete( Double Click ) Object
 
-  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Object_Select.png" alt="image-20220801142631780" style="zoom:33%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Object_Delete.png" alt="image-20220801142643059" style="zoom:33%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Object_Select.png" alt="image-20220801142631780" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Object_Delete.png" alt="image-20220801142643059" width="48%" />
 
 ## Requirements
 * Python 3.7x
