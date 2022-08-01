@@ -90,6 +90,7 @@ class HandAnnot(QMainWindow, main_form_class):
             cur_annot_info = self.Model.getAnnotInfo()
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.Model.setAnnotDict(normalized_annot_info)
+            self.loadLabelList()
         else:
             # 존재하지 않을 경우 이미지의 경로, width, height dict에 저장
             self.Model.setAnnotInfo(file_path, w, h)
@@ -118,6 +119,20 @@ class HandAnnot(QMainWindow, main_form_class):
         # 이미지 파일에 json이 존재할 경우 True, 그렇지 않으면 False 반환
         return True if os.path.isfile(self.jsonPath) else False
 
+    def loadLabelList(self):
+        label_list = []
+        shapes = self.Model.getAnnotInfo()['shapes']
+        for shape in shapes:
+            label = shape['label']
+            shape_type = shape['shape_type']
+            if label not in label_list:
+                label_list.append(label)
+            self.listWidget_ObjectList.addItem(QListWidgetItem(shape_type + '_' + label))
+
+        for label in label_list:
+            self.listWidget_LabelList.addItem(QListWidgetItem(label))
+            self.Model.setLabel(label)
+
     def menuRefresh(self):
         # 메뉴 플래그가 True면 TF=True, False면 TF=False
         TF = True if self.Model.getMenuFlag() else False
@@ -138,6 +153,9 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initAnnotStack()
         self.Model.initAnnotInfo()
         self.Model.initLabelList()
+        self.listWidget_LabelList.clear()
+        self.listWidget_ObjectList.clear()
+
 
     def saveJson(self):
         img, w, h = self.Model.getImgData()[:3]
@@ -265,7 +283,28 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
 
+    # ----- Context Menu Event -----
+    def contextMenuEvent(self, event):
+        if self.Model.getImgData() is None: return
 
+        menu = QMenu(self)
+        action_Polygon = menu.addAction('Polygon')
+        action_Right_Gesture_Polygon = menu.addAction('Right Gesture Polygon')
+        action_Left_Gesture_Polygon = menu.addAction('Left Gesture Polygon')
+        action_Rectangle = menu.addAction('Rectangle')
+        action_Circle = menu.addAction('Circle')
+        action_Line = menu.addAction('Line')
+        action_Dot = menu.addAction('Dot')
+
+        action = menu.exec(self.mapToGlobal(event.pos()))
+        if action == action_Polygon: self.setPolygon()
+        if action == action_Right_Gesture_Polygon: self.setRightGesture()
+        if action == action_Left_Gesture_Polygon: self.setLeftGesture()
+        if action == action_Rectangle: self.setRect()
+        if action == action_Circle: self.setCircle()
+        if action == action_Line: self.setLine()
+        if action == action_Dot: self.setDot()
+        
     # ----- Delete -----
     def objectClicked(self):
         self.Draw.setCanvas()
