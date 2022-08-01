@@ -99,7 +99,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.setImgData(img, w, h, c)
 
         # Save Image for Display to Model
-        img_QPixmap = self.img2QPixmap(img, w, h, c)
+        img_QPixmap = img2QPixmap(img, w, h, c)
         self.Model.setImgScaled(img_QPixmap, w, h, c)
 
         self.Model.pushAnnot(self.Model.getAnnotInfo())
@@ -151,12 +151,6 @@ class HandAnnot(QMainWindow, main_form_class):
         mItems = [self.menu_Edit, self.menu_Zoom, self.action_Save]
         for mItem in mItems:
             mItem.setEnabled(TF)
-
-    def img2QPixmap(self, img, w, h, c):
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-
-        return qPixmap
 
     def initData(self):
         self.Model.setImgData(None, None, None, None)
