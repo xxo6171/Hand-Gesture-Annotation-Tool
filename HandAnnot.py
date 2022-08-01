@@ -116,7 +116,16 @@ class HandAnnot(QMainWindow, main_form_class):
         # Display Canvas
         self.Draw.setCanvas()
         self.Zoom.setCanvas()
-    
+
+    def isExistJsonFile(self, filePath):
+        # 파일 이름과, 확장자 분리하여 변수에 저장
+        fileName, ext = os.path.splitext(os.path.basename(filePath))
+        # Json 경로명 넣기
+        self.jsonPath = os.path.dirname(filePath) + '/' + fileName + '.json'
+
+        # 이미지 파일에 json이 존재할 경우 True, 그렇지 않으면 False 반환
+        return True if os.path.isfile(self.jsonPath) else False
+
     def menuRefresh(self):
         # 메뉴 플래그가 True면 TF=True, False면 TF=False
         TF = True if self.Model.getMenuFlag() else False
