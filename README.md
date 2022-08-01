@@ -12,7 +12,7 @@
 ## Features
 - [x] Create *Polygon, Hand Gesture, Rectangle, Circle, Line, Dot* for Image Annotation
 
-  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Action.png" alt="image-20220801140559289" style="zoom: 25%;" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Polygon.png" alt="image-20220801141136646" style="zoom: 25%;" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Gesture.png" alt="image-20220801141841416" style="zoom:25%;" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" style="zoom:25%;" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Action.png" alt="image-20220801140559289" width="20%" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Polygon.png" alt="image-20220801141136646" style="zoom: 25%;" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Gesture.png" alt="image-20220801141841416" style="zoom:25%;" /><img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/refactor/dev/Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" style="zoom:25%;" />
 
 - [x] Retouch Things by Points Move
 
