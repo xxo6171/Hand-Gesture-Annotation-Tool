@@ -75,8 +75,7 @@ class HandAnnot(QMainWindow, main_form_class):
         file_path = QFileDialog.getOpenFileName(self, title, filter=filter)[0]
 
         # Exception Handling - Unavailable File Path
-        if file_path == '': 
-            return
+        if file_path == '': return
 
         # Initialize Data in Model
         self.initData()
@@ -143,7 +142,15 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initLabelList()
 
     def saveJson(self):
-        pass
+        img, w, h = self.Model.getImgData()[:3]
+
+        # 이미지 데이터가 없을 경우 return
+        if img is None: return
+
+        # dict형태의 annot_info를 정규화 해제 후 json 파일로 저장
+        cur_annot_info = self.Model.getAnnotInfo()
+        denormalized_annot_info = denormalization(cur_annot_info, w, h)
+        dict2Json(denormalized_annot_info, self.jsonPath)
 
     def exit(self):
         self.close()
