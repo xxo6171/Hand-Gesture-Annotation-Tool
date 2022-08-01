@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 
 import sys
 import os
+from functools import partial
 
 from Model import *
 from Widgets.Draw import *
@@ -26,10 +27,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.binding()
         self.actionConnect()
 
-        # Disable Menu
-        self.menu_Edit.setEnabled(False)
-        self.menu_Zoom.setEnabled(False)
-        self.action_Save.setEnabled(False)
+        self.menuRefresh()
 
     def binding(self):
         self.Model = Model()
@@ -59,8 +57,8 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
         self.action_Undo.triggered.connect(self.undo)
 
-        self.action_Zoom_In.triggered.connect(self.setZoomIn)
-        self.action_Zoom_Out.triggered.connect(self.setZoomOut)
+        self.action_Zoom_In.triggered.connect(partial(self.setZoom,'In'))
+        self.action_Zoom_Out.triggered.connect(partial(self.setZoom,'Out'))
 
         # Connect Object List
         self.listWidget_ObjectList.itemClicked.connect(self.objectClicked)
@@ -75,31 +73,26 @@ class HandAnnot(QMainWindow, main_form_class):
         file_path = QFileDialog.getOpenFileName(self, title, filter=filter)[0]
 
         # Exception Handling - Unavailable File Path
-        if file_path == '': 
-            return
+        if file_path == '': return
 
         # Initialize Data in Model
         self.initData()
 
-        # Extract Image File Name
-        base_name = os.path.basename(file_path)
-        file_name, extension_type = os.path.splitext(base_name)
-
-        # Set *.json File Name for Exist Check
-        json_path = os.path.dirname(file_path) + '/' + file_name + '.json'
-
         # Load Image From File Path
         img, w, h, c = loadImgData(file_path)
 
-        if ( extension_type == '.json' ) or ( os.path.isfile(json_path) ):
+        if self.isExistJsonFile(file_path):
+            # Json 파일이 존재할 경우 json 데이터 불러온 후 dict에 저장
             # Save Loaded Annotation Info to Model
-            opened_annot_info = json2Dict(json_path)
+            opened_annot_info = json2Dict(self.jsonPath)
             self.Model.setAnnotDict(opened_annot_info)
 
             cur_annot_info = self.Model.getAnnotInfo()
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.Model.setAnnotDict(normalized_annot_info)
-        else :
+            self.loadLabelList()
+        else:
+            # 존재하지 않을 경우 이미지의 경로, width, height dict에 저장
             self.Model.setAnnotInfo(file_path, w, h)
 
         # Save Original Image to Model
@@ -116,16 +109,37 @@ class HandAnnot(QMainWindow, main_form_class):
         # Display Canvas
         self.Draw.setCanvas()
         self.Zoom.setCanvas()
-    
+
+    def isExistJsonFile(self, filePath):
+        # 파일 이름과, 확장자 분리하여 변수에 저장
+        fileName = os.path.splitext(os.path.basename(filePath))[0]
+        # Json 경로명 넣기
+        self.jsonPath = os.path.dirname(filePath) + '/' + fileName + '.json'
+
+        # 이미지 파일에 json이 존재할 경우 True, 그렇지 않으면 False 반환
+        return True if os.path.isfile(self.jsonPath) else False
+
+    def loadLabelList(self):
+        label_list = []
+        shapes = self.Model.getAnnotInfo()['shapes']
+        for shape in shapes:
+            label = shape['label']
+            shape_type = shape['shape_type']
+            if label not in label_list:
+                label_list.append(label)
+            self.listWidget_ObjectList.addItem(QListWidgetItem(shape_type + '_' + label))
+
+        for label in label_list:
+            self.listWidget_LabelList.addItem(QListWidgetItem(label))
+            self.Model.setLabel(label)
+
     def menuRefresh(self):
-        if self.Model.getMenuFlag():
-            self.menu_Edit.setEnabled(True)
-            self.menu_Zoom.setEnabled(True)
-            self.action_Save.setEnabled(True)
-        else:
-            self.menu_Edit.setEnabled(False)
-            self.menu_Zoom.setEnabled(False)
-            self.action_Save.setEnabled(False)
+        # 메뉴 플래그가 True면 TF=True, False면 TF=False
+        TF = True if self.Model.getMenuFlag() else False
+        # 메뉴 아이템 배열에 저장
+        mItems = [self.menu_Edit, self.menu_Zoom, self.action_Save]
+        for mItem in mItems:
+            mItem.setEnabled(TF)
 
     def img2QPixmap(self, img, w, h, c):
         qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
@@ -139,9 +153,20 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initAnnotStack()
         self.Model.initAnnotInfo()
         self.Model.initLabelList()
+        self.listWidget_LabelList.clear()
+        self.listWidget_ObjectList.clear()
+
 
     def saveJson(self):
-        pass
+        img, w, h = self.Model.getImgData()[:3]
+
+        # 이미지 데이터가 없을 경우 return
+        if img is None: return
+
+        # dict형태의 annot_info를 정규화 해제 후 json 파일로 저장
+        cur_annot_info = self.Model.getAnnotInfo()
+        denormalized_annot_info = denormalization(cur_annot_info, w, h)
+        dict2Json(denormalized_annot_info, self.jsonPath)
 
     def exit(self):
         self.close()
@@ -235,16 +260,11 @@ class HandAnnot(QMainWindow, main_form_class):
     def undo(self):
         print('undo')
 
-
     # ----- Zoom Actions -----
-    def setZoomIn(self):
-        self.Zoom.zoomIn()
+    def setZoom(self, type):
+        self.Model.setZoomType(type)
+        self.Zoom.resizeZoomInOut()
         self.Draw.setCanvas()
-
-    def setZoomOut(self):
-        self.Zoom.zoomOut()
-        self.Draw.setCanvas()
-
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
@@ -263,7 +283,28 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
 
+    # ----- Context Menu Event -----
+    def contextMenuEvent(self, event):
+        if self.Model.getImgData() is None: return
 
+        menu = QMenu(self)
+        action_Polygon = menu.addAction('Polygon')
+        action_Right_Gesture_Polygon = menu.addAction('Right Gesture Polygon')
+        action_Left_Gesture_Polygon = menu.addAction('Left Gesture Polygon')
+        action_Rectangle = menu.addAction('Rectangle')
+        action_Circle = menu.addAction('Circle')
+        action_Line = menu.addAction('Line')
+        action_Dot = menu.addAction('Dot')
+
+        action = menu.exec(self.mapToGlobal(event.pos()))
+        if action == action_Polygon: self.setPolygon()
+        if action == action_Right_Gesture_Polygon: self.setRightGesture()
+        if action == action_Left_Gesture_Polygon: self.setLeftGesture()
+        if action == action_Rectangle: self.setRect()
+        if action == action_Circle: self.setCircle()
+        if action == action_Line: self.setLine()
+        if action == action_Dot: self.setDot()
+        
     # ----- Delete -----
     def objectClicked(self):
         self.Draw.setCanvas()
