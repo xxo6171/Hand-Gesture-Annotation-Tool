@@ -5,8 +5,10 @@ import math
 
 from Widgets.AddObjectDialog import *
 
+from Utils.Display import *
+
 class Draw(QWidget):
-    def __init__(self, view, model, display):
+    def __init__(self, view, model):
         super().__init__()
         
         self.Model = model
@@ -16,20 +18,22 @@ class Draw(QWidget):
         self.label_list = view[0]
         self.object_list = view[1]
 
-        # Init Display Class
-        self.Display = display
-
 
     # ----- Set View -----
     def setCanvas(self, reset_canvas=True):
         if reset_canvas:
-            self.Display.setDisplayAnnotInfo()
+            qimg, annot_info, point_scale = loadQImg(self.Model)
+            qimg_add_info = setDisplayAnnotInfo(qimg, annot_info, point_scale)
+            w, h, c = self.Model.getImgScaled(no_img=True)
+
+            self.Model.setImgScaled(qimg_add_info, w, h, c)
+
         img, w, h, c = self.Model.getImgScaled()
 
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
 
-        self.Display.displayImage(self.canvas, img, w, h)
+        displayImage(self.canvas, img, w, h)
 
 
     # ----- Context Menu Event -----

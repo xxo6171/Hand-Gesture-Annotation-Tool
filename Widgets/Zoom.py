@@ -3,17 +3,15 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 from Utils.ImageProc import *
+from Utils.Display import *
 
 class Zoom(QWidget):
-    def __init__(self, model, display):
+    def __init__(self, model):
         super().__init__()
 
         self.Model = model
 
         self.canvas = QLabel(self)
-
-        # Init Display Class
-        self.Display = display
 
         # Set Focus Policy
         self.setFocusPolicy(Qt.ClickFocus)
@@ -21,13 +19,16 @@ class Zoom(QWidget):
 
     # ----- Set View -----
     def setCanvas(self):
-        self.Display.setDisplayAnnotInfo()
-        img, w, h, c = self.Model.getImgScaled()
+        qimg, annot_info, point_scale = loadQImg(self.Model)
+        qimg_add_info = setDisplayAnnotInfo(qimg, annot_info, point_scale)
+        w, h, c = self.Model.getImgScaled(no_img=True)
+
+        self.Model.setImgScaled(qimg_add_info, w, h, c)
 
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
 
-        self.Display.displayImage(self.canvas, img, w, h)
+        displayImage(self.canvas, qimg_add_info, w, h)
     
 
     # ----- Wheel Event -----

@@ -9,9 +9,8 @@ import os
 from Model import *
 from Widgets.Draw import *
 from Widgets.Zoom import *
-from Widgets.Delete import *
-from Widgets.Display import *
 
+from Utils.Display import *
 from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
 from Utils.ImageProc import *
@@ -35,10 +34,8 @@ class HandAnnot(QMainWindow, main_form_class):
     def binding(self):
         self.Model = Model()
 
-        self.Display = Display(self.Model)
-        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model, self.Display)
-        self.Zoom = Zoom(self.Model, self.Display)
-        self.Delete = Delete(self.Model, self.Display)
+        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
+        self.Zoom = Zoom(self.Model)
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.Draw)
@@ -269,10 +266,19 @@ class HandAnnot(QMainWindow, main_form_class):
 
     # ----- Delete -----
     def objectClicked(self):
+        self.Draw.setCanvas()
+
         idx = self.listWidget_ObjectList.currentRow()        
         self.Model.setSelectedObjectIndex(idx)
+        idx = self.Model.getSelectedObjectIndex()
 
-        self.Display.displaySelectedObject()
+        qimg, w, h, c = self.Model.getImgScaled()
+        origin_annot = self.Model.getAnnotInfo()
+        denorm_annot = denormalization(origin_annot, w, h)
+
+        displaySelectedObject(idx, qimg, denorm_annot)
+        self.Model.setImgScaled(qimg,w, h, c)
+
         self.Draw.setCanvas(reset_canvas=False)
 
     def objectDoubleClicked(self):
@@ -286,7 +292,11 @@ class HandAnnot(QMainWindow, main_form_class):
         object_idx = self.Model.getSelectedObjectIndex()
         self.Model.deleteShape(object_idx)
 
-        self.Display.setDisplayAnnotInfo()
+        qimg, annot_info, point_scale = loadQImg(self.Model)
+        qimg_add_info = setDisplayAnnotInfo(qimg, annot_info, point_scale)
+        w, h, c = self.Model.getImgScaled(no_img=True)
+
+        self.Model.setImgScaled(qimg_add_info, w, h, c)
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
