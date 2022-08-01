@@ -22,9 +22,10 @@ class Model:
         self.cur_points = [-1]
         self.cur_label = ''
         self.cur_shape_type = ''
+        self.zoom_type = ''
 
         self.focus_flag = None
-        self.menu_flag = None
+        self.menu_flag = False
         self.ctrl_flag = None
         self.draw_flag = False
         self.retouch_flag = False
@@ -128,6 +129,11 @@ class Model:
         return copy.deepcopy(self.annot.pop())
     def pushAnnot(self, dict):
         self.annot.append(copy.deepcopy(dict))
+
+    def getZoomType(self):
+        return self.zoom_type
+    def setZoomType(self, type):
+        self.zoom_type = type
 
     def getUndoFlag(self):
         return self.undo_flag
