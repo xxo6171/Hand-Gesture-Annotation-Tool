@@ -290,13 +290,13 @@ class HandAnnot(QMainWindow, main_form_class):
         action_Dot = menu.addAction('Dot')
 
         action = menu.exec(self.mapToGlobal(event.pos()))
-        if action == action_Polygon: self.setPolygon()
-        if action == action_Right_Gesture_Polygon: self.setRightGesture()
-        if action == action_Left_Gesture_Polygon: self.setLeftGesture()
-        if action == action_Rectangle: self.setRect()
-        if action == action_Circle: self.setCircle()
-        if action == action_Line: self.setLine()
-        if action == action_Dot: self.setDot()
+        if action == action_Polygon: self.setDraw('Polygon')
+        if action == action_Right_Gesture_Polygon: self.setGesture('right')
+        if action == action_Left_Gesture_Polygon: self.setGesture('left')
+        if action == action_Rectangle: self.setDraw('Rectangle')
+        if action == action_Circle: self.setDraw('Circle')
+        if action == action_Line: self.setDraw('Line')
+        if action == action_Dot: self.setDraw('Dot')
         
     # ----- Delete -----
     def objectClicked(self):
