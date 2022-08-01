@@ -91,6 +91,7 @@ class HandAnnot(QMainWindow, main_form_class):
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.Model.setAnnotDict(normalized_annot_info)
             self.loadLabelList()
+            self.loadObjectList()
         else:
             # 존재하지 않을 경우 이미지의 경로, width, height dict에 저장
             self.Model.setAnnotInfo(file_path, w, h)
@@ -102,6 +103,7 @@ class HandAnnot(QMainWindow, main_form_class):
         img_QPixmap = self.img2QPixmap(img, w, h, c)
         self.Model.setImgScaled(img_QPixmap, w, h, c)
 
+        self.Model.pushAnnot(self.Model.getAnnotInfo())
         # Activate Menu
         self.Model.setMenuFlag(True)
         self.menuRefresh()
@@ -122,16 +124,26 @@ class HandAnnot(QMainWindow, main_form_class):
     def loadLabelList(self):
         label_list = []
         shapes = self.Model.getAnnotInfo()['shapes']
+        if not shapes: return
+
         for shape in shapes:
             label = shape['label']
-            shape_type = shape['shape_type']
             if label not in label_list:
                 label_list.append(label)
-            self.listWidget_ObjectList.addItem(QListWidgetItem(shape_type + '_' + label))
 
         for label in label_list:
             self.listWidget_LabelList.addItem(QListWidgetItem(label))
             self.Model.setLabel(label)
+
+    def loadObjectList(self):
+        self.listWidget_ObjectList.clear()
+        shapes = self.Model.getAnnotInfo(True)['shapes']
+        if not shapes: return
+
+        for shape in shapes:
+            obj_type = shape['shape_type']
+            obj_label = shape['label']
+            self.listWidget_ObjectList.addItem(QListWidgetItem(obj_type + '_' + obj_label))
 
     def menuRefresh(self):
         # 메뉴 플래그가 True면 TF=True, False면 TF=False
@@ -258,7 +270,12 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Draw.addObject()
 
     def undo(self):
-        print('undo')
+        if self.Model.getImgData() is None: return
+        self.Model.setAnnotDict(self.Model.popAnnot())
+
+        self.Draw.setCanvas()
+        self.Zoom.setCanvas()
+        self.loadObjectList()
 
     # ----- Zoom Actions -----
     def setZoom(self, type):
@@ -274,6 +291,7 @@ class HandAnnot(QMainWindow, main_form_class):
         if event.key() == Qt.Key_Control:
             self.Zoom.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Zoom)
+
 
     def keyReleaseEvent(self, event):
         if self.Model.getImgData() is None:
@@ -323,6 +341,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Draw.setCanvas(reset_canvas=False)
 
     def objectDoubleClicked(self):
+        self.Model.pushAnnot(self.Model.getAnnotInfo())
         idx = self.Model.getSelectedObjectIndex()
 
         self.deleteObject()
@@ -338,6 +357,8 @@ class HandAnnot(QMainWindow, main_form_class):
         w, h, c = self.Model.getImgScaled(no_img=True)
 
         self.Model.setImgScaled(qimg_add_info, w, h, c)
+
+
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
