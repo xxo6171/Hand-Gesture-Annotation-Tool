@@ -45,13 +45,13 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Save.triggered.connect(self.saveJson)
         self.action_Exit.triggered.connect(self.exit)
 
-        self.action_Polygon.triggered.connect(self.setPolygon)
-        self.action_Right_Gesture.triggered.connect(self.setRightGesture)
-        self.action_Left_Gesture.triggered.connect(self.setLeftGesture)
-        self.action_Rectangle.triggered.connect(self.setRect)
-        self.action_Circle.triggered.connect(self.setCircle)
-        self.action_Line.triggered.connect(self.setLine)
-        self.action_Dot.triggered.connect(self.setDot)
+        self.action_Polygon.triggered.connect(partial(self.setDraw, 'Polygon'))
+        self.action_Right_Gesture.triggered.connect(partial(self.setGesture, 'right'))
+        self.action_Left_Gesture.triggered.connect(partial(self.setGesture, 'left'))
+        self.action_Rectangle.triggered.connect(partial(self.setDraw, 'Rectangle'))
+        self.action_Circle.triggered.connect(partial(self.setDraw, 'Circle'))
+        self.action_Line.triggered.connect(partial(self.setDraw, 'Line'))
+        self.action_Dot.triggered.connect(partial(self.setDraw, 'Dot'))
 
         self.action_Retouch.triggered.connect(self.setRetouch)
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
@@ -63,7 +63,6 @@ class HandAnnot(QMainWindow, main_form_class):
         # Connect Object List
         self.listWidget_ObjectList.itemClicked.connect(self.objectClicked)
         self.listWidget_ObjectList.itemDoubleClicked.connect(self.objectDoubleClicked)
-
 
     # ----- File Actions -----
     def openFile(self):
@@ -168,7 +167,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.listWidget_LabelList.clear()
         self.listWidget_ObjectList.clear()
 
-
     def saveJson(self):
         img, w, h = self.Model.getImgData()[:3]
 
@@ -183,31 +181,7 @@ class HandAnnot(QMainWindow, main_form_class):
     def exit(self):
         self.close()
 
-
     # ----- Edit Actions -----
-    def setPolygon(self):
-        self.setDraw('Polygon')
-        self.Model.setKeepTracking(True)
-
-    def setRightGesture(self):
-        self.setGesture('right')
-
-    def setLeftGesture(self):
-        self.setGesture('left')
-
-    def setRect(self):
-        self.setDraw('Rectangle')
-
-    def setCircle(self):
-        self.setDraw('Circle')
-
-    def setLine(self):
-        self.setDraw('Line')
-
-    def setDot(self):
-        self.setDraw('Dot')
-        self.Draw.setTracking(True)
-
     def setGesture(self, hand_dir):
         self.setDraw('Gesture Polygon', draw=False)
         
@@ -240,12 +214,14 @@ class HandAnnot(QMainWindow, main_form_class):
 
     def setDraw(self, shape, draw=True):
         self.Draw.setCanvas()
-
         self.Model.setDrawFlag(draw)
         self.Model.setCurShapeType(shape)
+        if shape == 'Polygon' :
+            self.Model.setKeepTracking(True)
+        if shape == 'Dot' :
+            self.Draw.setTracking(True)
         self.Model.resetCurPoints()
-
-        self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape = shape))
+        self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape=shape))
         
     def setRetouch(self):
         retouch_flag = self.Model.getRetouchFlag()
@@ -291,7 +267,6 @@ class HandAnnot(QMainWindow, main_form_class):
         if event.key() == Qt.Key_Control:
             self.Zoom.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Zoom)
-
 
     def keyReleaseEvent(self, event):
         if self.Model.getImgData() is None:
@@ -357,8 +332,6 @@ class HandAnnot(QMainWindow, main_form_class):
         w, h, c = self.Model.getImgScaled(no_img=True)
 
         self.Model.setImgScaled(qimg_add_info, w, h, c)
-
-
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
