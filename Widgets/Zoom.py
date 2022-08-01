@@ -33,10 +33,10 @@ class Zoom(QWidget):
     # ----- Wheel Event -----
     def wheelEvent(self, event):
         self.Model.setZoomType('In') if event.angleDelta().y() > 0 else self.Model.setZoomType('Out')
-        self.resizeZoom()
+        self.resizeZoomInOut()
 
     # ----- Resize Zoom -----
-    def resizeZoom(self):
+    def resizeZoomInOut(self):
         # 이미지 데이터 불러오기
         img, w, h, c = self.Model.getImgData()
 
