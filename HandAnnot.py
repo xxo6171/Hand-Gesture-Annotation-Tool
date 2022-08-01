@@ -127,8 +127,9 @@ class HandAnnot(QMainWindow, main_form_class):
         if not shapes: return
 
         for shape in shapes:
-            if shape['label'] not in label_list:
-                label_list.append(shape['label'])
+            label = shape['label']
+            if label not in label_list:
+                label_list.append(label)
 
         for label in label_list:
             self.listWidget_LabelList.addItem(QListWidgetItem(label))
@@ -140,7 +141,9 @@ class HandAnnot(QMainWindow, main_form_class):
         if not shapes: return
 
         for shape in shapes:
-            self.listWidget_ObjectList.addItem(QListWidgetItem(shape['shape_type'] + '_' + shape['label']))
+            obj_type = shape['shape_type']
+            obj_label = shape['label']
+            self.listWidget_ObjectList.addItem(QListWidgetItem(obj_type + '_' + obj_label))
 
     def menuRefresh(self):
         # 메뉴 플래그가 True면 TF=True, False면 TF=False
