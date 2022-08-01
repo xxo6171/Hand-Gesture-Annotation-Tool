@@ -248,7 +248,7 @@ class HandAnnot(QMainWindow, main_form_class):
     # ----- Zoom Actions -----
     def setZoom(self, type):
         self.Model.setZoomType(type)
-        self.Zoom.resizeZoom()
+        self.Zoom.resizeZoomInOut()
         self.Draw.setCanvas()
 
     # ----- Key Event -----
