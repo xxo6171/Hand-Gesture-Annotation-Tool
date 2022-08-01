@@ -12,21 +12,23 @@
 ## Features
 - [x] Create *Polygon, Hand Gesture, Rectangle, Circle, Line, Dot* for Image Annotation
 
-  <img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801140559289.png" alt="image-20220801140559289" style="zoom: 25%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801141136646.png" alt="image-20220801141136646" style="zoom: 25%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801141841416.png" alt="image-20220801141841416" style="zoom:25%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801141221183.png" alt="image-20220801141221183" style="zoom:25%;" />
+  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Action.png" alt="image-20220801140559289" style="zoom: 25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Polygon.png" alt="image-20220801141136646" style="zoom: 25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Gesture.png" alt="image-20220801141841416" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" style="zoom:25%;" />
 
 - [x] Retouch Things by Points Move
 
-  <img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801142039426.png" alt="image-20220801142039426" style="zoom:33%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801142113560.png" alt="image-20220801142113560" style="zoom:33%;" />
+  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Retouch_Before.png" alt="image-20220801142039426" style="zoom:33%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Retouch_After.png" alt="image-20220801142113560" style="zoom:33%;" />
 
 - [x] Auto *Hand Gesture Annotation* by Mediapipe Hands
 
-  <img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801141605636.png" alt="image-20220801141605636" style="zoom:33%;" />s<img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801141620506.png" alt="image-20220801141620506" style="zoom:33%;" />
+  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Auto_Before.png" alt="image-20220801141605636" style="zoom:33%;" />s<img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Auto_After.png" alt="image-20220801141620506" style="zoom:33%;" />
 
-- [ ] Zoom In & Out
+- [x] Zoom In & Out
 
-  <img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801142245269.png" alt="image-20220801142245269" style="zoom:25%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801142307207.png" alt="image-20220801142307207" style="zoom:25%;" /><img src="C:\Users\Byeo\AppData\Roaming\Typora\typora-user-images\image-20220801142331061.png" alt="image-20220801142331061" style="zoom: 25%;" />
+  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_Before.png" alt="image-20220801142245269" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_In.png" alt="image-20220801142307207" style="zoom:25%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Zoom_Out.png" alt="image-20220801142331061" style="zoom: 25%;" />
 
-- [ ] Select & Delete Ojbect
+- [x] Select( Click ) & Delete( Double Click ) Object
+
+  <img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Object_Select.png" alt="image-20220801142631780" style="zoom:33%;" /><img src="D:\Private\GitHub\Hand-Gesture-Annotation-Tool\Resource\readme\Object_Delete.png" alt="image-20220801142643059" style="zoom:33%;" />
 
 ## Requirements
 * Python 3.7x
