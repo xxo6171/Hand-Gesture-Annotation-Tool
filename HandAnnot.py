@@ -283,7 +283,28 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
 
+    # ----- Context Menu Event -----
+    def contextMenuEvent(self, event):
+        if self.Model.getImgData() is None: return
 
+        menu = QMenu(self)
+        action_Polygon = menu.addAction('Polygon')
+        action_Right_Gesture_Polygon = menu.addAction('Right Gesture Polygon')
+        action_Left_Gesture_Polygon = menu.addAction('Left Gesture Polygon')
+        action_Rectangle = menu.addAction('Rectangle')
+        action_Circle = menu.addAction('Circle')
+        action_Line = menu.addAction('Line')
+        action_Dot = menu.addAction('Dot')
+
+        action = menu.exec(self.mapToGlobal(event.pos()))
+        if action == action_Polygon: self.setPolygon()
+        if action == action_Right_Gesture_Polygon: self.setRightGesture()
+        if action == action_Left_Gesture_Polygon: self.setLeftGesture()
+        if action == action_Rectangle: self.setRect()
+        if action == action_Circle: self.setCircle()
+        if action == action_Line: self.setLine()
+        if action == action_Dot: self.setDot()
+        
     # ----- Delete -----
     def objectClicked(self):
         self.Draw.setCanvas()
