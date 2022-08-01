@@ -272,17 +272,21 @@ class HandAnnot(QMainWindow, main_form_class):
         idx = self.listWidget_ObjectList.currentRow()        
         self.Model.setSelectedObjectIndex(idx)
 
-        self.Delete.displaySelectedObject()
+        self.Display.displaySelectedObject()
         self.Draw.setCanvas(reset_canvas=False)
 
     def objectDoubleClicked(self):
         idx = self.Model.getSelectedObjectIndex()
 
-        self.Delete.deleteObject()
+        self.deleteObject()
         self.listWidget_ObjectList.takeItem(idx)
         self.Draw.setCanvas(reset_canvas=False)
 
+    def deleteObject(self):
+        object_idx = self.Model.getSelectedObjectIndex()
+        self.Model.deleteShape(object_idx)
 
+        self.Display.setDisplayAnnotInfo()
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
