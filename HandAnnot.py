@@ -60,8 +60,8 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
         self.action_Undo.triggered.connect(self.undo)
 
-        self.action_Zoom_In.triggered.connect(partial(self.setZoom), 'In')
-        self.action_Zoom_Out.triggered.connect(partial(self.setZoom), 'Out')
+        self.action_Zoom_In.triggered.connect(partial(self.setZoom,'In'))
+        self.action_Zoom_Out.triggered.connect(partial(self.setZoom,'Out'))
 
         # Connect Object List
         self.listWidget_ObjectList.itemClicked.connect(self.objectClicked)
@@ -250,16 +250,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.setZoomType(type)
         self.Zoom.resizeZoom()
         self.Draw.setCanvas()
-
-    # # ----- Zoom Actions -----
-    # def setZoomIn(self):
-    #     self.Zoom.zoomIn()
-    #     self.Draw.setCanvas()
-    #
-    # def setZoomOut(self):
-    #     self.Zoom.zoomOut()
-    #     self.Draw.setCanvas()
-
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
