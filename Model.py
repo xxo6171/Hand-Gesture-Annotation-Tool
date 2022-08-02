@@ -22,10 +22,9 @@ class Model:
         self.cur_points = [-1]
         self.cur_label = ''
         self.cur_shape_type = ''
+        self.zoom_type = ''
 
-        self.focus_flag = None
-        self.menu_flag = None
-        self.ctrl_flag = None
+        self.menu_flag = False
         self.draw_flag = False
         self.retouch_flag = False
         self.tracking_flag = False
@@ -50,8 +49,11 @@ class Model:
         self.img_origin_height = height
         self.img_origin_channel = channel
 
-    def getImgScaled(self):
-        return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
+    def getImgScaled(self, no_img=False):
+        if no_img:
+            return self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
+        else:
+            return self.img_scaled.copy(), self.img_scaled_width, self.img_scaled_height, self.img_scaled_channel
     def setImgScaled(self, img, width, height, channel):
         if img is None : self.img_scaled = None
         else : self.img_scaled = img.copy()
@@ -126,25 +128,20 @@ class Model:
     def pushAnnot(self, dict):
         self.annot.append(copy.deepcopy(dict))
 
+    def getZoomType(self):
+        return self.zoom_type
+    def setZoomType(self, type):
+        self.zoom_type = type
+
     def getUndoFlag(self):
         return self.undo_flag
     def setUndoFlag(self, flag):
         self.undo_flag = flag
-
-    def getFocusFlag(self):
-        return self.focus_flag
-    def setFocusFlag(self, flag):
-        self.focus_flag = flag
         
     def getMenuFlag(self):
         return self.menu_flag
     def setMenuFlag(self, flag):
         self.menu_flag = flag
-
-    def getCtrlFlag(self):
-        return self.ctrl_flag
-    def setCtrlFlag(self, flag):
-        self.ctrl_flag = flag
 
     def getDrawFlag(self):
         return self.draw_flag

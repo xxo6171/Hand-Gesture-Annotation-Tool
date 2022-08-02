@@ -6,10 +6,9 @@ def loadImgData(filepath):
     h,w,c = img_data.shape
     return img_data, w, h, c
 
-def resizeImage(img, scaleRatio, interpolation):
-    if interpolation : itp = cv2.INTER_LINEAR
-    else : itp = cv2.INTER_AREA
+def resizeImgData(img, scaleRatio, interpolation):
+    itp = cv2.INTER_LINEAR if interpolation == 'LINEAR' else cv2.INTER_AREA
     img_data = cv2.resize(img, None, fx=scaleRatio, fy=scaleRatio,
                      interpolation=itp)
-    h,w,c = img_data.shape
+    h, w, c = img_data.shape
     return img_data, w, h, c
