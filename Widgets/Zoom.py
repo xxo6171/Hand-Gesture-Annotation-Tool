@@ -6,11 +6,12 @@ from Utils.ImageProc import *
 from Utils.Display import *
 
 class Zoom(QWidget):
-    def __init__(self, model):
+    def __init__(self, view, model):
         super().__init__()
 
         self.Model = model
 
+        self.stacked_widget = view
         self.canvas = QLabel(self)
 
         # Set Focus Policy
@@ -28,6 +29,9 @@ class Zoom(QWidget):
         self.setMinimumSize(w, h)
         self.setMaximumSize(w, h)
 
+        self.stacked_widget.setMaximumSize(w, h)
+        self.stacked_widget.setMinimumSize(w, h)
+
         displayImage(self.canvas, qimg_add_info, w, h)
     
 
@@ -35,6 +39,7 @@ class Zoom(QWidget):
     def wheelEvent(self, event):
         self.Model.setZoomType('In') if event.angleDelta().y() > 0 else self.Model.setZoomType('Out')
         self.resizeZoomInOut()
+
 
     # ----- Resize Zoom -----
     def resizeZoomInOut(self):

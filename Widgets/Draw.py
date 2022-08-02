@@ -36,11 +36,6 @@ class Draw(QWidget):
         displayImage(self.canvas, img, w, h)
 
 
-    # ----- Context Menu Event -----
-    def contextMenuEvent(self, event):
-        pass    
-    
-    
     # ----- Mouse Event -----
     def mousePressEvent(self, event):
         if self.Model.getDrawFlag() is True or self.Model.getRetouchFlag() is False:

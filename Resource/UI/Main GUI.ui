@@ -215,8 +215,6 @@
     </property>
     <addaction name="action_Zoom_In"/>
     <addaction name="action_Zoom_Out"/>
-    <addaction name="separator"/>
-    <addaction name="action_Fit"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>

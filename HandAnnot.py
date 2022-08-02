@@ -32,10 +32,10 @@ class HandAnnot(QMainWindow, main_form_class):
     def binding(self):
         self.Model = Model()
 
-        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
-        self.Zoom = Zoom(self.Model)
-
         self.stacked_widget = QStackedWidget()
+        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
+        self.Zoom = Zoom(self.stacked_widget, self.Model)
+
         self.stacked_widget.addWidget(self.Draw)
         self.stacked_widget.addWidget(self.Zoom)
         self.scrollArea_Canvas.setWidget(self.stacked_widget)
@@ -45,13 +45,13 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Save.triggered.connect(self.saveJson)
         self.action_Exit.triggered.connect(self.exit)
 
-        self.action_Polygon.triggered.connect(self.setPolygon)
-        self.action_Right_Gesture.triggered.connect(self.setRightGesture)
-        self.action_Left_Gesture.triggered.connect(self.setLeftGesture)
-        self.action_Rectangle.triggered.connect(self.setRect)
-        self.action_Circle.triggered.connect(self.setCircle)
-        self.action_Line.triggered.connect(self.setLine)
-        self.action_Dot.triggered.connect(self.setDot)
+        self.action_Polygon.triggered.connect(partial(self.setDraw, 'Polygon', True))
+        self.action_Right_Gesture.triggered.connect(partial(self.setGesture, 'right'))
+        self.action_Left_Gesture.triggered.connect(partial(self.setGesture, 'left'))
+        self.action_Rectangle.triggered.connect(partial(self.setDraw, 'Rectangle', True))
+        self.action_Circle.triggered.connect(partial(self.setDraw, 'Circle', True))
+        self.action_Line.triggered.connect(partial(self.setDraw, 'Line', True))
+        self.action_Dot.triggered.connect(partial(self.setDraw, 'Dot', True))
 
         self.action_Retouch.triggered.connect(self.setRetouch)
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
@@ -91,6 +91,7 @@ class HandAnnot(QMainWindow, main_form_class):
             normalized_annot_info = normalization(cur_annot_info, w, h)
             self.Model.setAnnotDict(normalized_annot_info)
             self.loadLabelList()
+            self.loadObjectList()
         else:
             # 존재하지 않을 경우 이미지의 경로, width, height dict에 저장
             self.Model.setAnnotInfo(file_path, w, h)
@@ -99,9 +100,10 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.setImgData(img, w, h, c)
 
         # Save Image for Display to Model
-        img_QPixmap = self.img2QPixmap(img, w, h, c)
+        img_QPixmap = img2QPixmap(img, w, h, c)
         self.Model.setImgScaled(img_QPixmap, w, h, c)
 
+        self.Model.pushAnnot(self.Model.getAnnotInfo())
         # Activate Menu
         self.Model.setMenuFlag(True)
         self.menuRefresh()
@@ -122,30 +124,32 @@ class HandAnnot(QMainWindow, main_form_class):
     def loadLabelList(self):
         label_list = []
         shapes = self.Model.getAnnotInfo()['shapes']
+        if not shapes: return
+
         for shape in shapes:
             label = shape['label']
-            shape_type = shape['shape_type']
             if label not in label_list:
                 label_list.append(label)
-            self.listWidget_ObjectList.addItem(QListWidgetItem(shape_type + '_' + label))
 
         for label in label_list:
             self.listWidget_LabelList.addItem(QListWidgetItem(label))
             self.Model.setLabel(label)
 
+    def loadObjectList(self):
+        self.listWidget_ObjectList.clear()
+        shapes = self.Model.getAnnotInfo(True)['shapes']
+        if not shapes: return
+
+        for shape in shapes:
+            obj_type = shape['shape_type']
+            obj_label = shape['label']
+            self.listWidget_ObjectList.addItem(QListWidgetItem(obj_type + '_' + obj_label))
+
     def menuRefresh(self):
-        # 메뉴 플래그가 True면 TF=True, False면 TF=False
-        TF = True if self.Model.getMenuFlag() else False
         # 메뉴 아이템 배열에 저장
         mItems = [self.menu_Edit, self.menu_Zoom, self.action_Save]
         for mItem in mItems:
-            mItem.setEnabled(TF)
-
-    def img2QPixmap(self, img, w, h, c):
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-
-        return qPixmap
+            mItem.setEnabled(self.Model.getMenuFlag())
 
     def initData(self):
         self.Model.setImgData(None, None, None, None)
@@ -155,7 +159,6 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Model.initLabelList()
         self.listWidget_LabelList.clear()
         self.listWidget_ObjectList.clear()
-
 
     def saveJson(self):
         img, w, h = self.Model.getImgData()[:3]
@@ -173,29 +176,6 @@ class HandAnnot(QMainWindow, main_form_class):
 
 
     # ----- Edit Actions -----
-    def setPolygon(self):
-        self.setDraw('Polygon')
-        self.Model.setKeepTracking(True)
-
-    def setRightGesture(self):
-        self.setGesture('right')
-
-    def setLeftGesture(self):
-        self.setGesture('left')
-
-    def setRect(self):
-        self.setDraw('Rectangle')
-
-    def setCircle(self):
-        self.setDraw('Circle')
-
-    def setLine(self):
-        self.setDraw('Line')
-
-    def setDot(self):
-        self.setDraw('Dot')
-        self.Draw.setTracking(True)
-
     def setGesture(self, hand_dir):
         self.setDraw('Gesture Polygon', draw=False)
         
@@ -228,12 +208,14 @@ class HandAnnot(QMainWindow, main_form_class):
 
     def setDraw(self, shape, draw=True):
         self.Draw.setCanvas()
-
         self.Model.setDrawFlag(draw)
         self.Model.setCurShapeType(shape)
+        if shape == 'Polygon' :
+            self.Model.setKeepTracking(True)
+        if shape == 'Dot' :
+            self.Draw.setTracking(True)
         self.Model.resetCurPoints()
-
-        self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape = shape))
+        self.statusBar.showMessage('Seleted Shape: {shape}'.format(shape=shape))
         
     def setRetouch(self):
         retouch_flag = self.Model.getRetouchFlag()
@@ -258,13 +240,20 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Draw.addObject()
 
     def undo(self):
-        print('undo')
+        if self.Model.getImgData() is None: return
+        self.Model.setAnnotDict(self.Model.popAnnot())
+
+        self.Draw.setCanvas()
+        self.Zoom.setCanvas()
+        self.loadObjectList()
+
 
     # ----- Zoom Actions -----
     def setZoom(self, type):
         self.Model.setZoomType(type)
         self.Zoom.resizeZoomInOut()
         self.Draw.setCanvas()
+
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
@@ -283,6 +272,7 @@ class HandAnnot(QMainWindow, main_form_class):
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
 
+
     # ----- Context Menu Event -----
     def contextMenuEvent(self, event):
         if self.Model.getImgData() is None: return
@@ -297,14 +287,15 @@ class HandAnnot(QMainWindow, main_form_class):
         action_Dot = menu.addAction('Dot')
 
         action = menu.exec(self.mapToGlobal(event.pos()))
-        if action == action_Polygon: self.setPolygon()
-        if action == action_Right_Gesture_Polygon: self.setRightGesture()
-        if action == action_Left_Gesture_Polygon: self.setLeftGesture()
-        if action == action_Rectangle: self.setRect()
-        if action == action_Circle: self.setCircle()
-        if action == action_Line: self.setLine()
-        if action == action_Dot: self.setDot()
+        if action == action_Polygon: self.setDraw('Polygon')
+        if action == action_Right_Gesture_Polygon: self.setGesture('right')
+        if action == action_Left_Gesture_Polygon: self.setGesture('left')
+        if action == action_Rectangle: self.setDraw('Rectangle')
+        if action == action_Circle: self.setDraw('Circle')
+        if action == action_Line: self.setDraw('Line')
+        if action == action_Dot: self.setDraw('Dot')
         
+
     # ----- Delete -----
     def objectClicked(self):
         self.Draw.setCanvas()
@@ -323,6 +314,7 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Draw.setCanvas(reset_canvas=False)
 
     def objectDoubleClicked(self):
+        self.Model.pushAnnot(self.Model.getAnnotInfo())
         idx = self.Model.getSelectedObjectIndex()
 
         self.deleteObject()
@@ -338,6 +330,7 @@ class HandAnnot(QMainWindow, main_form_class):
         w, h, c = self.Model.getImgScaled(no_img=True)
 
         self.Model.setImgScaled(qimg_add_info, w, h, c)
+
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
