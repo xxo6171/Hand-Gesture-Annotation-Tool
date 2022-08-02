@@ -32,10 +32,10 @@ class HandAnnot(QMainWindow, main_form_class):
     def binding(self):
         self.Model = Model()
 
-        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
-        self.Zoom = Zoom(self.Model)
-
         self.stacked_widget = QStackedWidget()
+        self.Draw = Draw([self.listWidget_LabelList, self.listWidget_ObjectList], self.Model)
+        self.Zoom = Zoom(self.stacked_widget, self.Model)
+
         self.stacked_widget.addWidget(self.Draw)
         self.stacked_widget.addWidget(self.Zoom)
         self.scrollArea_Canvas.setWidget(self.stacked_widget)
@@ -45,13 +45,13 @@ class HandAnnot(QMainWindow, main_form_class):
         self.action_Save.triggered.connect(self.saveJson)
         self.action_Exit.triggered.connect(self.exit)
 
-        self.action_Polygon.triggered.connect(partial(self.setDraw, 'Polygon'))
+        self.action_Polygon.triggered.connect(partial(self.setDraw, 'Polygon', True))
         self.action_Right_Gesture.triggered.connect(partial(self.setGesture, 'right'))
         self.action_Left_Gesture.triggered.connect(partial(self.setGesture, 'left'))
-        self.action_Rectangle.triggered.connect(partial(self.setDraw, 'Rectangle'))
-        self.action_Circle.triggered.connect(partial(self.setDraw, 'Circle'))
-        self.action_Line.triggered.connect(partial(self.setDraw, 'Line'))
-        self.action_Dot.triggered.connect(partial(self.setDraw, 'Dot'))
+        self.action_Rectangle.triggered.connect(partial(self.setDraw, 'Rectangle', True))
+        self.action_Circle.triggered.connect(partial(self.setDraw, 'Circle', True))
+        self.action_Line.triggered.connect(partial(self.setDraw, 'Line', True))
+        self.action_Dot.triggered.connect(partial(self.setDraw, 'Dot', True))
 
         self.action_Retouch.triggered.connect(self.setRetouch)
         self.action_Auto_Annotation.triggered.connect(self.setAuto)
@@ -63,6 +63,7 @@ class HandAnnot(QMainWindow, main_form_class):
         # Connect Object List
         self.listWidget_ObjectList.itemClicked.connect(self.objectClicked)
         self.listWidget_ObjectList.itemDoubleClicked.connect(self.objectDoubleClicked)
+
 
     # ----- File Actions -----
     def openFile(self):
@@ -173,6 +174,7 @@ class HandAnnot(QMainWindow, main_form_class):
     def exit(self):
         self.close()
 
+
     # ----- Edit Actions -----
     def setGesture(self, hand_dir):
         self.setDraw('Gesture Polygon', draw=False)
@@ -245,11 +247,13 @@ class HandAnnot(QMainWindow, main_form_class):
         self.Zoom.setCanvas()
         self.loadObjectList()
 
+
     # ----- Zoom Actions -----
     def setZoom(self, type):
         self.Model.setZoomType(type)
         self.Zoom.resizeZoomInOut()
         self.Draw.setCanvas()
+
 
     # ----- Key Event -----
     def keyPressEvent(self, event):
@@ -267,6 +271,7 @@ class HandAnnot(QMainWindow, main_form_class):
         if event.key() == Qt.Key_Control:
             self.Draw.setCanvas()
             self.stacked_widget.setCurrentWidget(self.Draw)
+
 
     # ----- Context Menu Event -----
     def contextMenuEvent(self, event):
@@ -290,6 +295,7 @@ class HandAnnot(QMainWindow, main_form_class):
         if action == action_Line: self.setDraw('Line')
         if action == action_Dot: self.setDraw('Dot')
         
+
     # ----- Delete -----
     def objectClicked(self):
         self.Draw.setCanvas()
@@ -324,6 +330,7 @@ class HandAnnot(QMainWindow, main_form_class):
         w, h, c = self.Model.getImgScaled(no_img=True)
 
         self.Model.setImgScaled(qimg_add_info, w, h, c)
+
 
 if __name__=='__main__':
     app = QApplication(sys.argv)
