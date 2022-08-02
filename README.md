@@ -71,14 +71,14 @@
      			"label": "{Label Name}",
      			"points": [
      				[
-                         {x_1},
-                         {y_1}
+     					x_1,
+     					y_1
      				],
      				...
      				,
      				[
-                     	{x_n},
-             			{y_n}
+     					x_n,
+     					y_n
      				]
      			],
      			"shape_type": "{Shape Type}"
