@@ -24,9 +24,7 @@ class Model:
         self.cur_shape_type = ''
         self.zoom_type = ''
 
-        self.focus_flag = None
         self.menu_flag = False
-        self.ctrl_flag = None
         self.draw_flag = False
         self.retouch_flag = False
         self.tracking_flag = False
@@ -139,21 +137,11 @@ class Model:
         return self.undo_flag
     def setUndoFlag(self, flag):
         self.undo_flag = flag
-
-    def getFocusFlag(self):
-        return self.focus_flag
-    def setFocusFlag(self, flag):
-        self.focus_flag = flag
         
     def getMenuFlag(self):
         return self.menu_flag
     def setMenuFlag(self, flag):
         self.menu_flag = flag
-
-    def getCtrlFlag(self):
-        return self.ctrl_flag
-    def setCtrlFlag(self, flag):
-        self.ctrl_flag = flag
 
     def getDrawFlag(self):
         return self.draw_flag
