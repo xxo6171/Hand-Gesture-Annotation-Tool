@@ -45,7 +45,55 @@
 * Mediapipe Hands
 
 ## Usage
-* 사용 방법
+1. Image File Open
 
-## Contact
-* 
+   * If there is a file with the same name as the *.json extension, load the file.
+   * else, create empty info
+
+2. Add Annotation Info( Gesture, Polygon, Rectangle, etc.)
+
+   * set draw type
+   * click canvas & set label
+
+3. Retouch Things
+
+   * set retouch mode
+   * click the point & drag & drop
+
+4. Save Annotation Info
+
+   * *.Json File Structure
+
+     ```json
+     {
+     	"shapes": [
+     		{
+     			"label": "{Label Name}",
+     			"points": [
+     				[
+     					x_1,
+     					y_1
+     				],
+     				...
+     				,
+     				[
+     					x_n,
+     					y_n
+     				]
+     			],
+     			"shape_type": "{Shape Type}"
+     		},
+             ...
+     	],
+     	"image_path": "{File Path}",
+     	"image_width": {Width},
+     	"image_height": {Height}
+     }
+     ```
+
+     
+
+## Contact Us
+* acmiheee@gmail.com
+* kyung971112@gmail.com
+
