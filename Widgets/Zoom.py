@@ -73,12 +73,6 @@ class Zoom(QWidget):
         # cv2로 이미지를 resize한 이미지 데이터 반환
         img, w, h, c = resizeImgData(img, ratio, interpolation)
 
-        img_scaled = self.img2QPixmap(img, w, h, c)
+        img_scaled = img2QPixmap(img, w, h, c)
         self.Model.setImgScaled(img_scaled, w, h, c)
         self.setCanvas()
-
-    def img2QPixmap(self, img, w, h, c):
-        qImg = QImage(img.data, w, h, w * c, QImage.Format_RGB888)
-        qPixmap = QPixmap.fromImage(qImg)
-
-        return qPixmap
