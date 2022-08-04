@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog_Add_Label</class>
- <widget class="QDialog" name="Dialog_Add_Label">
+ <class>Dialog_Add_Object</class>
+ <widget class="QDialog" name="Dialog_Add_Object">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Add Label</string>
+   <string>Add Object</string>
   </property>
   <widget class="QListWidget" name="listWidget_LabelList">
    <property name="geometry">
