@@ -48,7 +48,7 @@
 
 * Excute Program by HandAnnot.py or Released HandAnnot.exe
 
-  [HandAnnot_Released](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool)
+  [HandAnnot_Released](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/releases/tag/HandAnnot)
 
 1. Image File Open
 
