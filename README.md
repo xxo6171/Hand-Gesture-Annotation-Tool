@@ -45,6 +45,11 @@
 * Mediapipe Hands
 
 ## Usage
+
+* Excute Program by HandAnnot.py or Released HandAnnot.exe
+
+  [HandAnnot_Released](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool)
+
 1. Image File Open
 
    * If there is a file with the same name as the *.json extension, load the file.
