@@ -176,12 +176,12 @@ class Model:
 
     def getClickPointRange(self):
         return self.click_point_range
-    def setMovePoint(self, point):
-        self.move_point = point
     def getMovePoint(self):
         return self.move_point
+    def setMovePoint(self, point):
+        self.move_point = point
 
-    def setSelectedObjectIndex(self, idx):
-        self.selected_object_idx = idx
     def getSelectedObjectIndex(self):
         return self.selected_object_idx
+    def setSelectedObjectIndex(self, idx):
+        self.selected_object_idx = idx
