@@ -16,10 +16,10 @@ from Utils.AutoAnnotation import *
 from Utils.ConvertAnnotation import *
 from Utils.ImageProc import *
 
-mainUI_dir = 'Resource/UI/Main GUI.ui'
-main_form_class = uic.loadUiType(mainUI_dir)[0]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+Ui_MainWindow, QtBaseClass = uic.loadUiType(BASE_DIR + r'/Resource/UI/Main GUI.ui')
 
-class HandAnnot(QMainWindow, main_form_class):
+class HandAnnot(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)

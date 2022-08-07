@@ -79,16 +79,16 @@ class Model:
         self.annot_info['image_path'] = ''
         self.annot_info['image_width'] = 0
         self.annot_info['image_height'] = 0
+    def getAnnotInfo(self, no_deep=False):
+        if no_deep:
+            return self.annot_info
+        return copy.deepcopy(self.annot_info)
     def setAnnotDict(self, dict):
         self.annot_info = copy.deepcopy(dict)
     def setAnnotInfo(self, filepath, width, height):
         self.annot_info['image_path'] = filepath
         self.annot_info['image_width'] = width
         self.annot_info['image_height'] = height
-    def getAnnotInfo(self, no_deep=False):
-        if no_deep:
-            return self.annot_info
-        return copy.deepcopy(self.annot_info)
     def setCurShapeToDict(self):
         new_shape = {}
         new_shape['label'] = self.cur_label
@@ -105,18 +105,18 @@ class Model:
             pos[0] /= self.img_scaled_width
             pos[1] /= self.img_scaled_height
         self.cur_points.append(pos)
-    def setCurPoints(self, points):
-        self.cur_points = points.copy()
     def getCurPoints(self):
         return copy.deepcopy(self.cur_points)
-    def setCurLabel(self, label):
-        self.cur_label = label
+    def setCurPoints(self, points):
+        self.cur_points = points.copy()
     def getCurLabel(self):
         return self.cur_label
-    def setCurShapeType(self, shape_type):
-        self.cur_shape_type = shape_type
+    def setCurLabel(self, label):
+        self.cur_label = label
     def getCurShapeType(self):
         return self.cur_shape_type
+    def setCurShapeType(self, shape_type):
+        self.cur_shape_type = shape_type
 
     def initAnnotStack(self):
         self.top = len(self.annot)
@@ -176,12 +176,12 @@ class Model:
 
     def getClickPointRange(self):
         return self.click_point_range
-    def setMovePoint(self, point):
-        self.move_point = point
     def getMovePoint(self):
         return self.move_point
+    def setMovePoint(self, point):
+        self.move_point = point
 
-    def setSelectedObjectIndex(self, idx):
-        self.selected_object_idx = idx
     def getSelectedObjectIndex(self):
         return self.selected_object_idx
+    def setSelectedObjectIndex(self, idx):
+        self.selected_object_idx = idx

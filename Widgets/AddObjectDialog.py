@@ -3,11 +3,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-add_label_UI_dir = 'Resource/UI/Add Lable Dialog.ui'
-add_label_form_class = uic.loadUiType(add_label_UI_dir)[0]
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+Ui_AddObjectDialog, QtBaseClass = uic.loadUiType(BASE_DIR[:-8] + r'/Resource/UI/Add Object Dialog.ui')
 
-class AddObjectDialog(QDialog, add_label_form_class):
+class AddObjectDialog(QDialog, Ui_AddObjectDialog):
     def __init__(self, view, model):
         super().__init__()
         self.setupUi(self)
