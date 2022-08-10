@@ -23,7 +23,7 @@ def autoAnnotation(img):
                 mp_drawing.draw_landmarks(
                     image, hand_landmark, mp_hands.HAND_CONNECTIONS)
                 hand_landmarks.append(hand_landmark)
-    return image, hand_landmarks
+    return hand_landmarks
 
 def landmarksToList(landmarks):
     if landmarks is None:
@@ -42,6 +42,8 @@ def landmarksToList(landmarks):
 
     return pos_list
 
+
+'''
 if __name__ == '__main__':
     filename = 'Resource/Image/two_hands.jpg'
     image = cv2.imread(filename, cv2.IMREAD_COLOR)
@@ -56,4 +58,4 @@ if __name__ == '__main__':
     print(len(lists))
     cv2.imshow('image', image)
     cv2.waitKey()
- 
+'''
