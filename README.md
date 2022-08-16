@@ -11,22 +11,34 @@
 * Image Annotation Tool인 Labelme를 참고해 Python으로 작성되었으며, GUI를 위해 QT가 사용되었습니다.
 
 ## Features
+- [x] Create *Polygon, Hand Gesture, Rectangle, Circle, Line, Dot* for Image Annotation
 
-*   [x] Create _Polygon, Hand Gesture, Rectangle, Circle, Line, Dot_ for Image Annotation
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Auto_After.png" alt="image-20220801140559289" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Create_Polygon.png" alt="image-20220801141136646" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme\Create_Gesture.png" alt="image-20220801141841416" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Create_Rectangle.png" alt="image-20220801141221183" width="48%" />
 
-    ![image-20220801140559289](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Auto\_After.png) ![image-20220801141136646](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Create\_Polygon.png) ![image-20220801141841416](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Create\_Gesture.png) ![image-20220801141221183](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Create\_Rectangle.png)
-*   [x] Retouch Things by Points Move
+- [x] Retouch Things by Points Move
 
-    ![image-20220801142039426](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Retouch\_Before.png) ![image-20220801142113560](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Retouch\_After.png)
-*   [x] Auto _Hand Gesture Annotation_ by Mediapipe Hands
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Retouch_Before.png" alt="image-20220801142039426" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Retouch_After.png" alt="image-20220801142113560" width="48%" />
 
-    ![image-20220801141605636](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Auto\_Before.png) ![image-20220801141620506](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Auto\_After.png)
-*   [x] Zoom In & Out
+- [x] Auto *Hand Gesture Annotation* by Mediapipe Hands
 
-    ![image-20220801142245269](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Zoom\_Before.png) ![image-20220801142307207](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Zoom\_In.png) ![image-20220801142331061](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Zoom\_Out.png)
-*   [x] Select( Click ) & Delete( Double Click ) Object
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Auto_Before.png" alt="image-20220801141605636" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Auto_After.png" alt="image-20220801141620506" width="48%" />
 
-    ![image-20220801142631780](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Object\_Select.png) ![image-20220801142643059](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource/readme/Object\_Delete.png)
+- [x] Zoom In & Out
+
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Zoom_Before.png" alt="image-20220801142245269" width="32%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Zoom_In.png" alt="image-20220801142307207" width="32%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Zoom_Out.png" alt="image-20220801142331061" width="32%" />
+
+- [x] Select( Click ) & Delete( Double Click ) Object
+
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Object_Select.png" alt="image-20220801142631780" width="48%" />
+  <img src="https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/blob/master/Resource\readme\Object_Delete.png" alt="image-20220801142643059" width="48%" />
+
 
 ## Requirements
 
