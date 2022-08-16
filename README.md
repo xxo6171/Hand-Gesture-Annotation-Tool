@@ -37,9 +37,7 @@
 
 ## Usage
 
-*   Excute Program by HandAnnot.py or Released HandAnnot.exe
-
-    [HandAnnot\_Released](https://github.com/KimJinSeong-Git/Hand-Gesture-Annotation-Tool/releases/tag/HandAnnot)
+*   Excute Program by HandAnnot.py
 
 1. Image File Open
    * If there is a file with the same name as the \*.json extension, load the file.
